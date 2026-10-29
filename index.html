@@ -30,7 +30,50 @@
             overflow: hidden; 
         }
 
-        /* --- RAIN CONTAINER --- */
+        /* --- BACKGROUND LAYER (Sun & City) --- */
+        #background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* The Glowing Sunrise Sun */
+        .sun {
+            position: absolute;
+            bottom: 15vh; /* Positioned right above the city */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle, rgba(255, 200, 120, 0.4) 0%, rgba(242, 178, 190, 0.1) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+        }
+
+        /* The City Skyline (SVG) */
+        .city-skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 35vh; /* Takes up bottom third */
+            /* A soft gradient matching the sunrise image */
+            background: linear-gradient(to top, rgba(89, 62, 58, 0.7) 0%, rgba(217, 110, 136, 0.2) 60%, transparent 100%);
+            /* Mask it with an SVG shape to create buildings */
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
+            z-index: 1;
+        }
+
+        /* --- HEART ANIMATION LAYER --- */
         #heart-container {
             position: fixed;
             top: 0;
@@ -38,7 +81,7 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none; 
-            z-index: 0;
+            z-index: 2;
         }
 
         /* Base shape for both the heart and the ghosts */
@@ -61,7 +104,7 @@
         .heart-shape::before { top: -7px; left: 0; }
         .heart-shape::after { top: 0; left: -7px; }
 
-        /* --- THE ACTUAL YELLOW HEART --- */
+        /* The actual yellow heart */
         .yellow-heart {
             background: var(--butter);
             box-shadow: 0 0 10px var(--butter);
@@ -72,17 +115,30 @@
             box-shadow: 0 0 10px var(--butter);
         }
 
-        /* --- THE GHOST AFTERIMAGES --- */
+        /* The ghost afterimages */
         .ghost-heart {
             z-index: 5;
-            /* Fade out over 6 seconds */
             animation: fadeGhost 6s forwards; 
         }
 
-        /* The ghost shapes take the color assigned by JS */
         .ghost-heart, .ghost-heart::before, .ghost-heart::after {
             background: var(--ghost-color);
             box-shadow: 0 0 10px var(--ghost-color);
+        }
+
+        /* The Highlighter Rectangle */
+        .highlighter {
+            position: absolute;
+            top: -80px; /* Stretches up behind the heart */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 80px;
+            background: var(--highlighter-color);
+            filter: blur(3px);
+            opacity: 0.6;
+            z-index: -1;
+            border-radius: 4px;
         }
 
         @keyframes fadeGhost {
@@ -91,7 +147,7 @@
             100% { opacity: 0; }
         }
 
-        /* Main Area */
+        /* --- MAIN UI --- */
         .main-content {
             flex: 1;
             position: relative;
@@ -100,10 +156,9 @@
             align-items: center;
             padding: 30px;
             width: 100%;
-            z-index: 2; 
+            z-index: 3; /* Keeps text above hearts and city */
         }
 
-        /* Top Progress Bar */
         .header {
             width: 90%;
             max-width: 800px;
@@ -147,13 +202,12 @@
             margin-left: 20px;
         }
 
-        /* Center Hero Blob */
         .hero {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         .blob {
@@ -169,6 +223,7 @@
             margin-bottom: 40px;
             animation: float 6s ease-in-out infinite;
             max-width: 90vw;
+            z-index: 4;
         }
 
         @keyframes float {
@@ -193,7 +248,6 @@
             margin-top: 15px;
         }
 
-        /* Start Button */
         .start-btn {
             background: var(--butter);
             color: var(--cocoa);
@@ -213,6 +267,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            z-index: 4;
         }
 
         .start-btn:active {
@@ -222,7 +277,6 @@
             transform: translateY(2px);
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 600px) {
             .blob { padding: 50px 30px; }
             .blob h1 { font-size: 50px; }
@@ -230,13 +284,22 @@
             .progress-bar { display: none; }
             .header { flex-direction: column; gap: 10px; padding: 15px; }
             .score { margin-left: 0; }
+            .city-skyline { height: 25vh; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Background Layers -->
+    <div id="background-layer">
+        <div class="sun"></div>
+        <div class="city-skyline"></div>
+    </div>
+
+    <!-- Heart Animation Container -->
     <div id="heart-container"></div>
 
+    <!-- Main Content -->
     <div class="main-content">
         <div class="header">
             <span class="progress-text">TIP: you should click that button that says start now 😉</span>
@@ -261,17 +324,20 @@
     <script>
         const container = document.getElementById('heart-container');
         
-        // The colors of the trails from the Cyberpunk image
-        const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
+        // Colors and their darker highlighter versions
+        const trailData = [
+            { color: '#00FF66', dark: '#009933' }, // Green
+            { color: '#00FFFF', dark: '#009999' }, // Cyan
+            { color: '#0088FF', dark: '#004C99' }, // Blue
+            { color: '#8A2BE2', dark: '#4B0082' }  // Purple
+        ];
 
         function spawnHeart() {
-            // Random starting X position and scale
-            const startX = Math.random() * 90 + 5; // 5vw to 95vw
+            const startX = Math.random() * 95 + 2; 
             const scale = Math.random() * 0.4 + 0.8; 
-            const fallDuration = 4000; // 4 seconds to fall
+            const fallDuration = Math.random() * 2000 + 3000; // 3 to 5 seconds
             const startTime = performance.now();
 
-            // Create the actual yellow heart
             const heart = document.createElement('div');
             heart.className = 'yellow-heart heart-shape';
             heart.style.left = startX + 'vw';
@@ -279,7 +345,6 @@
 
             let lastGhostTime = 0;
 
-            // Animate it manually with JavaScript so we can track its exact position
             function animate(time) {
                 const elapsed = time - startTime;
                 const progress = elapsed / fallDuration;
@@ -289,16 +354,16 @@
                     return;
                 }
 
-                // Calculate current position and rotation
-                const y = -10 + (progress * 120); // -10vh to 110vh
-                const rotation = 45 + (progress * 720); // 45deg to 765deg (spins twice)
+                // Fall from -10vh to 110vh
+                const y = -10 + (progress * 120); 
+                // Spin 720 degrees
+                const rotation = 45 + (progress * 720); 
 
-                // Update the yellow heart
                 heart.style.top = y + 'vh';
                 heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-                // Spawn a ghost trail every 80 milliseconds
-                if (time - lastGhostTime > 80) {
+                // Drop a ghost every 60ms (creates a dense trail)
+                if (time - lastGhostTime > 60) {
                     createGhost(startX, y, rotation, scale);
                     lastGhostTime = time;
                 }
@@ -313,28 +378,35 @@
             const ghost = document.createElement('div');
             ghost.className = 'ghost-heart heart-shape';
             
-            // Position the ghost exactly where the heart just was
             ghost.style.left = x + 'vw';
             ghost.style.top = y + 'vh';
             ghost.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-            // Pick a random color from the cyberpunk palette
-            const color = trailColors[Math.floor(Math.random() * trailColors.length)];
-            ghost.style.setProperty('--ghost-color', color);
+            // Pick a random color set
+            const theme = trailData[Math.floor(Math.random() * trailData.length)];
+            ghost.style.setProperty('--ghost-color', theme.color);
+            ghost.style.setProperty('--highlighter-color', theme.dark);
+
+            // Create the Highlighter Rectangle
+            const highlighter = document.createElement('div');
+            highlighter.className = 'highlighter';
+            ghost.appendChild(highlighter);
 
             container.appendChild(ghost);
 
-            // Delete the ghost after 6 seconds
+            // Delete ghost after 6 seconds
             setTimeout(() => {
                 ghost.remove();
             }, 6000);
         }
 
-        // Spawn a new heart every 800ms (like rain)
-        setInterval(spawnHeart, 800);
+        // INCREASED SPAWN RATE: Spawn a new heart every 150ms for heavy rain
+        setInterval(spawnHeart, 150);
         
-        // Spawn one immediately to start
-        spawnHeart();
+        // Initial bursts to fill the screen
+        for(let i=0; i<10; i++) {
+            setTimeout(spawnHeart, i * 100);
+        }
     </script>
 </body>
 </html>
