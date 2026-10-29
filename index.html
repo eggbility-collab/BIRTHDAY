@@ -30,7 +30,7 @@
             overflow: hidden; 
         }
 
-        /* --- BACKGROUND LAYER (Sun & City) --- */
+        /* --- BACKGROUND LAYER (Sun & 3D City) --- */
         #background-layer {
             position: fixed;
             top: 0;
@@ -39,38 +39,58 @@
             height: 100vh;
             z-index: 0;
             pointer-events: none;
+            overflow: hidden;
         }
 
         /* The Glowing Sunrise Sun */
         .sun {
             position: absolute;
-            bottom: 15vh; /* Positioned right above the city */
+            bottom: 10vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 60vw;
-            height: 60vw;
-            max-width: 800px;
-            max-height: 800px;
-            background: radial-gradient(circle, rgba(255, 200, 120, 0.4) 0%, rgba(242, 178, 190, 0.1) 40%, transparent 70%);
+            width: 70vw;
+            height: 70vw;
+            max-width: 900px;
+            max-height: 900px;
+            background: radial-gradient(circle, rgba(255, 190, 130, 0.5) 0%, rgba(242, 178, 190, 0.2) 40%, transparent 70%);
             border-radius: 50%;
-            filter: blur(20px);
+            filter: blur(25px);
         }
 
-        /* The City Skyline (SVG) */
-        .city-skyline {
+        /* Base styling for all city layers */
+        .city-layer {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 35vh; /* Takes up bottom third */
-            /* A soft gradient matching the sunrise image */
-            background: linear-gradient(to top, rgba(89, 62, 58, 0.7) 0%, rgba(217, 110, 136, 0.2) 60%, transparent 100%);
-            /* Mask it with an SVG shape to create buildings */
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             -webkit-mask-size: 100% 100%;
             mask-size: 100% 100%;
-            z-index: 1;
+        }
+
+        /* Layer 1: Farthest Back (Soft, pinkish, low) */
+        .city-back {
+            height: 22vh;
+            background: linear-gradient(to top, rgba(217, 110, 136, 0.4) 0%, transparent 100%);
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+            filter: blur(2px);
+            opacity: 0.8;
+        }
+
+        /* Layer 2: Middle (Slightly darker, taller) */
+        .city-mid {
+            height: 28vh;
+            background: linear-gradient(to top, rgba(140, 70, 80, 0.6) 0%, rgba(217, 110, 136, 0.1) 100%);
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+        }
+
+        /* Layer 3: Foreground (Darkest, crispest, tallest) */
+        .city-front {
+            height: 35vh;
+            background: linear-gradient(to top, rgba(89, 62, 58, 0.8) 0%, rgba(89, 62, 58, 0.1) 100%);
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
         /* --- HEART ANIMATION LAYER --- */
@@ -82,14 +102,26 @@
             height: 100vh;
             pointer-events: none; 
             z-index: 2;
+            overflow: hidden;
         }
 
-        /* Base shape for both the heart and the ghosts */
+        /* Wrapper for each falling object */
+        .particle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            will-change: transform;
+        }
+
+        /* Base shape for hearts */
         .heart-shape {
             position: absolute;
             width: 14px;
             height: 14px;
             border-radius: 2px;
+            top: 0;
+            left: 0;
+            z-index: 2; /* Keeps the heart above the highlighter */
         }
 
         .heart-shape::before,
@@ -108,7 +140,6 @@
         .yellow-heart {
             background: var(--butter);
             box-shadow: 0 0 10px var(--butter);
-            z-index: 10;
         }
         .yellow-heart::before, .yellow-heart::after {
             background: var(--butter);
@@ -116,9 +147,8 @@
         }
 
         /* The ghost afterimages */
-        .ghost-heart {
-            z-index: 5;
-            animation: fadeGhost 6s forwards; 
+        .ghost-wrapper {
+            animation: fadeGhost 6s forwards linear; 
         }
 
         .ghost-heart, .ghost-heart::before, .ghost-heart::after {
@@ -126,24 +156,23 @@
             box-shadow: 0 0 10px var(--ghost-color);
         }
 
-        /* The Highlighter Rectangle */
+        /* The Highlighter Rectangle - Stays straight, does not rotate */
         .highlighter {
             position: absolute;
-            top: -80px; /* Stretches up behind the heart */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 14px;
+            top: -60px; 
+            left: -2px; 
+            width: 18px;
             height: 80px;
             background: var(--highlighter-color);
-            filter: blur(3px);
-            opacity: 0.6;
-            z-index: -1;
-            border-radius: 4px;
+            filter: blur(4px);
+            opacity: 0.8;
+            border-radius: 10px;
+            z-index: 1; /* Sits behind the ghost heart */
         }
 
         @keyframes fadeGhost {
-            0% { opacity: 0.9; }
-            80% { opacity: 0.3; }
+            0% { opacity: 0.8; }
+            80% { opacity: 0.2; }
             100% { opacity: 0; }
         }
 
@@ -156,7 +185,7 @@
             align-items: center;
             padding: 30px;
             width: 100%;
-            z-index: 3; /* Keeps text above hearts and city */
+            z-index: 3; 
         }
 
         .header {
@@ -284,19 +313,19 @@
             .progress-bar { display: none; }
             .header { flex-direction: column; gap: 10px; padding: 15px; }
             .score { margin-left: 0; }
-            .city-skyline { height: 25vh; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Layers -->
+    <!-- 3D Layered City Background -->
     <div id="background-layer">
         <div class="sun"></div>
-        <div class="city-skyline"></div>
+        <div class="city-layer city-back"></div>
+        <div class="city-layer city-mid"></div>
+        <div class="city-layer city-front"></div>
     </div>
 
-    <!-- Heart Animation Container -->
     <div id="heart-container"></div>
 
     <!-- Main Content -->
@@ -324,7 +353,6 @@
     <script>
         const container = document.getElementById('heart-container');
         
-        // Colors and their darker highlighter versions
         const trailData = [
             { color: '#00FF66', dark: '#009933' }, // Green
             { color: '#00FFFF', dark: '#009999' }, // Cyan
@@ -335,13 +363,18 @@
         function spawnHeart() {
             const startX = Math.random() * 95 + 2; 
             const scale = Math.random() * 0.4 + 0.8; 
-            const fallDuration = Math.random() * 2000 + 3000; // 3 to 5 seconds
+            const fallDuration = Math.random() * 2000 + 4000; // 4 to 6 seconds
             const startTime = performance.now();
 
+            const wrapper = document.createElement('div');
+            wrapper.className = 'particle';
+            
             const heart = document.createElement('div');
             heart.className = 'yellow-heart heart-shape';
-            heart.style.left = startX + 'vw';
-            container.appendChild(heart);
+            wrapper.appendChild(heart);
+            
+            wrapper.style.transform = `translate3d(${startX}vw, -10vh, 0)`;
+            container.appendChild(wrapper);
 
             let lastGhostTime = 0;
 
@@ -350,20 +383,17 @@
                 const progress = elapsed / fallDuration;
 
                 if (progress >= 1) {
-                    heart.remove();
+                    wrapper.remove();
                     return;
                 }
 
-                // Fall from -10vh to 110vh
                 const y = -10 + (progress * 120); 
-                // Spin 720 degrees
                 const rotation = 45 + (progress * 720); 
 
-                heart.style.top = y + 'vh';
+                wrapper.style.transform = `translate3d(${startX}vw, ${y}vh, 0)`;
                 heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-                // Drop a ghost every 60ms (creates a dense trail)
-                if (time - lastGhostTime > 60) {
+                if (time - lastGhostTime > 80) {
                     createGhost(startX, y, rotation, scale);
                     lastGhostTime = time;
                 }
@@ -375,37 +405,37 @@
         }
 
         function createGhost(x, y, rotation, scale) {
-            const ghost = document.createElement('div');
-            ghost.className = 'ghost-heart heart-shape';
-            
-            ghost.style.left = x + 'vw';
-            ghost.style.top = y + 'vh';
-            ghost.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-
-            // Pick a random color set
             const theme = trailData[Math.floor(Math.random() * trailData.length)];
-            ghost.style.setProperty('--ghost-color', theme.color);
-            ghost.style.setProperty('--highlighter-color', theme.dark);
 
-            // Create the Highlighter Rectangle
+            const ghostWrapper = document.createElement('div');
+            ghostWrapper.className = 'particle ghost-wrapper';
+            
+            ghostWrapper.style.transform = `translate3d(${x}vw, ${y}vh, 0)`;
+            ghostWrapper.style.setProperty('--ghost-color', theme.color);
+
+            // Highlighter (Straight)
             const highlighter = document.createElement('div');
             highlighter.className = 'highlighter';
-            ghost.appendChild(highlighter);
+            highlighter.style.setProperty('--highlighter-color', theme.dark);
+            ghostWrapper.appendChild(highlighter);
 
-            container.appendChild(ghost);
+            // Ghost Heart (Rotated, sits ON TOP of highlighter due to z-index)
+            const ghostHeart = document.createElement('div');
+            ghostHeart.className = 'heart-shape ghost-heart';
+            ghostHeart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+            ghostWrapper.appendChild(ghostHeart);
 
-            // Delete ghost after 6 seconds
+            container.appendChild(ghostWrapper);
+
             setTimeout(() => {
-                ghost.remove();
+                ghostWrapper.remove();
             }, 6000);
         }
 
-        // INCREASED SPAWN RATE: Spawn a new heart every 150ms for heavy rain
-        setInterval(spawnHeart, 150);
+        setInterval(spawnHeart, 250);
         
-        // Initial bursts to fill the screen
-        for(let i=0; i<10; i++) {
-            setTimeout(spawnHeart, i * 100);
+        for(let i=0; i<5; i++) {
+            setTimeout(spawnHeart, i * 150);
         }
     </script>
 </body>
