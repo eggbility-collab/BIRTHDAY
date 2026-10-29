@@ -30,7 +30,7 @@
             overflow: hidden; 
         }
 
-        /* --- SANDEVISTAN HEART CONTAINER --- */
+        /* --- RAIN CONTAINER --- */
         #heart-container {
             position: fixed;
             top: 0;
@@ -41,78 +41,55 @@
             z-index: 0;
         }
 
-        /* The whole falling object wrapper */
-        .falling-entity {
-            position: absolute;
-            /* Slower, smoother fall */
-            animation: fallAndRotate linear infinite;
-        }
-
-        /* --- THE GREEN/CYAN SQUARE TRAILS --- */
-        .trail-square {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-            /* Glowing neon effect */
-            box-shadow: 0 0 8px currentColor, inset 0 0 4px rgba(255,255,255,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            /* Position them exactly over the heart, but they will be offset via JS */
-        }
-
-        /* Colors matching the image's chromatic aberration */
-        .trail-1 { color: #00FF66; background: #00FF66; opacity: 0.8; } /* Neon Green */
-        .trail-2 { color: #00FFFF; background: #00FFFF; opacity: 0.6; } /* Cyan */
-        .trail-3 { color: #0088FF; background: #0088FF; opacity: 0.4; } /* Blue */
-        .trail-4 { color: #8A2BE2; background: #8A2BE2; opacity: 0.2; } /* Purple */
-
-        /* --- THE YELLOW HEART --- */
-        .sandevistan-heart {
+        /* Base shape for both the heart and the ghosts */
+        .heart-shape {
             position: absolute;
             width: 14px;
             height: 14px;
-            background: var(--butter);
-            transform: rotate(45deg);
-            box-shadow: 0 0 10px var(--butter);
             border-radius: 2px;
-            z-index: 10; /* Keep heart on top of trails */
         }
 
-        .sandevistan-heart::before,
-        .sandevistan-heart::after {
+        .heart-shape::before,
+        .heart-shape::after {
             content: '';
             position: absolute;
             width: 14px;
             height: 14px;
-            background: var(--butter);
             border-radius: 50%;
+        }
+
+        .heart-shape::before { top: -7px; left: 0; }
+        .heart-shape::after { top: 0; left: -7px; }
+
+        /* --- THE ACTUAL YELLOW HEART --- */
+        .yellow-heart {
+            background: var(--butter);
+            box-shadow: 0 0 10px var(--butter);
+            z-index: 10;
+        }
+        .yellow-heart::before, .yellow-heart::after {
+            background: var(--butter);
             box-shadow: 0 0 10px var(--butter);
         }
 
-        .sandevistan-heart::before { top: -7px; left: 0; }
-        .sandevistan-heart::after { top: 0; left: -7px; }
-
-        /* The Falling Animation */
-        @keyframes fallAndRotate {
-            0% {
-                top: -10vh;
-                /* Base 45deg rotation for the heart, plus 360 degree spin */
-                transform: rotate(45deg) rotateZ(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                top: 110vh;
-                transform: rotate(45deg) rotateZ(360deg);
-                opacity: 0;
-            }
+        /* --- THE GHOST AFTERIMAGES --- */
+        .ghost-heart {
+            z-index: 5;
+            /* Fade out over 6 seconds */
+            animation: fadeGhost 6s forwards; 
         }
-        /* ------------------------------ */
+
+        /* The ghost shapes take the color assigned by JS */
+        .ghost-heart, .ghost-heart::before, .ghost-heart::after {
+            background: var(--ghost-color);
+            box-shadow: 0 0 10px var(--ghost-color);
+        }
+
+        @keyframes fadeGhost {
+            0% { opacity: 0.9; }
+            80% { opacity: 0.3; }
+            100% { opacity: 0; }
+        }
 
         /* Main Area */
         .main-content {
@@ -284,52 +261,80 @@
     <script>
         const container = document.getElementById('heart-container');
         
-        function createEntity() {
-            const entity = document.createElement('div');
-            entity.classList.add('falling-entity');
-            
-            // Slow down the fall time (3 to 5 seconds per drop)
-            const duration = Math.random() * 2 + 3.5; 
-            entity.style.animationDuration = duration + 's';
-            
-            // Randomize horizontal position
-            entity.style.left = Math.random() * 100 + 'vw';
+        // The colors of the trails from the Cyberpunk image
+        const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
 
-            // 1. Create the glowing square trails (Behind the heart)
-            // We offset them slightly so they look like afterimages echoing backwards
-            const offsets = [
-                { class: 'trail-1', x: 0, y: 20 },  // Green
-                { class: 'trail-2', x: 0, y: 40 },  // Cyan
-                { class: 'trail-3', x: 0, y: 60 },  // Blue
-                { class: 'trail-4', x: 0, y: 80 }   // Purple
-            ];
+        function spawnHeart() {
+            // Random starting X position and scale
+            const startX = Math.random() * 90 + 5; // 5vw to 95vw
+            const scale = Math.random() * 0.4 + 0.8; 
+            const fallDuration = 4000; // 4 seconds to fall
+            const startTime = performance.now();
 
-            offsets.forEach(offset => {
-                const trail = document.createElement('div');
-                trail.classList.add('trail-square', offset.class);
-                // Offset the trail directly below the heart to simulate the path it just took
-                trail.style.transform = `translate(${offset.x}px, ${offset.y}px) rotate(45deg)`;
-                entity.appendChild(trail);
-            });
-
-            // 2. Create the Yellow Heart on top
+            // Create the actual yellow heart
             const heart = document.createElement('div');
-            heart.classList.add('sandevistan-heart');
-            // Add a subtle wobble scale
-            const scale = Math.random() * 0.5 + 0.8;
-            heart.style.transform = `rotate(45deg) scale(${scale})`;
-            entity.appendChild(heart);
+            heart.className = 'yellow-heart heart-shape';
+            heart.style.left = startX + 'vw';
+            container.appendChild(heart);
 
-            container.appendChild(entity);
-            
-            // Remove after it finishes falling
-            setTimeout(() => {
-                entity.remove();
-            }, duration * 1000);
+            let lastGhostTime = 0;
+
+            // Animate it manually with JavaScript so we can track its exact position
+            function animate(time) {
+                const elapsed = time - startTime;
+                const progress = elapsed / fallDuration;
+
+                if (progress >= 1) {
+                    heart.remove();
+                    return;
+                }
+
+                // Calculate current position and rotation
+                const y = -10 + (progress * 120); // -10vh to 110vh
+                const rotation = 45 + (progress * 720); // 45deg to 765deg (spins twice)
+
+                // Update the yellow heart
+                heart.style.top = y + 'vh';
+                heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+
+                // Spawn a ghost trail every 80 milliseconds
+                if (time - lastGhostTime > 80) {
+                    createGhost(startX, y, rotation, scale);
+                    lastGhostTime = time;
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            requestAnimationFrame(animate);
         }
 
-        // Spawn a heart every 400ms (much slower and less dizzying)
-        setInterval(createEntity, 400);
+        function createGhost(x, y, rotation, scale) {
+            const ghost = document.createElement('div');
+            ghost.className = 'ghost-heart heart-shape';
+            
+            // Position the ghost exactly where the heart just was
+            ghost.style.left = x + 'vw';
+            ghost.style.top = y + 'vh';
+            ghost.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+
+            // Pick a random color from the cyberpunk palette
+            const color = trailColors[Math.floor(Math.random() * trailColors.length)];
+            ghost.style.setProperty('--ghost-color', color);
+
+            container.appendChild(ghost);
+
+            // Delete the ghost after 6 seconds
+            setTimeout(() => {
+                ghost.remove();
+            }, 6000);
+        }
+
+        // Spawn a new heart every 800ms (like rain)
+        setInterval(spawnHeart, 800);
+        
+        // Spawn one immediately to start
+        spawnHeart();
     </script>
 </body>
 </html>
