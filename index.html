@@ -53,7 +53,6 @@
             max-height: 900px;
             background: radial-gradient(circle, rgba(255, 190, 130, 0.5) 0%, rgba(242, 178, 190, 0.2) 40%, transparent 70%);
             border-radius: 50%;
-            /* Removed heavy blur, using gradient for performance */
         }
 
         .city-layer {
@@ -106,62 +105,72 @@
             will-change: transform;
         }
 
+        /* The Continuous Highlighter Trail attached to the MAIN heart */
+        .main-highlighter {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 22px; /* Thick */
+            height: 150vh; /* Stretches all the way up */
+            /* A seamless gradient of all the dark neon colors */
+            background: linear-gradient(to top, 
+                #009933 0%, 
+                #009999 25%, 
+                #004C99 50%, 
+                #4B0082 75%, 
+                transparent 100%);
+            opacity: 0.6;
+            border-left: 1px solid rgba(255,255,255,0.4); /* Outline */
+            border-right: 1px solid rgba(255,255,255,0.4);
+            z-index: 1;
+        }
+
+        /* The Heart Shape */
         .heart-shape {
             position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 2px;
-            top: 0;
+            bottom: 0;
             left: 0;
-            z-index: 5; /* Forces the heart to cover the highlighter outline */
+            width: 24px; /* Slightly wider than the trail to cover the outline */
+            height: 24px;
+            border-radius: 4px;
+            z-index: 5; /* Sits above the highlighter */
         }
 
         .heart-shape::before,
         .heart-shape::after {
             content: '';
             position: absolute;
-            width: 16px;
-            height: 16px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
         }
 
-        .heart-shape::before { top: -8px; left: 0; }
-        .heart-shape::after { top: 0; left: -8px; }
+        .heart-shape::before { top: -12px; left: 0; }
+        .heart-shape::after { top: 0; left: -12px; }
 
+        /* The Main Yellow Heart */
         .yellow-heart {
             background: var(--butter);
-            box-shadow: 0 0 10px var(--butter);
+            box-shadow: 0 0 15px var(--butter);
+            z-index: 10;
         }
         .yellow-heart::before, .yellow-heart::after {
             background: var(--butter);
-            box-shadow: 0 0 10px var(--butter);
+            box-shadow: 0 0 15px var(--butter);
         }
 
+        /* The Ghost Afterimage Hearts */
         .ghost-wrapper {
-            animation: fadeGhost 4s forwards linear; /* Reduced from 6s to 4s to save memory */
+            animation: fadeGhost 2.5s forwards linear; 
         }
 
         .ghost-heart, .ghost-heart::before, .ghost-heart::after {
             background: var(--ghost-color);
-        }
-
-        /* The Highlighter Rectangle */
-        .highlighter {
-            position: absolute;
-            top: -70px; 
-            left: 0; 
-            width: 20px; /* Thicker, as requested */
-            height: 90px;
-            background: linear-gradient(to top, var(--highlighter-color) 0%, transparent 100%);
-            opacity: 0.7;
-            border-radius: 10px;
-            z-index: 1; 
-            border: 1px solid var(--highlighter-color); /* Outline effect */
+            box-shadow: 0 0 10px var(--ghost-color);
         }
 
         @keyframes fadeGhost {
-            0% { opacity: 0.8; }
-            80% { opacity: 0.2; }
+            0% { opacity: 0.9; }
             100% { opacity: 0; }
         }
 
@@ -343,15 +352,11 @@
 
     <script>
         const container = document.getElementById('heart-container');
-        const trailData = [
-            { color: '#00FF66', dark: '#009933' }, // Green
-            { color: '#00FFFF', dark: '#009999' }, // Cyan
-            { color: '#0088FF', dark: '#004C99' }, // Blue
-            { color: '#8A2BE2', dark: '#4B0082' }  // Purple
-        ];
+        
+        const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
 
-        // Strict limits to keep the design but stop the lag
-        const MAX_HEARTS = 4; 
+        // Performance limits: Keep it low so it stays buttery smooth
+        const MAX_HEARTS = 5; 
         let activeHearts = 0;
         let spawnInterval;
 
@@ -360,12 +365,19 @@
 
             const startX = Math.random() * 95 + 2; 
             const scale = Math.random() * 0.4 + 0.8; 
-            const fallDuration = Math.random() * 2000 + 4000; // 4 to 6 seconds
+            const fallDuration = Math.random() * 2000 + 5000; // 5 to 7 seconds
             const startTime = performance.now();
 
+            // 1. Create the Main Heart Wrapper
             const wrapper = document.createElement('div');
             wrapper.className = 'particle';
             
+            // 2. Attach the ONE continuous highlighter trail
+            const highlighter = document.createElement('div');
+            highlighter.className = 'main-highlighter';
+            wrapper.appendChild(highlighter);
+
+            // 3. Attach the Yellow Heart
             const heart = document.createElement('div');
             heart.className = 'yellow-heart heart-shape';
             wrapper.appendChild(heart);
@@ -389,11 +401,13 @@
                 const y = -10 + (progress * 120); 
                 const rotation = 45 + (progress * 720); 
 
+                // Move the wrapper (which moves the trail + heart)
                 wrapper.style.transform = `translate3d(${startX}vw, ${y}vh, 0)`;
+                // Spin the yellow heart
                 heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-                // Slower ghost spawn (150ms) to reduce DOM bloat
-                if (time - lastGhostTime > 150) {
+                // Spawn Ghosts (colored hearts only, no trail)
+                if (time - lastGhostTime > 60) {
                     createGhost(startX, y, rotation, scale);
                     lastGhostTime = time;
                 }
@@ -405,36 +419,31 @@
         }
 
         function createGhost(x, y, rotation, scale) {
-            const theme = trailData[Math.floor(Math.random() * trailData.length)];
+            const color = trailColors[Math.floor(Math.random() * trailColors.length)];
 
             const ghostWrapper = document.createElement('div');
             ghostWrapper.className = 'particle ghost-wrapper';
-            
             ghostWrapper.style.transform = `translate3d(${x}vw, ${y}vh, 0)`;
-            ghostWrapper.style.setProperty('--ghost-color', theme.color);
-
-            const highlighter = document.createElement('div');
-            highlighter.className = 'highlighter';
-            highlighter.style.setProperty('--highlighter-color', theme.dark);
-            ghostWrapper.appendChild(highlighter);
-
+            
             const ghostHeart = document.createElement('div');
             ghostHeart.className = 'heart-shape ghost-heart';
             ghostHeart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-            ghostWrapper.appendChild(ghostHeart);
+            ghostHeart.style.setProperty('--ghost-color', color);
 
+            ghostWrapper.appendChild(ghostHeart);
             container.appendChild(ghostWrapper);
 
+            // Delete ghost after 2.5 seconds
             setTimeout(() => {
                 ghostWrapper.remove();
-            }, 4000); // Fades out in 4 seconds
+            }, 2500);
         }
 
         function startSpawning() {
             if (!spawnInterval) {
                 spawnHeart();
-                // Much slower spawn rate (1.2 seconds)
-                spawnInterval = setInterval(spawnHeart, 1200); 
+                // Spawns a new main heart every 1.5 seconds
+                spawnInterval = setInterval(spawnHeart, 1500); 
             }
         }
 
@@ -443,7 +452,6 @@
             spawnInterval = null;
         }
 
-        // Pause when tab is hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 stopSpawning();
