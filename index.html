@@ -30,7 +30,7 @@
             overflow: hidden; 
         }
 
-        /* --- BACKGROUND LAYER (Sun & 3D City) --- */
+        /* --- OPTIMIZED BACKGROUND (No expensive blurs) --- */
         #background-layer {
             position: fixed;
             top: 0;
@@ -47,13 +47,13 @@
             bottom: 10vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 70vw;
-            height: 70vw;
-            max-width: 900px;
-            max-height: 900px;
-            background: radial-gradient(circle, rgba(255, 190, 130, 0.5) 0%, rgba(242, 178, 190, 0.2) 40%, transparent 70%);
+            width: 80vw;
+            height: 80vw;
+            max-width: 1000px;
+            max-height: 1000px;
+            /* Replaced heavy filter: blur() with a smooth radial gradient */
+            background: radial-gradient(circle, rgba(255, 190, 130, 0.6) 0%, rgba(242, 178, 190, 0.3) 30%, transparent 65%);
             border-radius: 50%;
-            filter: blur(25px);
         }
 
         .city-layer {
@@ -70,7 +70,6 @@
             background: linear-gradient(to top, rgba(217, 110, 136, 0.4) 0%, transparent 100%);
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-            filter: blur(2px);
             opacity: 0.8;
         }
 
@@ -88,7 +87,7 @@
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
-        /* --- HEART ANIMATION LAYER --- */
+        /* --- OPTIMIZED HEART ANIMATION --- */
         #heart-container {
             position: fixed;
             top: 0;
@@ -100,73 +99,69 @@
             overflow: hidden;
         }
 
-        .particle {
+        /* The Wrapper handles the fall via CSS */
+        .falling-wrapper {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: -100px;
             will-change: transform;
+            animation: fall linear forwards;
         }
 
+        @keyframes fall {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(120vh); }
+        }
+
+        /* The Highlighter Rectangle */
+        .highlighter {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 24px; /* Made wider as requested */
+            height: 100px;
+            background: linear-gradient(to top, var(--highlighter-color) 0%, transparent 100%);
+            border-radius: 12px;
+            border: 1px solid var(--highlighter-color); /* Outline effect */
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        /* The Heart Shape */
         .heart-shape {
             position: absolute;
-            width: 14px;
-            height: 14px;
-            border-radius: 2px;
-            top: 0;
+            bottom: 0;
             left: 0;
-            z-index: 5; /* Forces the heart ABOVE the highlighter */
+            width: 24px; /* Fits exactly over the highlighter */
+            height: 24px;
+            border-radius: 4px;
+            z-index: 2; /* Forces heart over the outline */
+            animation: spin 3s linear infinite;
         }
 
         .heart-shape::before,
         .heart-shape::after {
             content: '';
             position: absolute;
-            width: 14px;
-            height: 14px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
         }
 
-        .heart-shape::before { top: -7px; left: 0; }
-        .heart-shape::after { top: 0; left: -7px; }
+        .heart-shape::before { top: -12px; left: 0; }
+        .heart-shape::after { top: 0; left: -12px; }
 
-        /* The actual falling yellow heart */
         .yellow-heart {
             background: var(--butter);
-            box-shadow: 0 0 10px var(--butter);
+            box-shadow: 0 0 8px var(--butter);
         }
         .yellow-heart::before, .yellow-heart::after {
             background: var(--butter);
-            box-shadow: 0 0 10px var(--butter);
+            box-shadow: 0 0 8px var(--butter);
         }
 
-        /* The ghost afterimages */
-        .ghost-wrapper {
-            animation: fadeGhost 6s forwards linear; 
-        }
-
-        /* Removed box-shadow here to help with lag */
-        .ghost-heart, .ghost-heart::before, .ghost-heart::after {
-            background: var(--ghost-color);
-        }
-
-        /* The Highlighter Rectangle - Stays straight, fixed under the heart */
-        .highlighter {
-            position: absolute;
-            top: -60px; 
-            left: 0; 
-            width: 14px;
-            height: 80px;
-            /* CSS gradient instead of blur for performance */
-            background: linear-gradient(to top, var(--highlighter-color) 0%, transparent 100%);
-            opacity: 0.7;
-            border-radius: 10px;
-            z-index: 1; /* Sits firmly BEHIND the heart */
-        }
-
-        @keyframes fadeGhost {
-            0% { opacity: 0.8; }
-            80% { opacity: 0.2; }
-            100% { opacity: 0; }
+        @keyframes spin {
+            0% { transform: rotate(45deg); }
+            100% { transform: rotate(405deg); }
         }
 
         /* --- MAIN UI --- */
@@ -243,12 +238,12 @@
                 inset 5px 5px 15px rgba(255,255,255,0.8);
             text-align: center;
             margin-bottom: 40px;
-            animation: float 6s ease-in-out infinite;
+            animation: floatBlob 6s ease-in-out infinite;
             max-width: 90vw;
             z-index: 4;
         }
 
-        @keyframes float {
+        @keyframes floatBlob {
             0% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-10px) rotate(2deg); }
             100% { transform: translateY(0px) rotate(0deg); }
@@ -307,6 +302,11 @@
             .header { flex-direction: column; gap: 10px; padding: 15px; }
             .score { margin-left: 0; }
         }
+
+        /* Respect user motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            .blob, .heart-shape, .falling-wrapper { animation: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -343,7 +343,14 @@
 
     <script>
         const container = document.getElementById('heart-container');
-        
+        let activeHearts = 0;
+        let spawnInterval;
+
+        // Performance limits based on screen size
+        const isMobile = window.innerWidth < 768;
+        const MAX_HEARTS = isMobile ? 6 : 15;
+        const SPAWN_RATE = isMobile ? 1200 : 600; // Spawn slower
+
         const trailData = [
             { color: '#00FF66', dark: '#009933' }, // Green
             { color: '#00FFFF', dark: '#009999' }, // Cyan
@@ -352,85 +359,69 @@
         ];
 
         function spawnHeart() {
-            const startX = Math.random() * 95 + 2; 
-            const scale = Math.random() * 0.4 + 0.8; 
-            const fallDuration = Math.random() * 2000 + 4000; // 4 to 6 seconds
-            const startTime = performance.now();
+            // Enforce strict limit so it never lags
+            if (activeHearts >= MAX_HEARTS) return;
 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'particle';
-            
-            const heart = document.createElement('div');
-            heart.className = 'yellow-heart heart-shape';
-            wrapper.appendChild(heart);
-            
-            wrapper.style.transform = `translate3d(${startX}vw, -10vh, 0)`;
-            container.appendChild(wrapper);
-
-            let lastGhostTime = 0;
-
-            function animate(time) {
-                const elapsed = time - startTime;
-                const progress = elapsed / fallDuration;
-
-                if (progress >= 1) {
-                    wrapper.remove();
-                    return;
-                }
-
-                const y = -10 + (progress * 120); 
-                const rotation = 45 + (progress * 720); 
-
-                wrapper.style.transform = `translate3d(${startX}vw, ${y}vh, 0)`;
-                heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-
-                // Slightly reduced spawn frequency (100ms) to help with lag
-                if (time - lastGhostTime > 100) {
-                    createGhost(startX, y, rotation, scale);
-                    lastGhostTime = time;
-                }
-
-                requestAnimationFrame(animate);
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        function createGhost(x, y, rotation, scale) {
             const theme = trailData[Math.floor(Math.random() * trailData.length)];
-
-            const ghostWrapper = document.createElement('div');
-            ghostWrapper.className = 'particle ghost-wrapper';
             
-            ghostWrapper.style.transform = `translate3d(${x}vw, ${y}vh, 0)`;
-            ghostWrapper.style.setProperty('--ghost-color', theme.color);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'falling-wrapper';
+            
+            // Randomize position, speed, and size
+            wrapper.style.left = `${Math.random() * 95}vw`;
+            const duration = Math.random() * 3 + 4; // 4 to 7 seconds
+            wrapper.style.animationDuration = `${duration}s`;
+            wrapper.style.transform = `scale(${Math.random() * 0.4 + 0.7})`;
+            
+            // Apply colors
+            wrapper.style.setProperty('--highlighter-color', theme.dark);
 
-            // Highlighter (Straight, stays firmly under the heart)
+            // The highlighter trail
             const highlighter = document.createElement('div');
             highlighter.className = 'highlighter';
-            highlighter.style.setProperty('--highlighter-color', theme.dark);
-            ghostWrapper.appendChild(highlighter);
-
-            // Ghost Heart (Rotated, sits ON TOP due to z-index: 5)
-            const ghostHeart = document.createElement('div');
-            ghostHeart.className = 'heart-shape ghost-heart';
-            ghostHeart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-            ghostWrapper.appendChild(ghostHeart);
-
-            container.appendChild(ghostWrapper);
-
-            // Delete ghost after exactly 6 seconds
-            setTimeout(() => {
-                ghostWrapper.remove();
-            }, 6000);
+            
+            // The spinning heart
+            const heart = document.createElement('div');
+            heart.className = 'heart-shape yellow-heart';
+            
+            wrapper.appendChild(highlighter);
+            wrapper.appendChild(heart);
+            
+            // Track when it finishes falling so we can remove it and decrement the counter
+            wrapper.addEventListener('animationend', (e) => {
+                if (e.animationName === 'fall') {
+                    wrapper.remove();
+                    activeHearts--;
+                }
+            });
+            
+            container.appendChild(wrapper);
+            activeHearts++;
         }
 
-        // Balanced spawn rate: 250ms gives good density without melting the CPU
-        setInterval(spawnHeart, 250);
-        
-        for(let i=0; i<5; i++) {
-            setTimeout(spawnHeart, i * 150);
+        function startSpawning() {
+            if (!spawnInterval) {
+                spawnHeart(); // Initial immediate spawn
+                spawnInterval = setInterval(spawnHeart, SPAWN_RATE);
+            }
         }
+
+        function stopSpawning() {
+            clearInterval(spawnInterval);
+            spawnInterval = null;
+        }
+
+        // Pause animations when tab is minimized to save CPU/Battery
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopSpawning();
+            } else {
+                startSpawning();
+            }
+        });
+
+        // Start the rain
+        startSpawning();
     </script>
 </body>
 </html>
