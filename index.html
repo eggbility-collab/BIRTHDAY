@@ -13,7 +13,6 @@
             --blush: #F2B2BE;
             --deep-pink: #D96E88;
             --cocoa: #593E3A;
-            --sandevistan: #FFE55C; /* Cyberpunk Yellow */
         }
 
         * {
@@ -31,7 +30,7 @@
             overflow: hidden; 
         }
 
-        /* --- SANDEVISTAN HEARTS CSS --- */
+        /* --- SANDEVISTAN HEART CONTAINER --- */
         #heart-container {
             position: fixed;
             top: 0;
@@ -40,102 +39,77 @@
             height: 100vh;
             pointer-events: none; 
             z-index: 0;
-            /* Slight chromatic aberration on the whole container for that cyberpunk feel */
-            filter: contrast(1.1) saturate(1.2);
         }
 
-        .sandevistan-heart {
+        /* The whole falling object wrapper */
+        .falling-entity {
+            position: absolute;
+            /* Slower, smoother fall */
+            animation: fallAndRotate linear infinite;
+        }
+
+        /* --- THE GREEN/CYAN SQUARE TRAILS --- */
+        .trail-square {
             position: absolute;
             width: 12px;
             height: 12px;
-            background: var(--sandevistan);
-            transform: rotate(45deg);
-            /* The glowing core */
-            box-shadow: 0 0 10px var(--sandevistan), 0 0 20px var(--sandevistan);
-            animation: dash linear infinite;
             border-radius: 2px;
+            /* Glowing neon effect */
+            box-shadow: 0 0 8px currentColor, inset 0 0 4px rgba(255,255,255,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            /* Position them exactly over the heart, but they will be offset via JS */
         }
 
-        /* Heart shape */
+        /* Colors matching the image's chromatic aberration */
+        .trail-1 { color: #00FF66; background: #00FF66; opacity: 0.8; } /* Neon Green */
+        .trail-2 { color: #00FFFF; background: #00FFFF; opacity: 0.6; } /* Cyan */
+        .trail-3 { color: #0088FF; background: #0088FF; opacity: 0.4; } /* Blue */
+        .trail-4 { color: #8A2BE2; background: #8A2BE2; opacity: 0.2; } /* Purple */
+
+        /* --- THE YELLOW HEART --- */
+        .sandevistan-heart {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: var(--butter);
+            transform: rotate(45deg);
+            box-shadow: 0 0 10px var(--butter);
+            border-radius: 2px;
+            z-index: 10; /* Keep heart on top of trails */
+        }
+
         .sandevistan-heart::before,
         .sandevistan-heart::after {
             content: '';
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--sandevistan);
+            width: 14px;
+            height: 14px;
+            background: var(--butter);
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--sandevistan);
+            box-shadow: 0 0 10px var(--butter);
         }
 
-        .sandevistan-heart::before {
-            top: -6px;
-            left: 0;
-        }
+        .sandevistan-heart::before { top: -7px; left: 0; }
+        .sandevistan-heart::after { top: 0; left: -7px; }
 
-        .sandevistan-heart::after {
-            top: 0;
-            left: -6px;
-        }
-
-        /* The Sandevistan Trail */
-        .sandevistan-heart .trail {
-            position: absolute;
-            top: -100px; /* Length of the trail */
-            left: 4px; /* Center of the heart */
-            width: 4px;
-            height: 100px;
-            background: linear-gradient(to top, rgba(255, 229, 92, 0.9), rgba(255, 229, 92, 0));
-            filter: blur(2px);
-            border-radius: 50%;
-        }
-
-        /* The Afterimages / Speed lines */
-        .sandevistan-heart .trail::before,
-        .sandevistan-heart .trail::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: inherit;
-            border-radius: inherit;
-        }
-
-        .sandevistan-heart .trail::before {
-            left: -3px;
-            filter: blur(4px);
-            opacity: 0.7;
-            background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
-        }
-
-        .sandevistan-heart .trail::after {
-            left: 3px;
-            filter: blur(6px);
-            opacity: 0.5;
-            background: linear-gradient(to top, rgba(217, 110, 136, 0.8), rgba(217, 110, 136, 0));
-        }
-
-        @keyframes dash {
+        /* The Falling Animation */
+        @keyframes fallAndRotate {
             0% {
-                top: -20vh;
+                top: -10vh;
+                /* Base 45deg rotation for the heart, plus 360 degree spin */
+                transform: rotate(45deg) rotateZ(0deg);
                 opacity: 0;
-                transform: rotate(45deg) scale(1);
             }
             10% {
                 opacity: 1;
-                /* Slight glitch/speed wobble */
-                transform: rotate(45deg) scale(1) translateX(-2px); 
-            }
-            50% {
-                transform: rotate(45deg) scale(1) translateX(2px);
             }
             90% {
                 opacity: 1;
             }
             100% {
-                top: 120vh;
+                top: 110vh;
+                transform: rotate(45deg) rotateZ(360deg);
                 opacity: 0;
-                transform: rotate(45deg) scale(1) translateY(10px);
             }
         }
         /* ------------------------------ */
@@ -284,13 +258,9 @@
 </head>
 <body>
 
-    <!-- The container where JS puts the hearts -->
     <div id="heart-container"></div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        
-        <!-- Top Bar -->
         <div class="header">
             <span class="progress-text">TIP: you should click that button that says start now 😉</span>
             <div class="progress-bar">
@@ -299,7 +269,6 @@
             <span class="score">0 / 15</span>
         </div>
 
-        <!-- Center Hero -->
         <div class="hero">
             <div class="blob">
                 <h1>HAPPY BIRTHDAY<br>BABY</h1>
@@ -310,43 +279,57 @@
                 Start Now ➔
             </button>
         </div>
-
     </div>
 
-    <!-- Sandevistan Heart Generator -->
     <script>
         const container = document.getElementById('heart-container');
         
-        function createHeart() {
+        function createEntity() {
+            const entity = document.createElement('div');
+            entity.classList.add('falling-entity');
+            
+            // Slow down the fall time (3 to 5 seconds per drop)
+            const duration = Math.random() * 2 + 3.5; 
+            entity.style.animationDuration = duration + 's';
+            
+            // Randomize horizontal position
+            entity.style.left = Math.random() * 100 + 'vw';
+
+            // 1. Create the glowing square trails (Behind the heart)
+            // We offset them slightly so they look like afterimages echoing backwards
+            const offsets = [
+                { class: 'trail-1', x: 0, y: 20 },  // Green
+                { class: 'trail-2', x: 0, y: 40 },  // Cyan
+                { class: 'trail-3', x: 0, y: 60 },  // Blue
+                { class: 'trail-4', x: 0, y: 80 }   // Purple
+            ];
+
+            offsets.forEach(offset => {
+                const trail = document.createElement('div');
+                trail.classList.add('trail-square', offset.class);
+                // Offset the trail directly below the heart to simulate the path it just took
+                trail.style.transform = `translate(${offset.x}px, ${offset.y}px) rotate(45deg)`;
+                entity.appendChild(trail);
+            });
+
+            // 2. Create the Yellow Heart on top
             const heart = document.createElement('div');
             heart.classList.add('sandevistan-heart');
-            
-            // Add the trail div inside the heart
-            const trail = document.createElement('div');
-            trail.classList.add('trail');
-            heart.appendChild(trail);
-
-            // Randomize starting position
-            heart.style.left = Math.random() * 100 + 'vw';
-            
-            // Randomize speed (Cyberpunk dash speed)
-            const duration = Math.random() * 0.8 + 0.4; // Very fast
-            heart.style.animationDuration = duration + 's';
-            
-            // Randomize size slightly
-            const scale = Math.random() * 0.8 + 0.6;
+            // Add a subtle wobble scale
+            const scale = Math.random() * 0.5 + 0.8;
             heart.style.transform = `rotate(45deg) scale(${scale})`;
+            entity.appendChild(heart);
 
-            container.appendChild(heart);
+            container.appendChild(entity);
             
-            // Remove heart
+            // Remove after it finishes falling
             setTimeout(() => {
-                heart.remove();
+                entity.remove();
             }, duration * 1000);
         }
 
-        // Spawn 1 heart every 60ms for a dense, high-speed visual effect
-        setInterval(createHeart, 60);
+        // Spawn a heart every 400ms (much slower and less dizzying)
+        setInterval(createEntity, 400);
     </script>
 </body>
 </html>
