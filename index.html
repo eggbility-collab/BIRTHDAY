@@ -7,15 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Kept the warm clay UI colors */
-            --surface: #F2EDE4;
-            --butter: #F2D46F;
-            --blush: #F2B2BE;
-            --deep-pink: #D96E88;
-            --cocoa: #593E3A;
-            
-            /* Changed the background to Night City */
-            --bg-night: #12121a;
+            --bg-night: #0D0C15;
+            --surface: #2A2431; /* Dark plum header */
+            --butter: #C9A33A; /* Dark gold button */
+            --blush: #7B2E4A; /* Deep crimson blob */
+            --deep-pink: #E05A82; /* Neon pink accent */
+            --text-light: #FCEBEE; /* Glowing cream text */
+            --text-dark: #0D0C15;
         }
 
         * {
@@ -27,7 +25,7 @@
         body {
             background-color: var(--bg-night);
             font-family: 'Nunito', sans-serif;
-            color: var(--cocoa);
+            color: var(--text-light);
             display: flex;
             min-height: 100vh;
             overflow: hidden; 
@@ -45,7 +43,39 @@
             overflow: hidden;
         }
 
-        /* Cyberpunk Sun/Glow */
+        /* Moon */
+        .moon {
+            position: absolute;
+            top: 8vh;
+            right: 12vw;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: inset -15px -15px 0 0 var(--text-light);
+            filter: drop-shadow(0 0 15px rgba(252, 235, 238, 0.5));
+            z-index: 1;
+        }
+
+        /* Starfield using lightweight radial gradients */
+        .stars {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(1.5px 1.5px at 10% 15%, #fff, transparent),
+                radial-gradient(1px 1px at 30% 25%, #00FFFF, transparent),
+                radial-gradient(2px 2px at 50% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 70% 30%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 85% 15%, #E05A82, transparent),
+                radial-gradient(1px 1px at 20% 60%, #fff, transparent),
+                radial-gradient(2px 2px at 40% 70%, #00FF66, transparent),
+                radial-gradient(1px 1px at 60% 50%, #fff, transparent),
+                radial-gradient(1px 1px at 80% 80%, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 95% 45%, #fff, transparent),
+                radial-gradient(1px 1px at 15% 85%, #fff, transparent),
+                radial-gradient(2px 2px at 55% 90%, #00FFFF, transparent);
+            opacity: 0.7;
+        }
+
         .sun {
             position: absolute;
             bottom: 15vh;
@@ -55,7 +85,7 @@
             height: 80vw;
             max-width: 1000px;
             max-height: 1000px;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(138, 43, 226, 0.15) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, rgba(138, 43, 226, 0.1) 40%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -68,7 +98,6 @@
             mask-size: 100% 100%;
         }
 
-        /* Back layer: Neon Cyan */
         .city-back {
             height: 25vh;
             background: linear-gradient(to top, rgba(0, 255, 204, 0.4) 0%, transparent 100%);
@@ -77,7 +106,6 @@
             opacity: 0.8;
         }
 
-        /* Mid layer: Purple/Magenta */
         .city-mid {
             height: 32vh;
             background: linear-gradient(to top, rgba(138, 43, 226, 0.6) 0%, rgba(0, 255, 255, 0.1) 100%);
@@ -85,10 +113,9 @@
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
-        /* Front layer: Deep Shadow/Blue */
         .city-front {
             height: 40vh;
-            background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, rgba(20, 20, 30, 0.5) 100%);
+            background: linear-gradient(to top, rgba(13, 12, 21, 0.95) 0%, rgba(20, 20, 30, 0.5) 100%);
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
@@ -112,7 +139,6 @@
             will-change: transform;
         }
 
-        /* The Heart Shape */
         .heart-shape {
             position: absolute;
             top: 0;
@@ -135,7 +161,6 @@
         .heart-shape::before { top: -12px; left: 0; }
         .heart-shape::after { top: 0; left: -12px; }
 
-        /* The Main Yellow Heart */
         .yellow-heart {
             background: var(--butter);
             box-shadow: 0 0 15px var(--butter);
@@ -146,7 +171,6 @@
             box-shadow: 0 0 15px var(--butter);
         }
 
-        /* The Ghost Afterimage Hearts */
         .ghost-wrapper {
             animation: fadeGhost 2.5s forwards linear; 
         }
@@ -161,7 +185,7 @@
             100% { opacity: 0; }
         }
 
-        /* --- MAIN UI (Kept Warm Clay Style) --- */
+        /* --- MAIN UI (Dark Claymorphism) --- */
         .main-content {
             flex: 1;
             position: relative;
@@ -182,7 +206,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -6px -6px 12px rgba(255,255,255,0.1);
+            /* Darkened shadows with neon rim lighting */
+            box-shadow: 
+                10px 10px 20px rgba(0,0,0,0.6), 
+                -5px -5px 15px rgba(0, 255, 255, 0.05),
+                inset -3px -3px 8px rgba(0,0,0,0.5),
+                inset 3px 3px 8px rgba(224, 90, 130, 0.2);
             margin-bottom: 50px;
             margin-top: 20px;
         }
@@ -192,14 +221,15 @@
             font-size: 22px;
             flex: 1;
             text-align: center;
+            color: var(--text-light);
         }
 
         .progress-bar {
             width: 30%;
             height: 12px;
-            background: #e0d8cd;
+            background: #15131A;
             border-radius: 10px;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.8);
             overflow: hidden;
         }
 
@@ -208,12 +238,14 @@
             height: 100%;
             background: var(--deep-pink);
             border-radius: 10px;
+            box-shadow: 0 0 10px var(--deep-pink);
         }
 
         .score {
             font-weight: 800;
             color: var(--deep-pink);
             margin-left: 20px;
+            text-shadow: 0 0 8px rgba(224, 90, 130, 0.5);
         }
 
         .hero {
@@ -228,11 +260,12 @@
             background: var(--blush);
             padding: 60px 50px;
             border-radius: 46% 54% 48% 52% / 55% 43% 57% 45%; 
+            /* Deep clay shadows with neon reflections */
             box-shadow: 
-                10px 10px 20px rgba(0,0,0,0.4), 
-                -10px -10px 20px rgba(255,255,255,0.2),
-                inset -5px -5px 15px rgba(217, 110, 136, 0.3),
-                inset 5px 5px 15px rgba(255,255,255,0.8);
+                15px 15px 30px rgba(0,0,0,0.7), 
+                -10px -10px 25px rgba(0, 255, 255, 0.08),
+                inset -8px -8px 20px rgba(0,0,0,0.4),
+                inset 8px 8px 20px rgba(224, 90, 130, 0.4);
             text-align: center;
             margin-bottom: 40px;
             animation: floatBlob 6s ease-in-out infinite;
@@ -249,22 +282,24 @@
         .blob h1 {
             font-family: 'Caveat', cursive;
             font-size: 65px;
-            color: var(--cocoa);
+            color: var(--text-light);
             margin-bottom: 15px;
             line-height: 0.9;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .blob p {
             font-family: 'Caveat', cursive;
             font-size: 26px;
-            color: var(--cocoa);
+            color: var(--text-light);
             font-weight: 600;
             margin-top: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
 
         .start-btn {
             background: var(--butter);
-            color: var(--cocoa);
+            color: var(--text-dark);
             font-family: 'Fredoka', sans-serif;
             font-size: 24px;
             font-weight: 600;
@@ -272,23 +307,25 @@
             border: none;
             border-radius: 40px;
             cursor: pointer;
+            /* Dark gold shadows */
             box-shadow: 
-                6px 6px 15px rgba(0,0,0,0.4), 
-                -6px -6px 15px rgba(255,255,255,0.2),
-                inset -3px -3px 8px rgba(200, 160, 50, 0.3),
-                inset 3px 3px 8px rgba(255,255,255,0.8);
+                10px 10px 20px rgba(0,0,0,0.6), 
+                -5px -5px 15px rgba(224, 90, 130, 0.1),
+                inset -4px -4px 10px rgba(0,0,0,0.3),
+                inset 4px 4px 10px rgba(255,255,255,0.5);
             transition: all 0.1s ease;
             display: flex;
             align-items: center;
             gap: 15px;
             z-index: 4;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.3);
         }
 
         .start-btn:active {
             box-shadow: 
-                inset 6px 6px 10px rgba(200, 160, 50, 0.4),
-                inset -6px -6px 10px rgba(255,255,255,0.8);
-            transform: translateY(2px);
+                inset 6px 6px 15px rgba(0,0,0,0.4),
+                inset -6px -6px 15px rgba(255,255,255,0.3);
+            transform: translateY(3px);
         }
 
         @media (max-width: 600px) {
@@ -298,6 +335,7 @@
             .progress-bar { display: none; }
             .header { flex-direction: column; gap: 10px; padding: 15px; }
             .score { margin-left: 0; }
+            .moon { width: 50px; height: 50px; box-shadow: inset -10px -10px 0 0 var(--text-light); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -308,6 +346,8 @@
 <body>
 
     <div id="background-layer">
+        <div class="stars"></div>
+        <div class="moon"></div>
         <div class="sun"></div>
         <div class="city-layer city-back"></div>
         <div class="city-layer city-mid"></div>
