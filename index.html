@@ -7,12 +7,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #EAE6DF;
+            /* Kept the warm clay UI colors */
             --surface: #F2EDE4;
             --butter: #F2D46F;
             --blush: #F2B2BE;
             --deep-pink: #D96E88;
             --cocoa: #593E3A;
+            
+            /* Changed the background to Night City */
+            --bg-night: #12121a;
         }
 
         * {
@@ -22,7 +25,7 @@
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--bg-night);
             font-family: 'Nunito', sans-serif;
             color: var(--cocoa);
             display: flex;
@@ -30,7 +33,7 @@
             overflow: hidden; 
         }
 
-        /* --- BACKGROUND LAYER (Sun & 3D City) --- */
+        /* --- NIGHT CITY BACKGROUND --- */
         #background-layer {
             position: fixed;
             top: 0;
@@ -42,16 +45,17 @@
             overflow: hidden;
         }
 
+        /* Cyberpunk Sun/Glow */
         .sun {
             position: absolute;
-            bottom: 10vh;
+            bottom: 15vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 70vw;
-            height: 70vw;
-            max-width: 900px;
-            max-height: 900px;
-            background: radial-gradient(circle, rgba(255, 190, 130, 0.5) 0%, rgba(242, 178, 190, 0.2) 40%, transparent 70%);
+            width: 80vw;
+            height: 80vw;
+            max-width: 1000px;
+            max-height: 1000px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(138, 43, 226, 0.15) 40%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -64,24 +68,27 @@
             mask-size: 100% 100%;
         }
 
+        /* Back layer: Neon Cyan */
         .city-back {
-            height: 22vh;
-            background: linear-gradient(to top, rgba(217, 110, 136, 0.4) 0%, transparent 100%);
+            height: 25vh;
+            background: linear-gradient(to top, rgba(0, 255, 204, 0.4) 0%, transparent 100%);
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             opacity: 0.8;
         }
 
+        /* Mid layer: Purple/Magenta */
         .city-mid {
-            height: 28vh;
-            background: linear-gradient(to top, rgba(140, 70, 80, 0.6) 0%, rgba(217, 110, 136, 0.1) 100%);
+            height: 32vh;
+            background: linear-gradient(to top, rgba(138, 43, 226, 0.6) 0%, rgba(0, 255, 255, 0.1) 100%);
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
+        /* Front layer: Deep Shadow/Blue */
         .city-front {
-            height: 35vh;
-            background: linear-gradient(to top, rgba(89, 62, 58, 0.8) 0%, rgba(89, 62, 58, 0.1) 100%);
+            height: 40vh;
+            background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, rgba(20, 20, 30, 0.5) 100%);
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
@@ -105,35 +112,15 @@
             will-change: transform;
         }
 
-        /* The Continuous Highlighter Trail attached to the MAIN heart */
-        .main-highlighter {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 22px; /* Thick */
-            height: 150vh; /* Stretches all the way up */
-            /* A seamless gradient of all the dark neon colors */
-            background: linear-gradient(to top, 
-                #009933 0%, 
-                #009999 25%, 
-                #004C99 50%, 
-                #4B0082 75%, 
-                transparent 100%);
-            opacity: 0.6;
-            border-left: 1px solid rgba(255,255,255,0.4); /* Outline */
-            border-right: 1px solid rgba(255,255,255,0.4);
-            z-index: 1;
-        }
-
         /* The Heart Shape */
         .heart-shape {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
-            width: 24px; /* Slightly wider than the trail to cover the outline */
+            width: 24px; 
             height: 24px;
             border-radius: 4px;
-            z-index: 5; /* Sits above the highlighter */
+            z-index: 5; 
         }
 
         .heart-shape::before,
@@ -174,7 +161,7 @@
             100% { opacity: 0; }
         }
 
-        /* --- MAIN UI --- */
+        /* --- MAIN UI (Kept Warm Clay Style) --- */
         .main-content {
             flex: 1;
             position: relative;
@@ -195,7 +182,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.05), -6px -6px 12px rgba(255,255,255,0.8);
+            box-shadow: 6px 6px 12px rgba(0,0,0,0.4), -6px -6px 12px rgba(255,255,255,0.1);
             margin-bottom: 50px;
             margin-top: 20px;
         }
@@ -242,9 +229,9 @@
             padding: 60px 50px;
             border-radius: 46% 54% 48% 52% / 55% 43% 57% 45%; 
             box-shadow: 
-                10px 10px 20px rgba(0,0,0,0.1), 
-                -10px -10px 20px rgba(255,255,255,0.8),
-                inset -5px -5px 15px rgba(217, 110, 136, 0.2),
+                10px 10px 20px rgba(0,0,0,0.4), 
+                -10px -10px 20px rgba(255,255,255,0.2),
+                inset -5px -5px 15px rgba(217, 110, 136, 0.3),
                 inset 5px 5px 15px rgba(255,255,255,0.8);
             text-align: center;
             margin-bottom: 40px;
@@ -286,8 +273,8 @@
             border-radius: 40px;
             cursor: pointer;
             box-shadow: 
-                6px 6px 15px rgba(0,0,0,0.1), 
-                -6px -6px 15px rgba(255,255,255,0.8),
+                6px 6px 15px rgba(0,0,0,0.4), 
+                -6px -6px 15px rgba(255,255,255,0.2),
                 inset -3px -3px 8px rgba(200, 160, 50, 0.3),
                 inset 3px 3px 8px rgba(255,255,255,0.8);
             transition: all 0.1s ease;
@@ -355,7 +342,6 @@
         
         const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
 
-        // Performance limits: Keep it low so it stays buttery smooth
         const MAX_HEARTS = 5; 
         let activeHearts = 0;
         let spawnInterval;
@@ -365,19 +351,12 @@
 
             const startX = Math.random() * 95 + 2; 
             const scale = Math.random() * 0.4 + 0.8; 
-            const fallDuration = Math.random() * 2000 + 5000; // 5 to 7 seconds
+            const fallDuration = Math.random() * 2000 + 5000; 
             const startTime = performance.now();
 
-            // 1. Create the Main Heart Wrapper
             const wrapper = document.createElement('div');
             wrapper.className = 'particle';
             
-            // 2. Attach the ONE continuous highlighter trail
-            const highlighter = document.createElement('div');
-            highlighter.className = 'main-highlighter';
-            wrapper.appendChild(highlighter);
-
-            // 3. Attach the Yellow Heart
             const heart = document.createElement('div');
             heart.className = 'yellow-heart heart-shape';
             wrapper.appendChild(heart);
@@ -401,12 +380,9 @@
                 const y = -10 + (progress * 120); 
                 const rotation = 45 + (progress * 720); 
 
-                // Move the wrapper (which moves the trail + heart)
                 wrapper.style.transform = `translate3d(${startX}vw, ${y}vh, 0)`;
-                // Spin the yellow heart
                 heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-                // Spawn Ghosts (colored hearts only, no trail)
                 if (time - lastGhostTime > 60) {
                     createGhost(startX, y, rotation, scale);
                     lastGhostTime = time;
@@ -433,7 +409,6 @@
             ghostWrapper.appendChild(ghostHeart);
             container.appendChild(ghostWrapper);
 
-            // Delete ghost after 2.5 seconds
             setTimeout(() => {
                 ghostWrapper.remove();
             }, 2500);
@@ -442,7 +417,6 @@
         function startSpawning() {
             if (!spawnInterval) {
                 spawnHeart();
-                // Spawns a new main heart every 1.5 seconds
                 spawnInterval = setInterval(spawnHeart, 1500); 
             }
         }
