@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, My Love</title>
+    <title>Happy Birthday, Baby</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -58,11 +58,13 @@
 
         .progress-text {
             font-family: 'Caveat', cursive;
-            font-size: 24px;
+            font-size: 22px;
+            flex: 1;
+            text-align: center;
         }
 
         .progress-bar {
-            width: 40%;
+            width: 30%;
             height: 12px;
             background: #e0d8cd;
             border-radius: 10px;
@@ -80,6 +82,7 @@
         .score {
             font-weight: 800;
             color: var(--deep-pink);
+            margin-left: 20px;
         }
 
         /* Center Hero Blob */
@@ -94,7 +97,7 @@
 
         .blob {
             background: var(--blush);
-            padding: 60px 80px;
+            padding: 60px 50px;
             /* Organic Clay Shape */
             border-radius: 46% 54% 48% 52% / 55% 43% 57% 45%; 
             box-shadow: 
@@ -105,6 +108,7 @@
             text-align: center;
             margin-bottom: 40px;
             animation: float 6s ease-in-out infinite;
+            max-width: 90vw;
         }
 
         @keyframes float {
@@ -113,26 +117,20 @@
             100% { transform: translateY(0px) rotate(0deg); }
         }
 
-        .blob h2 {
-            font-family: 'Caveat', cursive;
-            font-weight: 600;
-            font-size: 32px;
-            color: var(--cocoa);
-            margin-bottom: 5px;
-        }
-
         .blob h1 {
             font-family: 'Caveat', cursive;
-            font-size: 80px;
+            font-size: 65px;
             color: var(--cocoa);
-            margin-bottom: 10px;
-            line-height: 1;
+            margin-bottom: 15px;
+            line-height: 0.9;
         }
 
         .blob p {
-            font-size: 18px;
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
             color: var(--cocoa);
             font-weight: 600;
+            margin-top: 15px;
         }
 
         /* Start Button */
@@ -180,10 +178,12 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 600px) {
-            .blob { padding: 40px 30px; }
-            .blob h1 { font-size: 60px; }
-            .progress-text { display: none; } /* Hide text on small screens */
-            .header { justify-content: center; gap: 20px; }
+            .blob { padding: 50px 30px; }
+            .blob h1 { font-size: 50px; }
+            .blob p { font-size: 22px; }
+            .progress-bar { display: none; }
+            .header { flex-direction: column; gap: 10px; padding: 15px; }
+            .score { margin-left: 0; }
         }
     </style>
 </head>
@@ -194,7 +194,7 @@
         
         <!-- Top Bar -->
         <div class="header">
-            <span class="progress-text">Soo close, you're almost there cutie ♡</span>
+            <span class="progress-text">TIP: you should click that button that says start now 😉</span>
             <div class="progress-bar">
                 <div class="progress-fill"></div>
             </div>
@@ -204,9 +204,8 @@
         <!-- Center Hero -->
         <div class="hero">
             <div class="blob">
-                <h2>Happy Birthday,</h2>
-                <h1>My Love</h1>
-                <p>A little space made just for you.</p>
+                <h1>HAPPY BIRTHDAY<br>BABY</h1>
+                <p>ingredients are love, code, and ambot👁️👁️</p>
             </div>
             
             <button class="start-btn">
