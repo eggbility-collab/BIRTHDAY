@@ -42,7 +42,6 @@
             overflow: hidden;
         }
 
-        /* The Glowing Sunrise Sun */
         .sun {
             position: absolute;
             bottom: 10vh;
@@ -57,7 +56,6 @@
             filter: blur(25px);
         }
 
-        /* Base styling for all city layers */
         .city-layer {
             position: absolute;
             bottom: 0;
@@ -67,7 +65,6 @@
             mask-size: 100% 100%;
         }
 
-        /* Layer 1: Farthest Back (Soft, pinkish, low) */
         .city-back {
             height: 22vh;
             background: linear-gradient(to top, rgba(217, 110, 136, 0.4) 0%, transparent 100%);
@@ -77,7 +74,6 @@
             opacity: 0.8;
         }
 
-        /* Layer 2: Middle (Slightly darker, taller) */
         .city-mid {
             height: 28vh;
             background: linear-gradient(to top, rgba(140, 70, 80, 0.6) 0%, rgba(217, 110, 136, 0.1) 100%);
@@ -85,7 +81,6 @@
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
-        /* Layer 3: Foreground (Darkest, crispest, tallest) */
         .city-front {
             height: 35vh;
             background: linear-gradient(to top, rgba(89, 62, 58, 0.8) 0%, rgba(89, 62, 58, 0.1) 100%);
@@ -105,7 +100,6 @@
             overflow: hidden;
         }
 
-        /* Wrapper for each falling object */
         .particle {
             position: absolute;
             top: 0;
@@ -113,7 +107,6 @@
             will-change: transform;
         }
 
-        /* Base shape for hearts */
         .heart-shape {
             position: absolute;
             width: 14px;
@@ -121,7 +114,7 @@
             border-radius: 2px;
             top: 0;
             left: 0;
-            z-index: 2; /* Keeps the heart above the highlighter */
+            z-index: 5; /* Forces the heart ABOVE the highlighter */
         }
 
         .heart-shape::before,
@@ -136,7 +129,7 @@
         .heart-shape::before { top: -7px; left: 0; }
         .heart-shape::after { top: 0; left: -7px; }
 
-        /* The actual yellow heart */
+        /* The actual falling yellow heart */
         .yellow-heart {
             background: var(--butter);
             box-shadow: 0 0 10px var(--butter);
@@ -151,23 +144,23 @@
             animation: fadeGhost 6s forwards linear; 
         }
 
+        /* Removed box-shadow here to help with lag */
         .ghost-heart, .ghost-heart::before, .ghost-heart::after {
             background: var(--ghost-color);
-            box-shadow: 0 0 10px var(--ghost-color);
         }
 
-        /* The Highlighter Rectangle - Stays straight, does not rotate */
+        /* The Highlighter Rectangle - Stays straight, fixed under the heart */
         .highlighter {
             position: absolute;
             top: -60px; 
-            left: -2px; 
-            width: 18px;
+            left: 0; 
+            width: 14px;
             height: 80px;
-            background: var(--highlighter-color);
-            filter: blur(4px);
-            opacity: 0.8;
+            /* CSS gradient instead of blur for performance */
+            background: linear-gradient(to top, var(--highlighter-color) 0%, transparent 100%);
+            opacity: 0.7;
             border-radius: 10px;
-            z-index: 1; /* Sits behind the ghost heart */
+            z-index: 1; /* Sits firmly BEHIND the heart */
         }
 
         @keyframes fadeGhost {
@@ -318,7 +311,6 @@
 </head>
 <body>
 
-    <!-- 3D Layered City Background -->
     <div id="background-layer">
         <div class="sun"></div>
         <div class="city-layer city-back"></div>
@@ -328,7 +320,6 @@
 
     <div id="heart-container"></div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="header">
             <span class="progress-text">TIP: you should click that button that says start now 😉</span>
@@ -393,7 +384,8 @@
                 wrapper.style.transform = `translate3d(${startX}vw, ${y}vh, 0)`;
                 heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-                if (time - lastGhostTime > 80) {
+                // Slightly reduced spawn frequency (100ms) to help with lag
+                if (time - lastGhostTime > 100) {
                     createGhost(startX, y, rotation, scale);
                     lastGhostTime = time;
                 }
@@ -413,13 +405,13 @@
             ghostWrapper.style.transform = `translate3d(${x}vw, ${y}vh, 0)`;
             ghostWrapper.style.setProperty('--ghost-color', theme.color);
 
-            // Highlighter (Straight)
+            // Highlighter (Straight, stays firmly under the heart)
             const highlighter = document.createElement('div');
             highlighter.className = 'highlighter';
             highlighter.style.setProperty('--highlighter-color', theme.dark);
             ghostWrapper.appendChild(highlighter);
 
-            // Ghost Heart (Rotated, sits ON TOP of highlighter due to z-index)
+            // Ghost Heart (Rotated, sits ON TOP due to z-index: 5)
             const ghostHeart = document.createElement('div');
             ghostHeart.className = 'heart-shape ghost-heart';
             ghostHeart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
@@ -427,11 +419,13 @@
 
             container.appendChild(ghostWrapper);
 
+            // Delete ghost after exactly 6 seconds
             setTimeout(() => {
                 ghostWrapper.remove();
             }, 6000);
         }
 
+        // Balanced spawn rate: 250ms gives good density without melting the CPU
         setInterval(spawnHeart, 250);
         
         for(let i=0; i<5; i++) {
