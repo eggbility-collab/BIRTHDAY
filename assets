@@ -1,0 +1,17 @@
+BIRTHDAY/
+│
+├── index.html
+├── .gitignore
+│
+└── assets/
+    ├── artwork/
+    │   └── the-kiss-reference.png
+    │
+    └── memories/
+        ├── memory-01-selfie.png
+        ├── memory-02-mirror-photo.png
+        ├── memory-03-cuddle.png
+        ├── memory-04-playful-moment.png
+        ├── memory-05-funny-selfie.png
+        ├── memory-06-school-memory.png
+        └── memory-07-walk-together.png
