@@ -607,7 +607,7 @@
             color: var(--sepia);
         }
 
-        /* The Kiss Painting Integration */
+        /* The Kiss Painting (SVG Version) */
         .klimt-art {
             position: absolute;
             top: 15%;
@@ -617,16 +617,18 @@
             padding: 12px;
             box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
             transform: rotate(6deg);
-            z-index: 3; /* Fixed: Raised z-index so it shows over the background */
+            z-index: 5;
             border: 1px solid #d3c5b5;
         }
 
-        .klimt-art img {
+        .klimt-svg {
             width: 100%;
             height: auto;
-            /* Mix the painting with the scrapbook theme */
-            filter: sepia(0.4) contrast(1.1) brightness(0.9);
+            aspect-ratio: 1/1;
             border: 1px solid #ccc;
+            display: block;
+            /* Apply the vintage filter to the whole SVG */
+            filter: sepia(0.3) contrast(1.1) brightness(0.95);
         }
 
         .klimt-caption {
@@ -760,7 +762,7 @@
                 width: 80%;
                 margin: 20px auto 40px auto;
                 transform: rotate(-2deg);
-                z-index: 2;
+                z-index: 5;
             }
             /* Adjust flowers for mobile */
             .flower-1 { width: 100px; top: 2%; }
@@ -1001,9 +1003,97 @@
             <span class="score">1 / 15</span>
         </div>
 
-        <!-- The Kiss Painting (Updated Link) -->
+        <!-- The Kiss Painting (Detailed SVG Vector Version) -->
         <div class="klimt-art">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Gustav_Klimt_016.jpg/800px-Gustav_Klimt_016.jpg" alt="The Kiss by Gustav Klimt" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/40/Gustav_Klimt_016.jpg'">
+            <svg class="klimt-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Man's Cloak Pattern -->
+                    <pattern id="man-cloak" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <rect width="20" height="20" fill="#1a1a1a" />
+                        <rect x="2" y="2" width="16" height="16" fill="#d4af37" opacity="0.8" />
+                        <circle cx="10" cy="10" r="4" fill="#1a1a1a" />
+                        <rect x="8" y="0" width="4" height="20" fill="#d4af37" opacity="0.6" />
+                        <rect x="0" y="8" width="20" height="4" fill="#d4af37" opacity="0.6" />
+                    </pattern>
+                    
+                    <!-- Woman's Dress Pattern -->
+                    <pattern id="woman-dress" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                        <rect width="24" height="24" fill="#3d5a80" />
+                        <circle cx="12" cy="12" r="8" fill="#e0fbfc" opacity="0.6" />
+                        <circle cx="0" cy="0" r="5" fill="#ee6c4d" opacity="0.8" />
+                        <circle cx="24" cy="24" r="5" fill="#ee6c4d" opacity="0.8" />
+                        <circle cx="24" cy="0" r="5" fill="#98c1d9" opacity="0.8" />
+                        <circle cx="0" cy="24" r="5" fill="#98c1d9" opacity="0.8" />
+                        <path d="M0,12 Q6,6 12,12 T24,12" stroke="#d4af37" stroke-width="2" fill="none" />
+                    </pattern>
+
+                    <!-- Gold Swirl Background Pattern -->
+                    <pattern id="gold-swirls" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <rect width="40" height="40" fill="#cfa935" />
+                        <path d="M0,20 Q10,10 20,20 T40,20" stroke="#b8912f" stroke-width="2" fill="none" />
+                        <path d="M20,0 Q10,10 20,20 T20,40" stroke="#b8912f" stroke-width="2" fill="none" />
+                        <circle cx="20" cy="20" r="3" fill="#e5c16c" />
+                    </pattern>
+
+                    <!-- Gradient for the background to fade to dark at edges -->
+                    <radialGradient id="vignette" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
+                        <stop offset="50%" stop-color="transparent" />
+                        <stop offset="100%" stop-color="rgba(0,0,0,0.6)" />
+                    </radialGradient>
+                </defs>
+
+                <!-- Background Gold -->
+                <rect width="400" height="400" fill="url(#gold-swirls)" />
+
+                <!-- Dark Floral Cliff Edge -->
+                <path d="M0,400 L0,300 Q50,260 100,290 T200,270 T300,290 T400,280 L400,400 Z" fill="#0b1b1a" />
+                <!-- Abstract flowers on cliff -->
+                <circle cx="60" cy="320" r="15" fill="#e8e8e8" opacity="0.8"/>
+                <circle cx="60" cy="320" r="8" fill="#d4af37" />
+                <circle cx="140" cy="340" r="10" fill="#ee6c4d" opacity="0.8"/>
+                <circle cx="250" cy="330" r="12" fill="#e8e8e8" opacity="0.7"/>
+                <circle cx="320" cy="350" r="18" fill="#d4af37" opacity="0.6"/>
+
+                <!-- Man's Body / Cloak -->
+                <path d="M120,400 L120,180 Q160,120 220,180 L220,400 Z" fill="url(#man-cloak)" />
+                <!-- Man's Cloak Golden Trim -->
+                <path d="M120,400 L120,180 Q160,120 220,180 L220,400 Z" stroke="#d4af37" stroke-width="4" fill="none" />
+
+                <!-- Woman's Body / Dress -->
+                <path d="M220,400 L220,220 Q260,150 320,200 L320,400 Z" fill="url(#woman-dress)" />
+                <!-- Woman's Dress Golden Trim -->
+                <path d="M220,400 L220,220 Q260,150 320,200 L320,400 Z" stroke="#e0fbfc" stroke-width="2" fill="none" />
+
+                <!-- Man's Head -->
+                <ellipse cx="180" cy="140" rx="25" ry="30" transform="rotate(-30 180 140)" fill="#fcecd5" />
+                <!-- Man's Hair -->
+                <path d="M150,140 Q160,90 200,110 Q210,130 200,160 Z" fill="#2b1d16" />
+                <path d="M150,140 Q140,110 170,100 Q180,100 190,110" fill="#2b1d16" />
+
+                <!-- Woman's Head -->
+                <ellipse cx="235" cy="170" rx="20" ry="25" transform="rotate(-20 235 170)" fill="#fcecd5" />
+                <!-- Woman's Hair -->
+                <path d="M220,170 Q210,120 250,110 Q270,130 260,180 Z" fill="#c45f2d" />
+                <!-- Hair flowers -->
+                <circle cx="240" cy="115" r="6" fill="#e8e8e8" />
+                <circle cx="250" cy="125" r="5" fill="#ee6c4d" />
+                <circle cx="228" cy="125" r="4" fill="#d4af37" />
+
+                <!-- The Kiss (faces touching) -->
+                <!-- Woman's closed eye -->
+                <path d="M230,165 Q235,168 240,165" stroke="#2b1d16" stroke-width="2" fill="none" />
+                <!-- Man's closed eye -->
+                <path d="M180,130 Q185,133 190,130" stroke="#2b1d16" stroke-width="2" fill="none" />
+
+                <!-- Man's Hand cradling her face -->
+                <path d="M215,185 Q240,195 245,175 Q235,185 220,185" fill="#fcecd5" stroke="#d4af37" stroke-width="1" />
+                
+                <!-- Woman's Hand on his hand -->
+                <path d="M205,195 Q215,205 230,200" fill="#fcecd5" stroke="#e0fbfc" stroke-width="1" />
+
+                <!-- Vignette overlay -->
+                <rect width="400" height="400" fill="url(#vignette)" />
+            </svg>
             <div class="klimt-caption">The Kiss</div>
         </div>
 
