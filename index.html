@@ -31,7 +31,7 @@
             min-height: 100dvh;
             overflow-y: auto;
             overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent; /* Removes blue tap square */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Background Layers */
@@ -443,34 +443,31 @@
             z-index: 9999;
             pointer-events: none;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
         }
 
         /* The massive main yellow square */
         .transition-square {
             position: absolute;
-            top: -200vmax; /* Start way above */
+            top: 0;
+            left: 0;
             width: 200vmax;
             height: 200vmax;
             background-color: var(--butter);
             will-change: transform;
-            /* No animation here, JS handles it */
+            z-index: 10; /* Main square sits on top */
         }
 
-        /* The ghost squares that leave the trail */
-        .transition-trail {
+        /* The massive ghost afterimages */
+        .transition-ghost {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 200vmax;
             height: 200vmax;
             will-change: transform, opacity;
-            /* Start solid, fade to 0 over 1.5s */
-            animation: fadeTrailSquare 1.5s forwards linear;
-        }
-
-        @keyframes fadeTrailSquare {
-            0% { opacity: 0.9; }
-            100% { opacity: 0; }
+            z-index: 1; /* Ghosts sit behind the main square */
+            /* Same exact fade animation as the hearts */
+            animation: fadeGhost 2.5s forwards linear;
         }
 
         #final-scene {
@@ -501,7 +498,7 @@
         }
 
         .show-final-scene #transition-overlay {
-            display: none; /* Instantly remove the square once image is showing */
+            display: none; /* Remove overlay completely once image is showing */
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -563,8 +560,7 @@
 
     <!-- Transition Overlay -->
     <div id="transition-overlay">
-        <!-- The trails will be injected here by JS -->
-        <div class="transition-square" id="mainSquare"></div>
+        <!-- Trails and the main square will be injected here by JS -->
     </div>
 
     <!-- Final Scene -->
@@ -677,7 +673,6 @@
     <script>
         const startBtn = document.getElementById('startBtn');
         const overlay = document.getElementById('transition-overlay');
-        const mainSquare = document.getElementById('mainSquare');
         let isTransitioning = false;
 
         // Preload the image
@@ -690,21 +685,22 @@
             startBtn.disabled = true;
 
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
             if (prefersReducedMotion) {
                 document.body.classList.add('show-final-scene');
                 return;
             }
 
-            // Transition Variables
+            // Prepare the main square
+            const mainSquare = document.createElement('div');
+            mainSquare.className = 'transition-square';
+            mainSquare.style.transform = `translateY(-200vmax)`; // Start off-screen
+            overlay.appendChild(mainSquare);
+
             const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
-            const duration = 1200; // 1.2 seconds
+            const duration = 1200; 
             const startTime = performance.now();
             let lastGhostTime = 0;
 
-            // The main square starts at -200vmax and needs to drop to +0vmax
-            // Wait, to cover the screen fully, if it's 200vmax tall, starting at top: -200vmax
-            // and dropping to top: 0, its bottom edge will be at 200vmax, perfectly covering the screen.
             const startY = -200;
             const endY = 0;
 
@@ -712,17 +708,17 @@
                 const elapsed = time - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 
-                // Ease in-out for a smooth cinematic drop
+                // Ease in-out
                 const ease = progress < 0.5 
                     ? 2 * progress * progress 
                     : 1 - Math.pow(-2 * progress + 2, 2) / 2;
                 
                 const currentY = startY + (endY - startY) * ease;
                 
-                // Move the main yellow square
+                // Move the main square
                 mainSquare.style.transform = `translateY(${currentY}vmax)`;
 
-                // Spawn the trail ghosts behind it (every 60ms to match the hearts exactly)
+                // Spawn the ghost afterimages
                 if (time - lastGhostTime > 60) {
                     createTransitionGhost(currentY);
                     lastGhostTime = time;
@@ -731,10 +727,9 @@
                 if (progress < 1) {
                     requestAnimationFrame(animateTransition);
                 } else {
-                    // Transition finished covering the screen
                     mainSquare.style.transform = `translateY(${endY}vmax)`;
                     
-                    // Wait a tiny bit for the final trail ghosts to settle, then fade in image
+                    // Wait for trails to fall a bit, then reveal image
                     setTimeout(() => {
                         document.body.classList.add('show-final-scene');
                     }, 150);
@@ -744,19 +739,19 @@
             function createTransitionGhost(yPos) {
                 const color = trailColors[Math.floor(Math.random() * trailColors.length)];
                 const ghost = document.createElement('div');
-                ghost.className = 'transition-trail';
+                ghost.className = 'transition-ghost';
                 
-                // Position it exactly where the main square is right now
+                // Position the massive ghost square exactly where the main square is right now
                 ghost.style.transform = `translateY(${yPos}vmax)`;
                 ghost.style.backgroundColor = color;
                 
-                // Add it to the overlay (it will be behind the main square because it's inserted before it)
+                // Insert BEHIND the main square
                 overlay.insertBefore(ghost, mainSquare);
 
-                // Remove the ghost from DOM after animation finishes (1.5s)
+                // Remove after the 2.5s fade animation completes
                 setTimeout(() => {
                     ghost.remove();
-                }, 1500);
+                }, 2500);
             }
 
             requestAnimationFrame(animateTransition);
