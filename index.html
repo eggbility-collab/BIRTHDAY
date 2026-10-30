@@ -574,8 +574,8 @@
             margin-top: 10px;
             margin-bottom: 30px;
             box-shadow: 3px 5px 15px rgba(0,0,0,0.2);
-            position: relative;
-            z-index: 99999; /* ABOVE THE STRING */
+            position: relative; /* So the string attaches to it */
+            z-index: 100; 
         }
 
         #final-scene .header::before {
@@ -613,6 +613,61 @@
             font-weight: 800;
             font-size: 20px;
             color: var(--sepia);
+        }
+
+        /* The Red String attached to the Header */
+        #red-string {
+            position: absolute;
+            top: 100%; /* Hangs exactly from the bottom edge of the header */
+            left: 50%;
+            width: 4px;
+            height: 0;
+            background: #e11d48;
+            z-index: 90; /* Below the header's z-index (100), but above the scrapbook grid */
+            transform: translateX(-50%);
+            transition: height 0.5s ease-out;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+            display: none; /* Fully hidden until triggered */
+        }
+
+        #red-string::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #e11d48;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
+        }
+
+        .pluck {
+            animation: pluckAnim 0.3s ease-out;
+        }
+
+        @keyframes pluckAnim {
+            0% { transform: translateX(-50%) scaleX(1); }
+            50% { transform: translateX(-50%) scaleX(3); }
+            100% { transform: translateX(-50%) scaleX(1); }
+        }
+
+        #string-counter {
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #e11d48;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            text-shadow: 1px 1px 0 #fff;
         }
 
         /* Photo Grid */
@@ -789,61 +844,6 @@
         @keyframes tearRight {
             0% { transform: translateX(0); }
             100% { transform: translateX(100%); }
-        }
-
-        /* --- THE RED STRING --- */
-        #red-string {
-            position: fixed;
-            top: 70px; /* Starts right under the header */
-            left: 50%;
-            width: 4px;
-            height: 0;
-            background: #e11d48;
-            z-index: 99998; /* Below header, above scrapbook */
-            transform: translateX(-50%);
-            transition: height 0.5s ease-out, opacity 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
-            opacity: 0; /* Hidden by default */
-        }
-
-        #red-string::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: #e11d48;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
-        }
-
-        .pluck {
-            animation: pluckAnim 0.3s ease-out;
-        }
-
-        @keyframes pluckAnim {
-            0% { transform: translateX(-50%) scaleX(1); }
-            50% { transform: translateX(-50%) scaleX(3); }
-            100% { transform: translateX(-50%) scaleX(1); }
-        }
-
-        #string-counter {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #e11d48;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 99999;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            text-shadow: 1px 1px 0 #fff;
         }
 
         /* --- RED CURTAINS --- */
@@ -1286,6 +1286,9 @@
                 <div class="progress-fill"></div>
             </div>
             <span class="score">1 / 15</span>
+            <!-- Red string and counter are now INSIDE the header -->
+            <div id="red-string"></div>
+            <div id="string-counter">0 / 4</div>
         </div>
 
         <div class="scrapbook-grid">
@@ -1366,10 +1369,6 @@
 
         </div>
     </div>
-
-    <!-- THE RED STRING -->
-    <div id="red-string"></div>
-    <div id="string-counter">0 / 4</div>
 
     <!-- RED CURTAINS -->
     <div id="red-curtain-left"></div>
@@ -1602,8 +1601,11 @@
                 
                 if (!stringActive) {
                     setTimeout(() => {
-                        redString.style.opacity = '1'; // Make visible
-                        redString.style.height = '60vh'; // Drop it
+                        redString.style.display = 'block'; // Make it exist in the DOM layout
+                        // Small delay to allow browser to register display block before animating height
+                        setTimeout(() => {
+                            redString.style.height = '60vh'; // Drop it
+                        }, 10);
                         stringActive = true;
                     }, 1000);
                 }
