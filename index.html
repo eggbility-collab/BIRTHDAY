@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Happy Birthday, Jessa</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
@@ -26,16 +26,22 @@
             font-family: 'Nunito', sans-serif;
             color: var(--cocoa);
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
-            overflow: hidden; 
+            min-height: 100dvh; /* Mobile viewport fix */
+            overflow-y: auto; /* Allow scrolling on mobile */
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap square */
         }
 
+        /* Background Layers */
         #background-layer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             z-index: 0;
             pointer-events: none;
             overflow: hidden;
@@ -110,6 +116,7 @@
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
+        /* DO NOT TOUCH - HEART ANIMATION STYLES */
         #heart-container {
             position: fixed;
             top: 0;
@@ -173,23 +180,26 @@
             0% { opacity: 0.9; }
             100% { opacity: 0; }
         }
+        /* END OF HEART ANIMATION STYLES */
 
+        /* Main UI */
         .main-content {
             flex: 1;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px;
+            padding: 30px 15px; /* Adjusted for mobile */
             width: 100%;
             z-index: 3; 
+            min-height: 100dvh;
         }
 
         .header {
-            width: 90%;
+            width: 100%;
             max-width: 800px;
             background: var(--surface);
-            padding: 15px 30px;
+            padding: 12px 20px;
             border-radius: 30px;
             display: flex;
             align-items: center;
@@ -199,25 +209,28 @@
                 -6px -6px 15px rgba(255,255,255,0.9),
                 inset -2px -2px 5px rgba(0,0,0,0.05),
                 inset 2px 2px 5px rgba(255,255,255,0.8);
-            margin-bottom: 50px;
-            margin-top: 20px;
+            margin-bottom: 40px;
+            margin-top: 10px;
+            gap: 10px; /* Added for mobile spacing */
         }
 
         .progress-text {
             font-family: 'Caveat', cursive;
-            font-size: 22px;
+            font-size: 20px;
             flex: 1;
             text-align: center;
             color: var(--cocoa);
+            line-height: 1.1;
         }
 
         .progress-bar {
             width: 30%;
-            height: 12px;
+            height: 10px;
             background: #E5DEC9;
             border-radius: 10px;
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .progress-fill {
@@ -229,8 +242,9 @@
 
         .score {
             font-weight: 800;
+            font-size: 14px;
             color: var(--pink-dark);
-            margin-left: 20px;
+            flex-shrink: 0;
         }
 
         .hero {
@@ -238,12 +252,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 10px;
+            width: 100%;
         }
 
         .blob {
             background: var(--pink);
-            padding: 60px 50px;
+            padding: clamp(30px, 8vw, 60px) clamp(20px, 6vw, 50px);
             border-radius: 46% 54% 48% 52% / 55% 43% 57% 45%; 
             box-shadow: 
                 10px 10px 25px rgba(225, 29, 72, 0.2), 
@@ -253,7 +268,8 @@
             text-align: center;
             margin-bottom: 40px;
             animation: floatBlob 6s ease-in-out infinite;
-            max-width: 90vw;
+            width: 95%;
+            max-width: 500px; /* Prevents overflow on small screens */
             z-index: 4;
         }
 
@@ -265,23 +281,22 @@
 
         .blob h1 {
             font-family: 'Caveat', cursive;
-            font-size: 65px;
+            font-size: clamp(40px, 10vw, 65px); /* Responsive font size */
             color: #fff;
             margin-bottom: 15px;
             line-height: 0.9;
             text-shadow: 2px 2px 4px rgba(225, 29, 72, 0.4);
         }
 
-        /* THE EYES AND RIBBON */
         .eyes-container {
             display: flex;
-            gap: 30px;
+            gap: clamp(15px, 5vw, 30px);
             justify-content: center;
             margin-top: 20px;
         }
         
         .eye-pair {
-            position: relative; /* Needed for the ribbon */
+            position: relative; 
             display: flex;
             gap: 8px;
             background: rgba(255, 255, 255, 0.3);
@@ -309,20 +324,14 @@
             border-radius: 50%;
         }
         
-        .looking-right .pupil {
-            transform: translateX(4px);
-        }
-        
-        .looking-left .pupil {
-            transform: translateX(-4px);
-        }
+        .looking-right .pupil { transform: translateX(4px); }
+        .looking-left .pupil { transform: translateX(-4px); }
 
         @keyframes blink {
             0%, 95%, 100% { transform: scaleY(1); }
             97.5% { transform: scaleY(0.1); }
         }
 
-        /* CSS YELLOW RIBBON */
         .ribbon {
             position: absolute;
             top: -22px;
@@ -344,15 +353,8 @@
             top: 0;
         }
 
-        .ribbon::before {
-            left: -2px;
-            transform: rotate(-25deg);
-        }
-
-        .ribbon::after {
-            right: -2px;
-            transform: rotate(25deg) scaleX(-1);
-        }
+        .ribbon::before { left: -2px; transform: rotate(-25deg); }
+        .ribbon::after { right: -2px; transform: rotate(25deg) scaleX(-1); }
 
         .ribbon-knot {
             position: absolute;
@@ -372,7 +374,8 @@
             font-family: 'Fredoka', sans-serif;
             font-size: 24px;
             font-weight: 600;
-            padding: 20px 50px;
+            padding: 18px 50px;
+            min-height: 44px; /* Accessible touch target */
             border: none;
             border-radius: 40px;
             cursor: pointer;
@@ -384,8 +387,16 @@
             transition: all 0.1s ease;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 15px;
             z-index: 4;
+            outline: none;
+        }
+
+        /* Accessible keyboard focus */
+        .start-btn:focus-visible {
+            outline: 3px solid var(--pink-dark);
+            outline-offset: 4px;
         }
 
         .start-btn:active {
@@ -395,22 +406,112 @@
             transform: translateY(3px);
         }
 
-        @media (max-width: 600px) {
-            .blob { padding: 50px 30px; }
-            .blob h1 { font-size: 50px; }
-            .progress-bar { display: none; }
-            .header { flex-direction: column; gap: 10px; padding: 15px; }
-            .score { margin-left: 0; }
-            .moon { width: 50px; height: 50px; box-shadow: inset -10px -10px 0 0 #FFF8D6; }
+        .start-btn:disabled {
+            pointer-events: none;
+            opacity: 0.8;
         }
 
+        /* --- MOBILE RESPONSIVENESS FIXES --- */
+        @media (max-width: 600px) {
+            .header { 
+                flex-direction: row; /* Keep it on one line */
+                flex-wrap: wrap; /* Allow wrapping if needed */
+                justify-content: center;
+                padding: 10px 15px; 
+            }
+            .progress-text { 
+                width: 100%; 
+                margin-bottom: 8px; 
+                font-size: 18px; 
+            }
+            .progress-bar { width: 50%; }
+            .score { font-size: 13px; margin-left: 10px; }
+        }
+
+        @media (max-height: 600px) {
+            .blob { padding: 20px 30px; margin-bottom: 20px; }
+            .blob h1 { font-size: 35px; }
+            .eyes-container { margin-top: 10px; }
+            .start-btn { padding: 12px 30px; font-size: 20px; }
+        }
+
+        /* --- TRANSITION SQUARE & FINAL SCENE --- */
+        #transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .transition-square {
+            position: absolute;
+            top: 0;
+            width: 200vmax; /* Extremely large square to ensure full coverage */
+            height: 200vmax;
+            background-color: var(--butter);
+            transform: translateY(-100%); /* Start above screen */
+            will-change: transform;
+        }
+
+        /* The drop animation */
+        .animate-drop .transition-square {
+            animation: floodDown 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+
+        @keyframes floodDown {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        #final-scene {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            background: #000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #final-scene img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Preserves aspect ratio */
+        }
+
+        .show-final-scene #final-scene {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .show-final-scene #transition-overlay {
+            opacity: 0;
+            transition: opacity 0.5s ease 0.5s;
+        }
+
+        /* Accessibility: Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             .blob { animation: none; }
+            .animate-drop .transition-square { animation: none; transform: translateY(100vh); }
+            .show-final-scene #transition-overlay { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Background Layers -->
     <div id="background-layer">
         <div class="stars"></div>
         <div class="moon"></div>
@@ -420,8 +521,10 @@
         <div class="city-layer city-front"></div>
     </div>
 
+    <!-- Heart Container -->
     <div id="heart-container"></div>
 
+    <!-- Main UI -->
     <div class="main-content">
         <div class="header">
             <span class="progress-text">TIP: you should click that button that says start now 😉</span>
@@ -435,31 +538,39 @@
             <div class="blob">
                 <h1>HAPPY BIRTHDAY<br>JESSA</h1>
                 
-                <!-- 4 Eyes looking at each other -->
                 <div class="eyes-container">
                     <div class="eye-pair looking-right">
                         <div class="eye"><div class="pupil"></div></div>
                         <div class="eye"><div class="pupil"></div></div>
                     </div>
                     <div class="eye-pair looking-left">
-                        <!-- The Yellow Ribbon added here -->
                         <div class="ribbon">
                             <div class="ribbon-knot"></div>
                         </div>
-                        
                         <div class="eye"><div class="pupil"></div></div>
                         <div class="eye"><div class="pupil"></div></div>
                     </div>
                 </div>
-
             </div>
             
-            <button class="start-btn">
+            <button class="start-btn" id="startBtn" aria-label="Start the birthday experience">
                 Start Now ➔
             </button>
         </div>
     </div>
 
+    <!-- Transition Overlay -->
+    <div id="transition-overlay">
+        <div class="transition-square"></div>
+    </div>
+
+    <!-- Final Scene -->
+    <div id="final-scene">
+        <!-- The image path is set exactly as requested -->
+        <img src="assets/moon-promise-pixel-art.png" alt="Fly you to the moon. That's a promise.">
+    </div>
+
+    <!-- DO NOT TOUCH - HEART ANIMATION JS -->
     <script>
         const container = document.getElementById('heart-container');
         
@@ -558,6 +669,41 @@
         });
 
         startSpawning();
+    </script>
+
+    <!-- NEW TRANSITION JS -->
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const finalImage = document.querySelector('#final-scene img');
+        let isTransitioning = false;
+
+        // Preload the image to ensure smooth transition
+        const preloadImg = new Image();
+        preloadImg.src = 'assets/moon-promise-pixel-art.png';
+
+        startBtn.addEventListener('click', () => {
+            if (isTransitioning) return; // Prevent double-triggering
+            isTransitioning = true;
+            startBtn.disabled = true; // Disable button to prevent spam
+
+            // Check for reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (prefersReducedMotion) {
+                // Skip drop animation, just fade in the image
+                document.body.classList.add('show-final-scene');
+                return;
+            }
+
+            // 1. Start the square flood animation
+            document.body.classList.add('animate-drop');
+
+            // 2. Wait for the square to fully cover the screen (1.2s animation + buffer)
+            setTimeout(() => {
+                // 3. Fade in the final image and fade out the square overlay
+                document.body.classList.add('show-final-scene');
+            }, 1200); 
+        });
     </script>
 </body>
 </html>
