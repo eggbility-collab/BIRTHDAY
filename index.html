@@ -698,7 +698,16 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #fff; /* White screen base */
+            background: #fff; 
+        }
+
+        .tear-container svg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .tear-left, .tear-right {
@@ -708,8 +717,7 @@
             height: 100%;
             background: #fff;
             z-index: 10;
-            animation: tearLeft 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            animation-delay: 1s; /* Wait 1 second before tearing */
+            /* Animation will be triggered by JS adding .tearing class */
         }
 
         .tear-left {
@@ -722,7 +730,14 @@
             right: 0;
             clip-path: polygon(100% 0, 50% 0, 48% 5%, 52% 10%, 48% 15%, 52% 20%, 48% 25%, 52% 30%, 48% 35%, 52% 40%, 48% 45%, 52% 50%, 48% 55%, 52% 60%, 48% 65%, 52% 70%, 48% 75%, 52% 80%, 48% 85%, 52% 90%, 48% 95%, 50% 100%, 100% 100%);
             box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-            animation-name: tearRight;
+        }
+
+        .tearing .tear-left {
+            animation: tearLeft 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .tearing .tear-right {
+            animation: tearRight 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes tearLeft {
@@ -770,7 +785,7 @@
             .curtain-active #pixel-curtain { animation: none !important; }
             .show-final-scene #final-scene { transition: none; opacity: 1; }
             #transition-overlay { display: none !important; }
-            .tear-left, .tear-right { animation: none; display: none; } /* Skip tear on reduced motion */
+            .tear-left, .tear-right { display: none !important; } 
         }
 
         /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
@@ -1042,7 +1057,7 @@
             <div class="polaroid">
                 <div class="photo-container tear-container">
                     <!-- The painting hidden underneath -->
-                    <svg class="klimt-svg" style="width: 100%; height: 100%; object-fit: cover; filter: sepia(0.3) contrast(1.1) brightness(0.95);" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="klimt-svg" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <pattern id="man-cloak" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
                                 <rect width="20" height="20" fill="#1a1a1a" />
@@ -1246,6 +1261,13 @@
             setTimeout(() => {
                 document.body.classList.remove('transitioning', 'curtain-active');
                 document.getElementById('transition-overlay').style.display = 'none';
+                
+                // NOW trigger the tear animation 1 second after the curtain is gone
+                setTimeout(() => {
+                    const tearContainer = document.querySelector('.tear-container');
+                    if(tearContainer) tearContainer.classList.add('tearing');
+                }, 1000);
+
             }, 4500);
         });
     </script>
