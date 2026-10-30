@@ -452,41 +452,6 @@
             display: block;
         }
 
-        /* PHASE 1: Digital Signal */
-        #signal-effect {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-        }
-
-        .signal-active #signal-effect {
-            animation: signalFlash 0.3s ease-out forwards;
-        }
-
-        #signal-effect::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 100%;
-            height: 8px; 
-            background: var(--pink);
-            box-shadow: 0 0 25px var(--pink);
-            top: 20%;
-            animation: scanline2 0.3s ease-in-out forwards;
-        }
-
-        @keyframes signalFlash {
-            0% { opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        @keyframes scanline2 {
-            0% { top: 20%; }
-            100% { top: 100%; }
-        }
-
         /* PHASE 2: Pixel Curtain */
         #pixel-curtain {
             position: absolute;
@@ -578,7 +543,7 @@
 
         @media (prefers-reduced-motion: reduce) {
             .blob { animation: none; }
-            #signal-effect, .curtain-active #pixel-curtain { animation: none !important; }
+            .curtain-active #pixel-curtain { animation: none !important; }
             .show-final-scene #final-scene { transition: none; opacity: 1; }
             #transition-overlay { display: none !important; }
         }
@@ -629,7 +594,6 @@
             padding: 12px;
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.2);
             position: relative;
-            /* Scale down slightly if the laptop screen is short */
             transform: scale(0.85); 
         }
 
@@ -657,7 +621,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* Hide the simulator button on mobile devices */
         @media (max-width: 768px) {
             .sim-btn { display: none; }
         }
@@ -715,13 +678,11 @@
 
     <!-- Transition Overlay -->
     <div id="transition-overlay">
-        <div id="signal-effect"></div>
         <div id="pixel-curtain"></div>
     </div>
 
     <!-- Final Scene (Stage 2) -->
     <div id="final-scene">
-        <!-- The new header bar -->
         <div class="header">
             <span class="progress-text">heres our memories 📸</span>
             <div class="progress-bar">
@@ -858,21 +819,19 @@
                 return;
             }
 
-            document.body.classList.add('transitioning', 'signal-active');
+            // Immediately start the curtain drop
+            document.body.classList.add('transitioning', 'curtain-active');
 
-            setTimeout(() => {
-                document.body.classList.remove('signal-active');
-                document.body.classList.add('curtain-active');
-            }, 300);
-
+            // Curtain takes 1.2s to drop. Fade in the butter yellow background behind it at 1.25s.
             setTimeout(() => {
                 document.body.classList.add('show-final-scene');
-            }, 1500);
+            }, 1250);
             
+            // Cleanup after the curtain goes back up (Total animation is 4.4s)
             setTimeout(() => {
                 document.body.classList.remove('transitioning', 'curtain-active');
                 document.getElementById('transition-overlay').style.display = 'none';
-            }, 4800);
+            }, 4500);
         });
     </script>
 
