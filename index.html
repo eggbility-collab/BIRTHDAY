@@ -412,20 +412,31 @@
             opacity: 0.8;
         }
 
+        /* --- MOBILE HEADER FIX --- */
         @media (max-width: 600px) {
-            .header { 
-                flex-direction: row;
-                flex-wrap: wrap;
+            .header, #final-scene .header { 
+                flex-direction: column; /* Stacks the text, bar, and score vertically */
                 justify-content: center;
-                padding: 10px 15px; 
+                padding: 15px 20px; 
+                gap: 8px;
             }
             .progress-text { 
+                flex: unset; /* Removes the flex: 1 that was forcing it sideways */
                 width: 100%; 
-                margin-bottom: 8px; 
                 font-size: 18px; 
             }
-            .progress-bar { width: 50%; }
-            .score { font-size: 13px; margin-left: 10px; }
+            .progress-bar { 
+                width: 80%; /* Makes the bar nicely wide under the text */
+                margin: 0 auto;
+            }
+            .score { 
+                margin-left: 0; 
+                font-size: 14px; 
+            }
+            
+            /* Specific Stage 2 mobile sizes */
+            #final-scene .progress-text { font-size: 24px; margin-bottom: 0; }
+            #final-scene .score { font-size: 18px; }
         }
 
         @media (max-height: 600px) {
@@ -531,15 +542,7 @@
             margin-top: 10px;
         }
 
-        #final-scene .progress-text { font-size: 32px; font-weight: 600; }
-        #final-scene .score { font-size: 24px; }
         #final-scene .progress-fill { width: 6.66%; }
-
-        @media (max-width: 600px) {
-            #final-scene .progress-text { font-size: 24px; margin-bottom: 5px; }
-            #final-scene .score { font-size: 18px; }
-            #final-scene .header { padding: 12px 15px; }
-        }
 
         @media (prefers-reduced-motion: reduce) {
             .blob { animation: none; }
@@ -843,10 +846,7 @@
         const iframe = document.getElementById('sim-iframe');
 
         openSimBtn.addEventListener('click', () => {
-            // Get the current HTML of the page
             const currentHTML = document.documentElement.outerHTML;
-            
-            // Write it into the iframe
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             iframeDoc.open();
             iframeDoc.write(currentHTML);
