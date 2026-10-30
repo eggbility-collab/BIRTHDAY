@@ -514,31 +514,29 @@
         }
 
         .curtain-active #pixel-curtain {
-            /* Drops down, holds for 2s, then goes back up */
             animation: curtainSequence 4.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes curtainSequence {
             0% { transform: translateY(0); }
-            27.27% { transform: translateY(200vh); } /* Reaches bottom */
-            72.72% { transform: translateY(200vh); } /* Holds */
-            100% { transform: translateY(0); } /* Goes back up */
+            27.27% { transform: translateY(200vh); } 
+            72.72% { transform: translateY(200vh); } 
+            100% { transform: translateY(0); }
         }
 
-        /* PHASE 3 & 4: Final Scene (Butter Yellow with Header) */
+        /* PHASE 3 & 4: Final Scene (Stage 2) */
         #final-scene {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 9998; /* Behind the curtain */
+            z-index: 9998; 
             background: var(--butter);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.1s ease;
             
-            /* Layout for the new header */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -550,12 +548,11 @@
             pointer-events: auto;
         }
 
-        /* Adjusted header for stage 2 */
         #final-scene .header {
             width: 100%;
             max-width: 800px;
             background: var(--surface);
-            padding: 15px 25px; /* Slightly taller header */
+            padding: 15px 25px; 
             border-radius: 30px;
             display: flex;
             align-items: center;
@@ -569,41 +566,100 @@
             margin-top: 10px;
         }
 
-        /* Bigger text for stage 2 */
-        #final-scene .progress-text {
-            font-size: 32px;
-            font-weight: 600;
-        }
+        #final-scene .progress-text { font-size: 32px; font-weight: 600; }
+        #final-scene .score { font-size: 24px; }
+        #final-scene .progress-fill { width: 6.66%; }
 
-        /* Bigger score for stage 2 */
-        #final-scene .score {
-            font-size: 24px;
-        }
-
-        #final-scene .progress-fill {
-            width: 6.66%; /* 1/15 */
-        }
-
-        /* Mobile adjustments for Stage 2 bigger text */
         @media (max-width: 600px) {
-            #final-scene .progress-text {
-                font-size: 24px;
-                margin-bottom: 5px;
-            }
-            #final-scene .score {
-                font-size: 18px;
-            }
-            #final-scene .header {
-                padding: 12px 15px;
-            }
+            #final-scene .progress-text { font-size: 24px; margin-bottom: 5px; }
+            #final-scene .score { font-size: 18px; }
+            #final-scene .header { padding: 12px 15px; }
         }
 
-        /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             .blob { animation: none; }
             #signal-effect, .curtain-active #pixel-curtain { animation: none !important; }
             .show-final-scene #final-scene { transition: none; opacity: 1; }
             #transition-overlay { display: none !important; }
+        }
+
+        /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
+        .sim-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 999999;
+            background: var(--surface);
+            color: var(--cocoa);
+            border: 2px solid var(--cocoa);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--cocoa);
+            transition: all 0.1s ease;
+        }
+
+        .sim-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0 0 0 var(--cocoa);
+        }
+
+        #mobile-simulator {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        #mobile-simulator.active {
+            display: flex;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 45px;
+            padding: 12px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.2);
+            position: relative;
+            /* Scale down slightly if the laptop screen is short */
+            transform: scale(0.85); 
+        }
+
+        .phone-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 35px;
+            background: #fff;
+        }
+
+        .close-sim {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: var(--pink);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Hide the simulator button on mobile devices */
+        @media (max-width: 768px) {
+            .sim-btn { display: none; }
         }
     </style>
 </head>
@@ -672,6 +728,15 @@
                 <div class="progress-fill"></div>
             </div>
             <span class="score">1 / 15</span>
+        </div>
+    </div>
+
+    <!-- MOBILE SIMULATOR -->
+    <button class="sim-btn" id="openSimBtn">📱 Mobile POV</button>
+    <div id="mobile-simulator">
+        <div class="phone-frame">
+            <button class="close-sim" id="closeSimBtn">Close X</button>
+            <iframe id="sim-iframe" title="Mobile Preview"></iframe>
         </div>
     </div>
 
@@ -782,7 +847,7 @@
         let isTransitioning = false;
 
         startBtn.addEventListener('click', () => {
-            if (isTransitioning) return; // Prevent multiple clicks
+            if (isTransitioning) return; 
             isTransitioning = true;
             startBtn.disabled = true;
 
@@ -793,26 +858,46 @@
                 return;
             }
 
-            // 1. Start Phase 1 (Digital Signal)
             document.body.classList.add('transitioning', 'signal-active');
 
-            // 2. After 300ms, start the curtain sequence
             setTimeout(() => {
                 document.body.classList.remove('signal-active');
                 document.body.classList.add('curtain-active');
             }, 300);
 
-            // 3. After 1.5s (300ms + 1.2s drop time), the curtain fully covers the screen.
-            // We fade in the butter yellow background behind it now.
             setTimeout(() => {
                 document.body.classList.add('show-final-scene');
             }, 1500);
             
-            // 4. Cleanup after the curtain goes back up (Total 4.7s)
             setTimeout(() => {
                 document.body.classList.remove('transitioning', 'curtain-active');
                 document.getElementById('transition-overlay').style.display = 'none';
             }, 4800);
+        });
+    </script>
+
+    <!-- MOBILE SIMULATOR JS -->
+    <script>
+        const openSimBtn = document.getElementById('openSimBtn');
+        const closeSimBtn = document.getElementById('closeSimBtn');
+        const sim = document.getElementById('mobile-simulator');
+        const iframe = document.getElementById('sim-iframe');
+
+        openSimBtn.addEventListener('click', () => {
+            // Get the current HTML of the page
+            const currentHTML = document.documentElement.outerHTML;
+            
+            // Write it into the iframe
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(currentHTML);
+            iframeDoc.close();
+
+            sim.classList.add('active');
+        });
+
+        closeSimBtn.addEventListener('click', () => {
+            sim.classList.remove('active');
         });
     </script>
 </body>
