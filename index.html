@@ -713,7 +713,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 55%; /* Made wider to ensure overlap in the middle */
+            width: 55%; 
             background: #fff;
             z-index: 10;
             pointer-events: auto;
@@ -721,14 +721,12 @@
 
         .tear-left {
             left: 0;
-            /* Jagged edge on the right side going into the middle */
             clip-path: polygon(0 0, 100% 0, 95% 5%, 100% 10%, 95% 15%, 100% 20%, 95% 25%, 100% 30%, 95% 35%, 100% 40%, 95% 45%, 100% 50%, 95% 55%, 100% 60%, 95% 65%, 100% 70%, 95% 75%, 100% 80%, 95% 85%, 100% 90%, 95% 95%, 100% 100%, 0 100%);
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
 
         .tear-right {
             right: 0;
-            /* Jagged edge on the left side going into the middle */
             clip-path: polygon(100% 0, 0 0, 5% 5%, 0 10%, 5% 15%, 0 20%, 5% 25%, 0 30%, 5% 35%, 0 40%, 5% 45%, 0 50%, 5% 55%, 0 60%, 5% 65%, 0 70%, 5% 75%, 0 80%, 5% 85%, 0 90%, 5% 95%, 0 100%, 100% 100%);
             box-shadow: -2px 0 5px rgba(0,0,0,0.1);
         }
@@ -736,32 +734,27 @@
         /* The Vertical Triangle Banner */
         .reveal-banner {
             position: absolute;
-            top: 0;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 130px;
-            height: 160px;
+            transform: translate(-50%, -50%);
+            width: calc(100% + 24px); /* Bleeds exactly into the frame padding */
+            height: 140px;
             background: var(--blush); 
             color: var(--cocoa);
             font-family: 'Caveat', cursive;
-            font-size: 30px;
+            font-size: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             /* Creates the pointed bottom */
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
-            box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             z-index: 15;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            padding: 15px 10px 40px 10px;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            padding: 10px 20px 35px 20px;
             line-height: 1.1;
-            pointer-events: none; 
-        }
-
-        .tearing .reveal-banner {
-            opacity: 0;
-            transform: translate(-50%, -20px);
+            pointer-events: none; /* Let clicks pass through */
         }
 
         .tearing .tear-left {
@@ -1097,10 +1090,9 @@
                     <!-- The pure white overlay that tears apart -->
                     <div class="tear-left"></div>
                     <div class="tear-right"></div>
-                    
-                    <!-- The vertical triangle tag -->
-                    <div class="reveal-banner">Tap to<br>reveal 💌</div>
                 </div>
+                <!-- The vertical triangle tag is now OUTSIDE the image container so it can bleed into the frame -->
+                <div class="reveal-banner" id="banner-6">Tap to<br>reveal 💌</div>
                 <div class="caption">[WRITE YOUR CAPTION HERE]</div>
             </div>
 
@@ -1259,9 +1251,16 @@
 
         // CLICK TRIGGER FOR TEAR EFFECT
         const tearFrame = document.getElementById('tear-frame-6');
-        if (tearFrame) {
+        const banner = document.getElementById('banner-6');
+        
+        if (tearFrame && banner) {
             tearFrame.addEventListener('click', () => {
+                // Trigger the white paper tear
                 tearFrame.classList.add('tearing');
+                
+                // Trigger the banner fade and zoom effect
+                banner.style.opacity = '0';
+                banner.style.transform = 'translate(-50%, -50%) scale(1.1)';
             });
         }
     </script>
