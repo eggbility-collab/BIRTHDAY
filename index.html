@@ -673,7 +673,7 @@
             transform: rotate(45deg);
         }
 
-        /* Photo Container - Fit to image height */
+        /* Photo Container */
         .photo-container {
             width: 100%;
             background: #e0d8c8; 
@@ -684,7 +684,7 @@
 
         .photo-container img {
             width: 100%;
-            height: auto; /* Adapts to image aspect ratio */
+            height: auto;
             display: block;
         }
 
@@ -706,6 +706,25 @@
             cursor: pointer; 
         }
 
+        /* Fake Secret Text on the White Paper */
+        .tear-container::before {
+            content: 'Tap to reveal 💌';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Caveat', cursive;
+            font-size: 28px;
+            color: #ccc;
+            z-index: 15;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tearing::before {
+            opacity: 0;
+        }
+
         .tear-left, .tear-right {
             position: absolute;
             top: 0;
@@ -713,6 +732,7 @@
             height: 100%;
             background: #fff;
             z-index: 10;
+            pointer-events: auto;
         }
 
         .tear-left {
@@ -1051,7 +1071,7 @@
                 <div class="caption">[WRITE YOUR CAPTION HERE]</div>
             </div>
 
-            <!-- MEMORY 6: TEAR EFFECT (ONLY TRIGGERS ON CLICK) -->
+            <!-- MEMORY 6: TEAR EFFECT -->
             <div class="polaroid">
                 <div class="photo-container tear-container" id="tear-frame-6">
                     <!-- Your actual 6th photo hidden underneath -->
