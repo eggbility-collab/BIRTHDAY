@@ -450,11 +450,12 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 200vmax;
-            height: 200vmax;
+            width: 150vmax; /* Large enough to cover screen, but you can see it fall */
+            height: 150vmax;
             background-color: var(--butter);
             will-change: transform;
-            z-index: 10; /* Main square sits on top */
+            z-index: 10; 
+            box-shadow: 0 0 30px rgba(242, 212, 111, 0.8); /* Yellow glow */
         }
 
         /* The massive ghost afterimages */
@@ -462,11 +463,10 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 200vmax;
-            height: 200vmax;
+            width: 150vmax;
+            height: 150vmax;
             will-change: transform, opacity;
-            z-index: 1; /* Ghosts sit behind the main square */
-            /* Same exact fade animation as the hearts */
+            z-index: 1; 
             animation: fadeGhost 2.5s forwards linear;
         }
 
@@ -498,7 +498,7 @@
         }
 
         .show-final-scene #transition-overlay {
-            display: none; /* Remove overlay completely once image is showing */
+            display: none;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -560,7 +560,7 @@
 
     <!-- Transition Overlay -->
     <div id="transition-overlay">
-        <!-- Trails and the main square will be injected here by JS -->
+        <!-- The main square and trails get injected here -->
     </div>
 
     <!-- Final Scene -->
@@ -690,35 +690,36 @@
                 return;
             }
 
-            // Prepare the main square
+            // Create the main falling yellow square
             const mainSquare = document.createElement('div');
             mainSquare.className = 'transition-square';
-            mainSquare.style.transform = `translateY(-200vmax)`; // Start off-screen
+            mainSquare.style.transform = `translateY(-150vmax)`; 
             overlay.appendChild(mainSquare);
 
             const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
-            const duration = 1200; 
+            const duration = 1200; // 1.2 seconds to drop
             const startTime = performance.now();
             let lastGhostTime = 0;
 
-            const startY = -200;
+            // Start above screen (-150vmax) and end at top (0) so it fully covers screen
+            const startY = -150;
             const endY = 0;
 
             function animateTransition(time) {
                 const elapsed = time - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 
-                // Ease in-out
+                // Smooth drop
                 const ease = progress < 0.5 
                     ? 2 * progress * progress 
                     : 1 - Math.pow(-2 * progress + 2, 2) / 2;
                 
                 const currentY = startY + (endY - startY) * ease;
                 
-                // Move the main square
+                // Move the main yellow square
                 mainSquare.style.transform = `translateY(${currentY}vmax)`;
 
-                // Spawn the ghost afterimages
+                // Spawn a neon ghost square every 60ms (just like the hearts)
                 if (time - lastGhostTime > 60) {
                     createTransitionGhost(currentY);
                     lastGhostTime = time;
@@ -729,7 +730,7 @@
                 } else {
                     mainSquare.style.transform = `translateY(${endY}vmax)`;
                     
-                    // Wait for trails to fall a bit, then reveal image
+                    // Wait for trails to start fading, then reveal image
                     setTimeout(() => {
                         document.body.classList.add('show-final-scene');
                     }, 150);
@@ -741,14 +742,14 @@
                 const ghost = document.createElement('div');
                 ghost.className = 'transition-ghost';
                 
-                // Position the massive ghost square exactly where the main square is right now
+                // Position the massive ghost exactly where the main square is right now
                 ghost.style.transform = `translateY(${yPos}vmax)`;
                 ghost.style.backgroundColor = color;
                 
-                // Insert BEHIND the main square
+                // Insert BEHIND the main yellow square
                 overlay.insertBefore(ghost, mainSquare);
 
-                // Remove after the 2.5s fade animation completes
+                // Remove from DOM after the 2.5s fade finishes
                 setTimeout(() => {
                     ghost.remove();
                 }, 2500);
