@@ -28,8 +28,8 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            min-height: 100dvh; /* Mobile viewport fix */
-            overflow-y: auto; /* Allow scrolling on mobile */
+            min-height: 100dvh;
+            overflow-y: auto;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent; /* Removes blue tap square */
         }
@@ -189,7 +189,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px 15px; /* Adjusted for mobile */
+            padding: 30px 15px;
             width: 100%;
             z-index: 3; 
             min-height: 100dvh;
@@ -211,7 +211,7 @@
                 inset 2px 2px 5px rgba(255,255,255,0.8);
             margin-bottom: 40px;
             margin-top: 10px;
-            gap: 10px; /* Added for mobile spacing */
+            gap: 10px;
         }
 
         .progress-text {
@@ -269,7 +269,7 @@
             margin-bottom: 40px;
             animation: floatBlob 6s ease-in-out infinite;
             width: 95%;
-            max-width: 500px; /* Prevents overflow on small screens */
+            max-width: 500px;
             z-index: 4;
         }
 
@@ -281,7 +281,7 @@
 
         .blob h1 {
             font-family: 'Caveat', cursive;
-            font-size: clamp(40px, 10vw, 65px); /* Responsive font size */
+            font-size: clamp(40px, 10vw, 65px);
             color: #fff;
             margin-bottom: 15px;
             line-height: 0.9;
@@ -375,7 +375,7 @@
             font-size: 24px;
             font-weight: 600;
             padding: 18px 50px;
-            min-height: 44px; /* Accessible touch target */
+            min-height: 44px;
             border: none;
             border-radius: 40px;
             cursor: pointer;
@@ -393,7 +393,6 @@
             outline: none;
         }
 
-        /* Accessible keyboard focus */
         .start-btn:focus-visible {
             outline: 3px solid var(--pink-dark);
             outline-offset: 4px;
@@ -411,11 +410,10 @@
             opacity: 0.8;
         }
 
-        /* --- MOBILE RESPONSIVENESS FIXES --- */
         @media (max-width: 600px) {
             .header { 
-                flex-direction: row; /* Keep it on one line */
-                flex-wrap: wrap; /* Allow wrapping if needed */
+                flex-direction: row;
+                flex-wrap: wrap;
                 justify-content: center;
                 padding: 10px 15px; 
             }
@@ -435,7 +433,7 @@
             .start-btn { padding: 12px 30px; font-size: 20px; }
         }
 
-        /* --- TRANSITION SQUARE & FINAL SCENE --- */
+        /* --- THE FLOOD TRANSITION --- */
         #transition-overlay {
             position: fixed;
             top: 0;
@@ -449,24 +447,30 @@
             justify-content: center;
         }
 
+        /* The massive main yellow square */
         .transition-square {
             position: absolute;
-            top: 0;
-            width: 200vmax; /* Extremely large square to ensure full coverage */
+            top: -200vmax; /* Start way above */
+            width: 200vmax;
             height: 200vmax;
             background-color: var(--butter);
-            transform: translateY(-100%); /* Start above screen */
             will-change: transform;
+            /* No animation here, JS handles it */
         }
 
-        /* The drop animation */
-        .animate-drop .transition-square {
-            animation: floodDown 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        /* The ghost squares that leave the trail */
+        .transition-trail {
+            position: absolute;
+            width: 200vmax;
+            height: 200vmax;
+            will-change: transform, opacity;
+            /* Start solid, fade to 0 over 1.5s */
+            animation: fadeTrailSquare 1.5s forwards linear;
         }
 
-        @keyframes floodDown {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
+        @keyframes fadeTrailSquare {
+            0% { opacity: 0.9; }
+            100% { opacity: 0; }
         }
 
         #final-scene {
@@ -488,7 +492,7 @@
         #final-scene img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Preserves aspect ratio */
+            object-fit: contain;
         }
 
         .show-final-scene #final-scene {
@@ -497,15 +501,13 @@
         }
 
         .show-final-scene #transition-overlay {
-            opacity: 0;
-            transition: opacity 0.5s ease 0.5s;
+            display: none; /* Instantly remove the square once image is showing */
         }
 
-        /* Accessibility: Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             .blob { animation: none; }
-            .animate-drop .transition-square { animation: none; transform: translateY(100vh); }
-            .show-final-scene #transition-overlay { display: none; }
+            #transition-overlay { display: none; }
+            .show-final-scene #final-scene { transition: none; opacity: 1; }
         }
     </style>
 </head>
@@ -561,12 +563,12 @@
 
     <!-- Transition Overlay -->
     <div id="transition-overlay">
-        <div class="transition-square"></div>
+        <!-- The trails will be injected here by JS -->
+        <div class="transition-square" id="mainSquare"></div>
     </div>
 
     <!-- Final Scene -->
     <div id="final-scene">
-        <!-- The image path is set exactly as requested -->
         <img src="assets/moon-promise-pixel-art.png" alt="Fly you to the moon. That's a promise.">
     </div>
 
@@ -674,35 +676,90 @@
     <!-- NEW TRANSITION JS -->
     <script>
         const startBtn = document.getElementById('startBtn');
-        const finalImage = document.querySelector('#final-scene img');
+        const overlay = document.getElementById('transition-overlay');
+        const mainSquare = document.getElementById('mainSquare');
         let isTransitioning = false;
 
-        // Preload the image to ensure smooth transition
+        // Preload the image
         const preloadImg = new Image();
         preloadImg.src = 'assets/moon-promise-pixel-art.png';
 
         startBtn.addEventListener('click', () => {
-            if (isTransitioning) return; // Prevent double-triggering
+            if (isTransitioning) return;
             isTransitioning = true;
-            startBtn.disabled = true; // Disable button to prevent spam
+            startBtn.disabled = true;
 
-            // Check for reduced motion preference
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
             if (prefersReducedMotion) {
-                // Skip drop animation, just fade in the image
                 document.body.classList.add('show-final-scene');
                 return;
             }
 
-            // 1. Start the square flood animation
-            document.body.classList.add('animate-drop');
+            // Transition Variables
+            const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
+            const duration = 1200; // 1.2 seconds
+            const startTime = performance.now();
+            let lastGhostTime = 0;
 
-            // 2. Wait for the square to fully cover the screen (1.2s animation + buffer)
-            setTimeout(() => {
-                // 3. Fade in the final image and fade out the square overlay
-                document.body.classList.add('show-final-scene');
-            }, 1200); 
+            // The main square starts at -200vmax and needs to drop to +0vmax
+            // Wait, to cover the screen fully, if it's 200vmax tall, starting at top: -200vmax
+            // and dropping to top: 0, its bottom edge will be at 200vmax, perfectly covering the screen.
+            const startY = -200;
+            const endY = 0;
+
+            function animateTransition(time) {
+                const elapsed = time - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Ease in-out for a smooth cinematic drop
+                const ease = progress < 0.5 
+                    ? 2 * progress * progress 
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                
+                const currentY = startY + (endY - startY) * ease;
+                
+                // Move the main yellow square
+                mainSquare.style.transform = `translateY(${currentY}vmax)`;
+
+                // Spawn the trail ghosts behind it (every 60ms to match the hearts exactly)
+                if (time - lastGhostTime > 60) {
+                    createTransitionGhost(currentY);
+                    lastGhostTime = time;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateTransition);
+                } else {
+                    // Transition finished covering the screen
+                    mainSquare.style.transform = `translateY(${endY}vmax)`;
+                    
+                    // Wait a tiny bit for the final trail ghosts to settle, then fade in image
+                    setTimeout(() => {
+                        document.body.classList.add('show-final-scene');
+                    }, 150);
+                }
+            }
+
+            function createTransitionGhost(yPos) {
+                const color = trailColors[Math.floor(Math.random() * trailColors.length)];
+                const ghost = document.createElement('div');
+                ghost.className = 'transition-trail';
+                
+                // Position it exactly where the main square is right now
+                ghost.style.transform = `translateY(${yPos}vmax)`;
+                ghost.style.backgroundColor = color;
+                
+                // Add it to the overlay (it will be behind the main square because it's inserted before it)
+                overlay.insertBefore(ghost, mainSquare);
+
+                // Remove the ghost from DOM after animation finishes (1.5s)
+                setTimeout(() => {
+                    ghost.remove();
+                }, 1500);
+            }
+
+            requestAnimationFrame(animateTransition);
         });
     </script>
 </body>
