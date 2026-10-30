@@ -7,13 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* New Pastel Theme */
-            --bg-pastel: #EAE6DF; /* Soft pastel butter yellow/cream */
-            --surface: #FDFBF7; /* Slightly lighter cream for header */
-            --pink: #fb7185; /* Soft rose-pink */
-            --pink-dark: #e11d48; /* Darker pink for text/shadows */
-            --butter: #F2D46F; /* Butter yellow button */
-            --cocoa: #593E3A; /* Warm cocoa text */
+            --bg-pastel: #EAE6DF;
+            --surface: #FDFBF7;
+            --pink: #fb7185;
+            --pink-dark: #e11d48;
+            --butter: #F2D46F;
+            --cocoa: #593E3A;
         }
 
         * {
@@ -31,7 +30,6 @@
             overflow: hidden; 
         }
 
-        /* --- BACKGROUND LAYER (Blended City) --- */
         #background-layer {
             position: fixed;
             top: 0;
@@ -41,7 +39,6 @@
             z-index: 0;
             pointer-events: none;
             overflow: hidden;
-            /* Blends the dark city into the pastel yellow */
             background: linear-gradient(to bottom, var(--bg-pastel) 0%, #C5BFAF 100%);
         }
 
@@ -91,7 +88,6 @@
             mask-size: 100% 100%;
         }
 
-        /* The city layers are now blended with opacity to match the pastel theme */
         .city-back {
             height: 25vh;
             background: linear-gradient(to top, rgba(100, 70, 80, 0.4) 0%, transparent 100%);
@@ -114,8 +110,6 @@
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
         }
 
-
-                /* --- HEART ANIMATION LAYER --- */
         #heart-container {
             position: fixed;
             top: 0;
@@ -180,7 +174,6 @@
             100% { opacity: 0; }
         }
 
-        /* --- MAIN UI (Pastel Claymorphism) --- */
         .main-content {
             flex: 1;
             position: relative;
@@ -201,7 +194,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* Soft clay shadows */
             box-shadow: 
                 6px 6px 15px rgba(0,0,0,0.08), 
                 -6px -6px 15px rgba(255,255,255,0.9),
@@ -253,7 +245,6 @@
             background: var(--pink);
             padding: 60px 50px;
             border-radius: 46% 54% 48% 52% / 55% 43% 57% 45%; 
-            /* Soft pink clay shadows */
             box-shadow: 
                 10px 10px 25px rgba(225, 29, 72, 0.2), 
                 -10px -10px 25px rgba(255,255,255,0.8),
@@ -281,13 +272,53 @@
             text-shadow: 2px 2px 4px rgba(225, 29, 72, 0.4);
         }
 
-        .blob p {
-            font-family: 'Caveat', cursive;
-            font-size: 26px;
-            color: #fff;
-            font-weight: 600;
-            margin-top: 15px;
-            text-shadow: 1px 1px 3px rgba(225, 29, 72, 0.4);
+        /* THE EYES */
+        .eyes-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .eye-pair {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 8px 14px;
+            border-radius: 25px;
+            box-shadow: inset 2px 2px 5px rgba(225, 29, 72, 0.2), 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .eye {
+            width: 24px;
+            height: 24px;
+            background: #FFF8D6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2);
+            animation: blink 4s infinite;
+        }
+        
+        .pupil {
+            width: 12px;
+            height: 12px;
+            background: var(--cocoa);
+            border-radius: 50%;
+        }
+        
+        .looking-right .pupil {
+            transform: translateX(4px);
+        }
+        
+        .looking-left .pupil {
+            transform: translateX(-4px);
+        }
+
+        @keyframes blink {
+            0%, 95%, 100% { transform: scaleY(1); }
+            97.5% { transform: scaleY(0.1); }
         }
 
         .start-btn {
@@ -300,7 +331,6 @@
             border: none;
             border-radius: 40px;
             cursor: pointer;
-            /* Yellow clay shadows */
             box-shadow: 
                 8px 8px 20px rgba(200, 160, 50, 0.3), 
                 -8px -8px 20px rgba(255,255,255,0.9),
@@ -323,7 +353,6 @@
         @media (max-width: 600px) {
             .blob { padding: 50px 30px; }
             .blob h1 { font-size: 50px; }
-            .blob p { font-size: 22px; }
             .progress-bar { display: none; }
             .header { flex-direction: column; gap: 10px; padding: 15px; }
             .score { margin-left: 0; }
@@ -335,9 +364,7 @@
         }
     </style>
 </head>
-
-
-    <body>
+<body>
 
     <div id="background-layer">
         <div class="stars"></div>
@@ -362,7 +389,19 @@
         <div class="hero">
             <div class="blob">
                 <h1>HAPPY BIRTHDAY<br>BABY</h1>
-                <p>ingredients are love, code, and ambot👁️👁️</p>
+                
+                <!-- 4 Eyes looking at each other -->
+                <div class="eyes-container">
+                    <div class="eye-pair looking-right">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                    <div class="eye-pair looking-left">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                </div>
+
             </div>
             
             <button class="start-btn">
