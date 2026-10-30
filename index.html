@@ -12,6 +12,8 @@
             --pink: #fb7185;
             --pink-dark: #e11d48;
             --butter: #F2D46F;
+            --blush: #F2B2BE;
+            --coral: #FF9F81;
             --cocoa: #593E3A;
         }
 
@@ -31,7 +33,7 @@
             min-height: 100dvh;
             overflow-y: auto;
             overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight */
         }
 
         /* Background Layers */
@@ -433,7 +435,7 @@
             .start-btn { padding: 12px 30px; font-size: 20px; }
         }
 
-        /* --- THE FLOOD TRANSITION --- */
+        /* --- THE PINK & YELLOW PIXEL SIGNAL TRANSITION --- */
         #transition-overlay {
             position: fixed;
             top: 0;
@@ -443,34 +445,98 @@
             z-index: 9999;
             pointer-events: none;
             overflow: hidden;
+            display: none;
         }
 
-        /* The massive main square - NEON GRADIENT */
-        .transition-square {
+        .transitioning #transition-overlay {
+            display: block;
+        }
+
+        /* PHASE 1: Digital Signal */
+        #signal-effect {
             position: absolute;
-            top: 0;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+        }
+
+        .signal-active #signal-effect {
+            animation: signalFlash 0.3s ease-out forwards;
+        }
+
+        #signal-effect::before, #signal-effect::after {
+            content: '';
+            position: absolute;
             left: 0;
-            width: 100vmax; 
-            height: 100vmax;
-            /* Same colors as the trail, combined */
-            background: linear-gradient(135deg, #00FF66, #00FFFF, #0088FF, #8A2BE2);
+            width: 100%;
+            height: 6px;
+        }
+
+        #signal-effect::before {
+            background: var(--butter);
+            box-shadow: 0 0 15px var(--butter);
+            top: 0;
+            animation: scanline1 0.3s ease-in-out forwards;
+        }
+
+        #signal-effect::after {
+            background: var(--blush);
+            box-shadow: 0 0 15px var(--blush);
+            top: 20%;
+            animation: scanline2 0.3s ease-in-out forwards;
+        }
+
+        @keyframes signalFlash {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes scanline1 {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        @keyframes scanline2 {
+            0% { top: 20%; }
+            100% { top: 120%; }
+        }
+
+        /* PHASE 2: Pixel Curtain */
+        #pixel-curtain {
+            position: absolute;
+            top: -120vh;
+            left: 0;
+            width: 100vw;
+            height: 120vh;
+            /* Stepped mask at the bottom */
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,90 L90,90 L90,95 L80,95 L80,100 L70,100 L70,95 L60,95 L60,90 L50,90 L50,95 L40,95 L40,100 L30,100 L30,95 L20,95 L20,90 L10,90 L10,95 L0,95 Z' fill='black'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,90 L90,90 L90,95 L80,95 L80,100 L70,100 L70,95 L60,95 L60,90 L50,90 L50,95 L40,95 L40,100 L30,100 L30,95 L20,95 L20,90 L10,90 L10,95 L0,95 Z' fill='black'/%3E%3C/svg%3E");
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
             will-change: transform;
-            z-index: 10; 
-            box-shadow: 0 0 50px rgba(0, 255, 255, 0.6); 
+            /* Pastel pixel stripes */
+            background: repeating-linear-gradient(
+                to bottom,
+                var(--butter) 0%,
+                var(--butter) 8%,
+                var(--blush) 8%,
+                var(--blush) 16%,
+                var(--coral) 16%,
+                var(--coral) 24%
+            );
         }
 
-        /* The massive ghost afterimages */
-        .transition-ghost {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vmax;
-            height: 100vmax;
-            will-change: transform, opacity;
-            z-index: 1; 
-            animation: fadeGhost 2.5s forwards linear;
+        .curtain-active #pixel-curtain {
+            animation: curtainDrop 1s cubic-bezier(0.5, 0, 0.3, 1) forwards;
         }
 
+        @keyframes curtainDrop {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(220vh); }
+        }
+
+        /* PHASE 3 & 4: Final Scene */
         #final-scene {
             position: fixed;
             top: 0;
@@ -478,10 +544,9 @@
             width: 100vw;
             height: 100vh;
             z-index: 10000;
-            background: #000;
+            background: #0B0914; /* Deep cobalt to fill empty space */
             opacity: 0;
             pointer-events: none;
-            transition: opacity 1s ease;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -490,22 +555,25 @@
         #final-scene img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: contain; /* Preserves aspect ratio */
         }
 
         .show-final-scene #final-scene {
             opacity: 1;
             pointer-events: auto;
+            transition: opacity 0.5s ease;
         }
 
         .show-final-scene #transition-overlay {
             display: none;
         }
 
+        /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             .blob { animation: none; }
-            #transition-overlay { display: none; }
+            #signal-effect, .curtain-active #pixel-curtain { animation: none !important; }
             .show-final-scene #final-scene { transition: none; opacity: 1; }
+            #transition-overlay { display: none !important; }
         }
     </style>
 </head>
@@ -561,7 +629,8 @@
 
     <!-- Transition Overlay -->
     <div id="transition-overlay">
-        <!-- The main square and trails get injected here -->
+        <div id="signal-effect"></div>
+        <div id="pixel-curtain"></div>
     </div>
 
     <!-- Final Scene -->
@@ -670,93 +739,42 @@
         startSpawning();
     </script>
 
-    <!-- NEW TRANSITION JS -->
+    <!-- TRANSITION JS -->
     <script>
         const startBtn = document.getElementById('startBtn');
-        const overlay = document.getElementById('transition-overlay');
         let isTransitioning = false;
 
-        // Preload the image
+        // Preload the image to ensure it's ready
         const preloadImg = new Image();
         preloadImg.src = 'assets/moon-promise-pixel-art.png';
 
         startBtn.addEventListener('click', () => {
-            if (isTransitioning) return;
+            if (isTransitioning) return; // Prevent multiple clicks
             isTransitioning = true;
             startBtn.disabled = true;
 
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
             if (prefersReducedMotion) {
+                // Skip animations, just show image
                 document.body.classList.add('show-final-scene');
                 return;
             }
 
-            // Create the main falling square
-            const mainSquare = document.createElement('div');
-            mainSquare.className = 'transition-square';
-            mainSquare.style.transform = `translateY(-100vmax)`; 
-            overlay.appendChild(mainSquare);
+            // 1. Start Phase 1 (Digital Signal) & Show Overlay
+            document.body.classList.add('transitioning', 'signal-active');
 
-            const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
-            const duration = 1200; // 1.2 seconds
-            const startTime = performance.now();
-            let lastGhostTime = 0;
+            // 2. Wait for signal to finish (300ms), then start curtain drop
+            setTimeout(() => {
+                document.body.classList.remove('signal-active');
+                document.body.classList.add('curtain-active');
+            }, 300);
 
-            // Start above screen (-100vmax) and end at top (0) so it fully covers screen
-            const startY = -100;
-            const endY = 0;
-
-            function animateTransition(time) {
-                const elapsed = time - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                // Smooth drop
-                const ease = progress < 0.5 
-                    ? 2 * progress * progress 
-                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-                
-                const currentY = startY + (endY - startY) * ease;
-                
-                // Move the main neon square
-                mainSquare.style.transform = `translateY(${currentY}vmax)`;
-
-                // Spawn a neon ghost square every 60ms (exact match to hearts)
-                if (time - lastGhostTime > 60) {
-                    createTransitionGhost(currentY);
-                    lastGhostTime = time;
-                }
-
-                if (progress < 1) {
-                    requestAnimationFrame(animateTransition);
-                } else {
-                    mainSquare.style.transform = `translateY(${endY}vmax)`;
-                    
-                    // Wait for trails to start fading, then reveal image
-                    setTimeout(() => {
-                        document.body.classList.add('show-final-scene');
-                    }, 150);
-                }
-            }
-
-            function createTransitionGhost(yPos) {
-                const color = trailColors[Math.floor(Math.random() * trailColors.length)];
-                const ghost = document.createElement('div');
-                ghost.className = 'transition-ghost';
-                
-                // Position the massive ghost exactly where the main square is right now
-                ghost.style.transform = `translateY(${yPos}vmax)`;
-                ghost.style.backgroundColor = color;
-                
-                // Insert BEHIND the main square
-                overlay.insertBefore(ghost, mainSquare);
-
-                // Remove from DOM after the 2.5s fade finishes
-                setTimeout(() => {
-                    ghost.remove();
-                }, 2500);
-            }
-
-            requestAnimationFrame(animateTransition);
+            // 3. Curtain takes 1s to drop. After it drops, reveal the image.
+            // 300ms + 1000ms = 1300ms total.
+            setTimeout(() => {
+                document.body.classList.add('show-final-scene');
+            }, 1300);
         });
     </script>
 </body>
