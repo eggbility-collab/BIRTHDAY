@@ -525,7 +525,7 @@
             100% { transform: translateY(0); } /* Goes back up */
         }
 
-        /* PHASE 3 & 4: Final Scene (Butter Yellow Background) */
+        /* PHASE 3 & 4: Final Scene (Butter Yellow with Header) */
         #final-scene {
             position: fixed;
             top: 0;
@@ -537,11 +537,40 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.1s ease;
+            
+            /* Layout for the new header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 15px;
         }
 
         .show-final-scene #final-scene {
             opacity: 1;
             pointer-events: auto;
+        }
+
+        /* Adjusted header for stage 2 */
+        #final-scene .header {
+            width: 100%;
+            max-width: 800px;
+            background: var(--surface);
+            padding: 12px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 
+                6px 6px 15px rgba(200, 160, 50, 0.3), 
+                -6px -6px 15px rgba(255,255,255,0.8),
+                inset -2px -2px 5px rgba(200, 160, 50, 0.2),
+                inset 2px 2px 5px rgba(255,255,255,0.9);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        #final-scene .progress-fill {
+            width: 6.66%; /* 1/15 */
         }
 
         /* Reduced Motion */
@@ -609,8 +638,17 @@
         <div id="pixel-curtain"></div>
     </div>
 
-    <!-- Final Scene (Butter Yellow Background) -->
-    <div id="final-scene"></div>
+    <!-- Final Scene (Stage 2) -->
+    <div id="final-scene">
+        <!-- The new header bar -->
+        <div class="header">
+            <span class="progress-text">heres our memories 📸</span>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <span class="score">1 / 15</span>
+        </div>
+    </div>
 
     <!-- DO NOT TOUCH - HEART ANIMATION JS -->
     <script>
