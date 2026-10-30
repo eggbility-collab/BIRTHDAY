@@ -445,18 +445,18 @@
             overflow: hidden;
         }
 
-        /* The massive main square - NOW NEON CYBERPUNK */
+        /* The massive main square - NEON GRADIENT */
         .transition-square {
             position: absolute;
             top: 0;
             left: 0;
-            width: 150vmax;
-            height: 150vmax;
-            /* Gradient of all the trail colors combined */
+            width: 100vmax; 
+            height: 100vmax;
+            /* Same colors as the trail, combined */
             background: linear-gradient(135deg, #00FF66, #00FFFF, #0088FF, #8A2BE2);
             will-change: transform;
             z-index: 10; 
-            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5); /* Cyan glow */
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.6); 
         }
 
         /* The massive ghost afterimages */
@@ -464,8 +464,8 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 150vmax;
-            height: 150vmax;
+            width: 100vmax;
+            height: 100vmax;
             will-change: transform, opacity;
             z-index: 1; 
             animation: fadeGhost 2.5s forwards linear;
@@ -691,10 +691,10 @@
                 return;
             }
 
-            // Create the main falling neon square
+            // Create the main falling square
             const mainSquare = document.createElement('div');
             mainSquare.className = 'transition-square';
-            mainSquare.style.transform = `translateY(-150vmax)`; 
+            mainSquare.style.transform = `translateY(-100vmax)`; 
             overlay.appendChild(mainSquare);
 
             const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
@@ -702,8 +702,8 @@
             const startTime = performance.now();
             let lastGhostTime = 0;
 
-            // Start above screen (-150vmax) and end at top (0) so it fully covers screen
-            const startY = -150;
+            // Start above screen (-100vmax) and end at top (0) so it fully covers screen
+            const startY = -100;
             const endY = 0;
 
             function animateTransition(time) {
@@ -720,7 +720,7 @@
                 // Move the main neon square
                 mainSquare.style.transform = `translateY(${currentY}vmax)`;
 
-                // Spawn a neon ghost square every 60ms
+                // Spawn a neon ghost square every 60ms (exact match to hearts)
                 if (time - lastGhostTime > 60) {
                     createTransitionGhost(currentY);
                     lastGhostTime = time;
