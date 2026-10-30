@@ -463,24 +463,14 @@
             animation: signalFlash 0.3s ease-out forwards;
         }
 
-        #signal-effect::before, #signal-effect::after {
+        #signal-effect::after {
             content: '';
             position: absolute;
             left: 0;
             width: 100%;
-            height: 6px;
-        }
-
-        #signal-effect::before {
-            background: var(--butter);
-            box-shadow: 0 0 15px var(--butter);
-            top: 0;
-            animation: scanline1 0.3s ease-in-out forwards;
-        }
-
-        #signal-effect::after {
-            background: var(--blush);
-            box-shadow: 0 0 15px var(--blush);
+            height: 8px; 
+            background: var(--pink);
+            box-shadow: 0 0 25px var(--pink);
             top: 20%;
             animation: scanline2 0.3s ease-in-out forwards;
         }
@@ -492,80 +482,66 @@
             100% { opacity: 0; }
         }
 
-        @keyframes scanline1 {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
         @keyframes scanline2 {
             0% { top: 20%; }
-            100% { top: 120%; }
+            100% { top: 100%; }
         }
 
         /* PHASE 2: Pixel Curtain */
         #pixel-curtain {
             position: absolute;
-            top: -120vh;
+            top: -200vh; 
             left: 0;
             width: 100vw;
-            height: 120vh;
-            /* Stepped mask at the bottom */
+            height: 200vh; 
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,90 L90,90 L90,95 L80,95 L80,100 L70,100 L70,95 L60,95 L60,90 L50,90 L50,95 L40,95 L40,100 L30,100 L30,95 L20,95 L20,90 L10,90 L10,95 L0,95 Z' fill='black'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,90 L90,90 L90,95 L80,95 L80,100 L70,100 L70,95 L60,95 L60,90 L50,90 L50,95 L40,95 L40,100 L30,100 L30,95 L20,95 L20,90 L10,90 L10,95 L0,95 Z' fill='black'/%3E%3C/svg%3E");
             -webkit-mask-size: 100% 100%;
             mask-size: 100% 100%;
             will-change: transform;
-            /* Pastel pixel stripes */
             background: repeating-linear-gradient(
                 to bottom,
                 var(--butter) 0%,
-                var(--butter) 8%,
-                var(--blush) 8%,
-                var(--blush) 16%,
-                var(--coral) 16%,
-                var(--coral) 24%
+                var(--butter) 10%,
+                var(--pink) 10%,
+                var(--pink) 20%,
+                var(--butter) 20%,
+                var(--butter) 30%,
+                var(--blush) 30%,
+                var(--blush) 40%
             );
+            background-size: 100% 40%;
         }
 
         .curtain-active #pixel-curtain {
-            animation: curtainDrop 1s cubic-bezier(0.5, 0, 0.3, 1) forwards;
+            /* Drops down, holds for 2s, then goes back up */
+            animation: curtainSequence 4.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        @keyframes curtainDrop {
+        @keyframes curtainSequence {
             0% { transform: translateY(0); }
-            100% { transform: translateY(220vh); }
+            27.27% { transform: translateY(200vh); } /* Reaches bottom */
+            72.72% { transform: translateY(200vh); } /* Holds */
+            100% { transform: translateY(0); } /* Goes back up */
         }
 
-        /* PHASE 3 & 4: Final Scene */
+        /* PHASE 3 & 4: Final Scene (Butter Yellow Background) */
         #final-scene {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 10000;
-            background: #1a0b2e; /* Deep purple to match the new image */
+            z-index: 9998; /* Behind the curtain */
+            background: var(--butter);
             opacity: 0;
             pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #final-scene img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Preserves aspect ratio */
+            transition: opacity 0.1s ease;
         }
 
         .show-final-scene #final-scene {
             opacity: 1;
             pointer-events: auto;
-            transition: opacity 0.5s ease;
-        }
-
-        .show-final-scene #transition-overlay {
-            display: none;
         }
 
         /* Reduced Motion */
@@ -633,10 +609,8 @@
         <div id="pixel-curtain"></div>
     </div>
 
-    <!-- Final Scene (Updated to new image) -->
-    <div id="final-scene">
-        <img src="assets/pink-city-pixel-art.png" alt="Neon pixel art cityscape.">
-    </div>
+    <!-- Final Scene (Butter Yellow Background) -->
+    <div id="final-scene"></div>
 
     <!-- DO NOT TOUCH - HEART ANIMATION JS -->
     <script>
@@ -744,10 +718,6 @@
         const startBtn = document.getElementById('startBtn');
         let isTransitioning = false;
 
-        // Preload the image to ensure it's ready
-        const preloadImg = new Image();
-        preloadImg.src = 'assets/pink-city-pixel-art.png';
-
         startBtn.addEventListener('click', () => {
             if (isTransitioning) return; // Prevent multiple clicks
             isTransitioning = true;
@@ -756,25 +726,30 @@
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             
             if (prefersReducedMotion) {
-                // Skip animations, just show image
                 document.body.classList.add('show-final-scene');
                 return;
             }
 
-            // 1. Start Phase 1 (Digital Signal) & Show Overlay
+            // 1. Start Phase 1 (Digital Signal)
             document.body.classList.add('transitioning', 'signal-active');
 
-            // 2. Wait for signal to finish (300ms), then start curtain drop
+            // 2. After 300ms, start the curtain sequence
             setTimeout(() => {
                 document.body.classList.remove('signal-active');
                 document.body.classList.add('curtain-active');
             }, 300);
 
-            // 3. Curtain takes 1s to drop. After it drops, reveal the image.
-            // 300ms + 1000ms = 1300ms total.
+            // 3. After 1.5s (300ms + 1.2s drop time), the curtain fully covers the screen.
+            // We fade in the butter yellow background behind it now.
             setTimeout(() => {
                 document.body.classList.add('show-final-scene');
-            }, 1300);
+            }, 1500);
+            
+            // 4. Cleanup after the curtain goes back up (Total 4.7s)
+            setTimeout(() => {
+                document.body.classList.remove('transitioning', 'curtain-active');
+                document.getElementById('transition-overlay').style.display = 'none';
+            }, 4800);
         });
     </script>
 </body>
