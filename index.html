@@ -673,24 +673,18 @@
             transform: rotate(45deg);
         }
 
-        /* Photo Container */
+        /* Photo Container - Fit to image height */
         .photo-container {
             width: 100%;
-            aspect-ratio: 4/3;
             background: #e0d8c8; 
             overflow: hidden;
             border: 1px solid #ccc;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .photo-container img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            object-position: center;
+            height: auto; /* Adapts to image aspect ratio */
             display: block;
         }
 
@@ -703,23 +697,13 @@
             line-height: 1.2;
         }
 
-        /* The Kiss Painting specific sizes in the 7th frame */
-        .klimt-svg {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            filter: sepia(0.3) contrast(1.1) brightness(0.95);
-        }
-
         /* --- THE TEAR ANIMATION FOR MEMORY 6 --- */
         .tear-container {
             position: relative;
             width: 100%;
-            height: 100%;
             overflow: hidden;
             background: #fff; 
-            cursor: pointer; /* Show it's clickable */
+            cursor: pointer; 
         }
 
         .tear-left, .tear-right {
@@ -729,7 +713,6 @@
             height: 100%;
             background: #fff;
             z-index: 10;
-            /* Animation will be triggered by JS adding .tearing class */
         }
 
         .tear-left {
@@ -1072,7 +1055,7 @@
             <div class="polaroid">
                 <div class="photo-container tear-container" id="tear-frame-6">
                     <!-- Your actual 6th photo hidden underneath -->
-                    <img src="./assets/memory6.jpg" alt="Memory 6" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;">
+                    <img src="./assets/memory6.jpg" alt="Memory 6">
                     
                     <!-- The white screen that tears apart -->
                     <div class="tear-left"></div>
@@ -1084,60 +1067,7 @@
             <!-- MEMORY 7: THE KISS PAINTING -->
             <div class="polaroid">
                 <div class="photo-container">
-                    <svg class="klimt-svg" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="man-cloak" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <rect width="20" height="20" fill="#1a1a1a" />
-                                <rect x="2" y="2" width="16" height="16" fill="#d4af37" opacity="0.8" />
-                                <circle cx="10" cy="10" r="4" fill="#1a1a1a" />
-                                <rect x="8" y="0" width="4" height="20" fill="#d4af37" opacity="0.6" />
-                                <rect x="0" y="8" width="20" height="4" fill="#d4af37" opacity="0.6" />
-                            </pattern>
-                            <pattern id="woman-dress" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                                <rect width="24" height="24" fill="#3d5a80" />
-                                <circle cx="12" cy="12" r="8" fill="#e0fbfc" opacity="0.6" />
-                                <circle cx="0" cy="0" r="5" fill="#ee6c4d" opacity="0.8" />
-                                <circle cx="24" cy="24" r="5" fill="#ee6c4d" opacity="0.8" />
-                                <circle cx="24" cy="0" r="5" fill="#98c1d9" opacity="0.8" />
-                                <circle cx="0" cy="24" r="5" fill="#98c1d9" opacity="0.8" />
-                                <path d="M0,12 Q6,6 12,12 T24,12" stroke="#d4af37" stroke-width="2" fill="none" />
-                            </pattern>
-                            <pattern id="gold-swirls" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                                <rect width="40" height="40" fill="#cfa935" />
-                                <path d="M0,20 Q10,10 20,20 T40,20" stroke="#b8912f" stroke-width="2" fill="none" />
-                                <path d="M20,0 Q10,10 20,20 T20,40" stroke="#b8912f" stroke-width="2" fill="none" />
-                                <circle cx="20" cy="20" r="3" fill="#e5c16c" />
-                            </pattern>
-                            <radialGradient id="vignette" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
-                                <stop offset="50%" stop-color="transparent" />
-                                <stop offset="100%" stop-color="rgba(0,0,0,0.7)" />
-                            </radialGradient>
-                        </defs>
-                        <rect width="400" height="400" fill="url(#gold-swirls)" />
-                        <path d="M0,400 L0,300 Q50,260 100,290 T200,270 T300,290 T400,280 L400,400 Z" fill="#0b1b1a" />
-                        <circle cx="60" cy="320" r="15" fill="#e8e8e8" opacity="0.8"/>
-                        <circle cx="60" cy="320" r="8" fill="#d4af37" />
-                        <circle cx="140" cy="340" r="10" fill="#ee6c4d" opacity="0.8"/>
-                        <circle cx="250" cy="330" r="12" fill="#e8e8e8" opacity="0.7"/>
-                        <circle cx="320" cy="350" r="18" fill="#d4af37" opacity="0.6"/>
-                        <path d="M100,400 L120,180 Q160,120 220,180 L220,400 Z" fill="url(#man-cloak)" />
-                        <path d="M100,400 L120,180 Q160,120 220,180 L220,400 Z" stroke="#d4af37" stroke-width="4" fill="none" />
-                        <path d="M220,400 L220,200 Q260,160 320,200 L320,400 Z" fill="url(#woman-dress)" />
-                        <path d="M220,400 L220,200 Q260,160 320,200 L320,400 Z" stroke="#e0fbfc" stroke-width="2" fill="none" />
-                        <ellipse cx="195" cy="145" rx="22" ry="32" transform="rotate(30 195 145)" fill="#fcecd5" />
-                        <path d="M165,130 Q170,80 210,105 Q220,130 205,160 Z" fill="#2b1d16" />
-                        <path d="M165,130 Q150,110 175,95 Q185,95 195,105" fill="#2b1d16" />
-                        <ellipse cx="225" cy="155" rx="20" ry="28" transform="rotate(-40 225 155)" fill="#fcecd5" />
-                        <path d="M235,125 Q230,80 270,110 Q280,140 250,170 Z" fill="#c45f2d" />
-                        <circle cx="250" cy="110" r="6" fill="#e8e8e8" />
-                        <circle cx="260" cy="120" r="5" fill="#ee6c4d" />
-                        <circle cx="235" cy="115" r="4" fill="#d4af37" />
-                        <path d="M215,145 Q210,148 205,145" stroke="#2b1d16" stroke-width="2" fill="none" />
-                        <path d="M195,130 Q200,133 205,130" stroke="#2b1d16" stroke-width="2" fill="none" />
-                        <path d="M205,175 Q225,185 230,165 Q220,175 210,170" fill="#fcecd5" stroke="#d4af37" stroke-width="1" />
-                        <path d="M200,185 Q215,195 225,190" fill="#fcecd5" stroke="#e0fbfc" stroke-width="1" />
-                        <rect width="400" height="400" fill="url(#vignette)" />
-                    </svg>
+                    <img src="./assets/the-kiss.jpg" alt="The Kiss by Gustav Klimt">
                 </div>
                 <div class="caption">The Kiss</div>
             </div>
