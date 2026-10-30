@@ -725,11 +725,12 @@
             opacity: 0;
         }
 
+        /* FORCE FULL COVERAGE */
         .tear-left, .tear-right {
             position: absolute;
             top: 0;
+            bottom: 0; /* Replaced height 100% with bottom 0 for perfect stretch */
             width: 50%;
-            height: 100%;
             background: #fff;
             z-index: 10;
             pointer-events: auto;
