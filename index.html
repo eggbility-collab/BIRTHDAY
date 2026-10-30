@@ -33,7 +33,7 @@
             min-height: 100dvh;
             overflow-y: auto;
             overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Background Layers */
@@ -544,7 +544,7 @@
             width: 100vw;
             height: 100vh;
             z-index: 10000;
-            background: #0B0914; /* Deep cobalt to fill empty space */
+            background: #1a0b2e; /* Deep purple to match the new image */
             opacity: 0;
             pointer-events: none;
             display: flex;
@@ -633,9 +633,9 @@
         <div id="pixel-curtain"></div>
     </div>
 
-    <!-- Final Scene -->
+    <!-- Final Scene (Updated to new image) -->
     <div id="final-scene">
-        <img src="assets/moon-promise-pixel-art.png" alt="Fly you to the moon. That's a promise.">
+        <img src="assets/pink-city-pixel-art.png" alt="Neon pixel art cityscape.">
     </div>
 
     <!-- DO NOT TOUCH - HEART ANIMATION JS -->
@@ -746,7 +746,7 @@
 
         // Preload the image to ensure it's ready
         const preloadImg = new Image();
-        preloadImg.src = 'assets/moon-promise-pixel-art.png';
+        preloadImg.src = 'assets/pink-city-pixel-art.png';
 
         startBtn.addEventListener('click', () => {
             if (isTransitioning) return; // Prevent multiple clicks
