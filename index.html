@@ -731,6 +731,37 @@
             box-shadow: -2px 0 5px rgba(0,0,0,0.1);
         }
 
+        /* The Vertical Triangle Banner */
+        .reveal-banner {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 130px;
+            height: 160px;
+            background: var(--blush); /* Soft pink background */
+            color: var(--cocoa);
+            font-family: 'Caveat', cursive;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            /* Creates the pointed bottom */
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+            box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+            z-index: 15;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            padding: 15px 10px 40px 10px;
+            line-height: 1.1;
+            pointer-events: none; /* Let clicks pass through to the white paper */
+        }
+
+        .tearing .reveal-banner {
+            opacity: 0;
+            transform: translate(-50%, -20px);
+        }
+
         .tearing .tear-left {
             animation: tearLeft 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -787,7 +818,7 @@
             .curtain-active #pixel-curtain { animation: none !important; }
             .show-final-scene #final-scene { transition: none; opacity: 1; }
             #transition-overlay { display: none !important; }
-            .tear-left, .tear-right { display: none !important; } 
+            .tear-left, .tear-right, .reveal-banner { display: none !important; } 
         }
 
         /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
@@ -1064,6 +1095,9 @@
                     <!-- The pure white overlay that tears apart -->
                     <div class="tear-left"></div>
                     <div class="tear-right"></div>
+                    
+                    <!-- The vertical triangle tag -->
+                    <div class="reveal-banner">Tap to<br>reveal 💌</div>
                 </div>
                 <div class="caption">[WRITE YOUR CAPTION HERE]</div>
             </div>
