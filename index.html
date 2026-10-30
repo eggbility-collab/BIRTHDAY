@@ -445,17 +445,18 @@
             overflow: hidden;
         }
 
-        /* The massive main yellow square */
+        /* The massive main square - NOW NEON CYBERPUNK */
         .transition-square {
             position: absolute;
             top: 0;
             left: 0;
-            width: 150vmax; /* Large enough to cover screen, but you can see it fall */
+            width: 150vmax;
             height: 150vmax;
-            background-color: var(--butter);
+            /* Gradient of all the trail colors combined */
+            background: linear-gradient(135deg, #00FF66, #00FFFF, #0088FF, #8A2BE2);
             will-change: transform;
             z-index: 10; 
-            box-shadow: 0 0 30px rgba(242, 212, 111, 0.8); /* Yellow glow */
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.5); /* Cyan glow */
         }
 
         /* The massive ghost afterimages */
@@ -690,14 +691,14 @@
                 return;
             }
 
-            // Create the main falling yellow square
+            // Create the main falling neon square
             const mainSquare = document.createElement('div');
             mainSquare.className = 'transition-square';
             mainSquare.style.transform = `translateY(-150vmax)`; 
             overlay.appendChild(mainSquare);
 
             const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
-            const duration = 1200; // 1.2 seconds to drop
+            const duration = 1200; // 1.2 seconds
             const startTime = performance.now();
             let lastGhostTime = 0;
 
@@ -716,10 +717,10 @@
                 
                 const currentY = startY + (endY - startY) * ease;
                 
-                // Move the main yellow square
+                // Move the main neon square
                 mainSquare.style.transform = `translateY(${currentY}vmax)`;
 
-                // Spawn a neon ghost square every 60ms (just like the hearts)
+                // Spawn a neon ghost square every 60ms
                 if (time - lastGhostTime > 60) {
                     createTransitionGhost(currentY);
                     lastGhostTime = time;
@@ -746,7 +747,7 @@
                 ghost.style.transform = `translateY(${yPos}vmax)`;
                 ghost.style.backgroundColor = color;
                 
-                // Insert BEHIND the main yellow square
+                // Insert BEHIND the main square
                 overlay.insertBefore(ghost, mainSquare);
 
                 // Remove from DOM after the 2.5s fade finishes
