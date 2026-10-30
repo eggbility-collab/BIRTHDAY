@@ -555,7 +555,7 @@
             width: 100%;
             max-width: 800px;
             background: var(--surface);
-            padding: 12px 20px;
+            padding: 15px 25px; /* Slightly taller header */
             border-radius: 30px;
             display: flex;
             align-items: center;
@@ -569,8 +569,33 @@
             margin-top: 10px;
         }
 
+        /* Bigger text for stage 2 */
+        #final-scene .progress-text {
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        /* Bigger score for stage 2 */
+        #final-scene .score {
+            font-size: 24px;
+        }
+
         #final-scene .progress-fill {
             width: 6.66%; /* 1/15 */
+        }
+
+        /* Mobile adjustments for Stage 2 bigger text */
+        @media (max-width: 600px) {
+            #final-scene .progress-text {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+            #final-scene .score {
+                font-size: 18px;
+            }
+            #final-scene .header {
+                padding: 12px 15px;
+            }
         }
 
         /* Reduced Motion */
