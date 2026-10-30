@@ -713,7 +713,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 50%;
+            width: 55%; /* Made wider to ensure overlap in the middle */
             background: #fff;
             z-index: 10;
             pointer-events: auto;
@@ -721,13 +721,15 @@
 
         .tear-left {
             left: 0;
-            clip-path: polygon(0 0, 50% 0, 48% 5%, 52% 10%, 48% 15%, 52% 20%, 48% 25%, 52% 30%, 48% 35%, 52% 40%, 48% 45%, 52% 50%, 48% 55%, 52% 60%, 48% 65%, 52% 70%, 48% 75%, 52% 80%, 48% 85%, 52% 90%, 48% 95%, 50% 100%, 0 100%);
+            /* Jagged edge on the right side going into the middle */
+            clip-path: polygon(0 0, 100% 0, 95% 5%, 100% 10%, 95% 15%, 100% 20%, 95% 25%, 100% 30%, 95% 35%, 100% 40%, 95% 45%, 100% 50%, 95% 55%, 100% 60%, 95% 65%, 100% 70%, 95% 75%, 100% 80%, 95% 85%, 100% 90%, 95% 95%, 100% 100%, 0 100%);
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
 
         .tear-right {
             right: 0;
-            clip-path: polygon(100% 0, 50% 0, 48% 5%, 52% 10%, 48% 15%, 52% 20%, 48% 25%, 52% 30%, 48% 35%, 52% 40%, 48% 45%, 52% 50%, 48% 55%, 52% 60%, 48% 65%, 52% 70%, 48% 75%, 52% 80%, 48% 85%, 52% 90%, 48% 95%, 50% 100%, 100% 100%);
+            /* Jagged edge on the left side going into the middle */
+            clip-path: polygon(100% 0, 0 0, 5% 5%, 0 10%, 5% 15%, 0 20%, 5% 25%, 0 30%, 5% 35%, 0 40%, 5% 45%, 0 50%, 5% 55%, 0 60%, 5% 65%, 0 70%, 5% 75%, 0 80%, 5% 85%, 0 90%, 5% 95%, 0 100%, 100% 100%);
             box-shadow: -2px 0 5px rgba(0,0,0,0.1);
         }
 
@@ -739,7 +741,7 @@
             transform: translateX(-50%);
             width: 130px;
             height: 160px;
-            background: var(--blush); /* Soft pink background */
+            background: var(--blush); 
             color: var(--cocoa);
             font-family: 'Caveat', cursive;
             font-size: 30px;
@@ -754,7 +756,7 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
             padding: 15px 10px 40px 10px;
             line-height: 1.1;
-            pointer-events: none; /* Let clicks pass through to the white paper */
+            pointer-events: none; 
         }
 
         .tearing .reveal-banner {
