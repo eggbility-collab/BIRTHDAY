@@ -673,7 +673,7 @@
             transform: rotate(45deg);
         }
 
-        /* Photo Container - Enforced strict height */
+        /* Photo Container */
         .photo-container {
             width: 100%;
             background: #e0d8c8; 
@@ -681,7 +681,7 @@
             border: 1px solid #ccc;
             position: relative;
             display: block; 
-            line-height: 0; /* Removes gap below image */
+            line-height: 0; 
         }
 
         .photo-container img {
@@ -708,30 +708,7 @@
             cursor: pointer; 
         }
 
-        /* White label with background */
-        .tear-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 10px 25px;
-            font-family: 'Caveat', cursive;
-            font-size: 32px;
-            color: #d3c5b5;
-            z-index: 20;
-            pointer-events: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: opacity 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .tearing .tear-text {
-            opacity: 0;
-        }
-
-        /* FORCE FULL COVERAGE */
+        /* FORCE FULL COVERAGE ON JPG ONLY */
         .tear-left, .tear-right {
             position: absolute;
             top: 0;
@@ -1084,10 +1061,9 @@
                     <!-- Your actual 6th photo hidden underneath -->
                     <img src="./assets/memory6.jpg" alt="Memory 6">
                     
-                    <!-- The white screen that tears apart -->
+                    <!-- The pure white overlay that tears apart -->
                     <div class="tear-left"></div>
                     <div class="tear-right"></div>
-                    <div class="tear-text">Tap to reveal 💌</div>
                 </div>
                 <div class="caption">[WRITE YOUR CAPTION HERE]</div>
             </div>
