@@ -922,13 +922,14 @@
             align-items: center;
             box-shadow: 0 20px 50px rgba(56, 20, 19, 0.3);
             overflow: hidden;
-            border: none; /* Ensures no border */
+            border: none; 
         }
 
         .bg-heart {
             position: absolute;
             fill: var(--envelope);
             opacity: 0.6;
+            pointer-events: none;
         }
         .bh-1 { width: 30px; top: 10%; left: 40%; transform: rotate(-15deg); }
         .bh-2 { width: 20px; top: 70%; left: 15%; transform: rotate(25deg); }
@@ -942,20 +943,32 @@
             gap: 20px;
             position: relative;
             z-index: 10;
+            height: 100%;
         }
 
-        /* YOUR CAMERA */
+        /* YOUR CAMERA WRAPPER TO ENSURE CLICKS */
+        .camera-btn-wrapper {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+            pointer-events: auto;
+            z-index: 20;
+            transition: transform 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .camera-btn-wrapper:active {
+            transform: scale(0.95);
+        }
+
         .svg-camera {
             width: 220px;
             height: auto;
             margin-top: 40px; 
             filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .svg-camera:active {
-            transform: scale(0.95);
+            pointer-events: none;
         }
 
         .svg-envelope-wrapper {
@@ -979,6 +992,34 @@
             height: auto;
             margin-top: 40px;
             filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
+            pointer-events: none;
+        }
+
+        /* NEW GALLERY BUTTON */
+        .gallery-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--main-red);
+            color: var(--vintage-paper);
+            border: 2px solid var(--accent-gold);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gallery-btn:active {
+            transform: translateX(-50%) scale(0.95);
         }
 
         /* MOBILE RESPONSIVE FIXES FOR STAGE 3 (NO OVERLAP) */
@@ -997,28 +1038,29 @@
                 grid-column: 1 / -1; /* Span full width */
                 grid-row: 1; /* Top row */
                 width: min(260px, 75vw);
+                margin-top: 10vh;
             }
-            .svg-camera {
+            .camera-btn-wrapper {
                 grid-column: 1;
                 grid-row: 2; /* Bottom left */
-                width: clamp(80px, 25vw, 120px);
-                position: static;
-                margin: 0;
                 align-self: end;
                 justify-self: start;
                 margin-left: 5vw;
-                margin-bottom: 5vh;
+                margin-bottom: 10vh;
+            }
+            .svg-camera {
+                width: clamp(80px, 25vw, 120px);
+                margin: 0;
             }
             .svg-flowers {
                 grid-column: 2;
                 grid-row: 2; /* Bottom right */
                 width: clamp(80px, 25vw, 110px);
-                position: static;
-                margin: 0;
                 align-self: end;
                 justify-self: end;
                 margin-right: 5vw;
-                margin-bottom: 5vh;
+                margin-bottom: 10vh;
+                margin-top: 0;
             }
             .main-canvas {
                 height: 90vh;
@@ -1032,14 +1074,17 @@
             }
             .svg-envelope-wrapper {
                 width: min(180px, 60vw);
+                margin-top: 5vh;
             }
             .svg-camera {
                 width: 60px;
-                margin-bottom: 2vh;
+            }
+            .camera-btn-wrapper {
+                margin-bottom: 5vh;
             }
             .svg-flowers {
                 width: 60px;
-                margin-bottom: 2vh;
+                margin-bottom: 5vh;
             }
         }
 
@@ -1051,7 +1096,7 @@
             .tear-left, .tear-right, .reveal-banner { display: none !important; } 
             #red-rope-container.snapped #red-circle { transform: none !important; }
             #love-text { transition: none; }
-            .svg-camera:active { transform: none; }
+            .camera-btn-wrapper:active { transform: none; }
         }
 
         /* --- CAMERA INTERFACE MODAL --- */
@@ -1063,7 +1108,7 @@
             height: 100vh;
             height: 100dvh;
             z-index: 100000000;
-            background-color: #1a1110; /* Very dark brown/black */
+            background-color: #1a1110;
             display: none;
             flex-direction: column;
             align-items: center;
@@ -1075,6 +1120,16 @@
         #camera-modal.active {
             display: flex;
             opacity: 1;
+        }
+
+        /* Flash Overlay */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--vintage-paper);
+            z-index: 100000005;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .camera-back-btn {
@@ -1132,8 +1187,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* CSS Filter for live preview */
             filter: sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg);
+            transition: filter 0.3s ease;
         }
 
         .grain-overlay {
@@ -1157,16 +1212,49 @@
             height: 120px;
             background: var(--main-red);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-around;
-            padding: 0 20px;
+            justify-content: center;
             border-top: 2px solid var(--accent-gold);
             z-index: 4;
+            padding: 0 10px;
+        }
+
+        .filter-presets {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .preset-btn {
+            background: transparent;
+            color: var(--vintage-paper);
+            border: 1px solid var(--accent-gold);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn.active {
+            background: var(--accent-gold);
+            color: var(--main-red);
+            font-weight: bold;
+        }
+
+        .action-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
         }
 
         .capture-btn {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: var(--surface);
             border: 4px solid var(--accent-gold);
@@ -1180,8 +1268,8 @@
 
         .capture-btn::after {
             content: '';
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background: var(--main-red);
             transition: all 0.1s;
@@ -1199,10 +1287,10 @@
             background: var(--surface);
             color: var(--main-red);
             border: 2px solid var(--accent-gold);
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1304,6 +1392,7 @@
             transition: opacity 0.3s;
             pointer-events: none;
             z-index: 20;
+            text-align: center;
         }
         
         .save-toast.show {
@@ -1324,7 +1413,7 @@
                 font-size: 14px;
             }
             .camera-controls {
-                height: 100px;
+                height: 140px;
                 padding-bottom: env(safe-area-inset-bottom);
             }
         }
@@ -1577,37 +1666,39 @@
 
             <div class="scene-container">
                 
-                <!-- 1. YOUR CAMERA (Clickable to open Camera UI) -->
-                <svg class="svg-camera" id="camera-trigger" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="200" cy="380" rx="120" ry="15" fill="#381413" opacity="0.15"/>
-                    <path d="M 80 120 C 80 90, 110 70, 160 65 C 200 60, 280 60, 320 65 C 360 70, 370 100, 370 140 L 370 320 C 370 360, 350 380, 300 380 L 100 380 C 50 380, 30 350, 30 300 L 30 160 C 30 130, 50 120, 80 120 Z" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
-                    <path d="M 320 65 C 350 65, 370 80, 370 110 L 370 140" stroke="#E6D68E" stroke-width="3" stroke-linecap="round"/>
-                    <rect x="130" y="90" width="45" height="70" rx="20" fill="#FFFFFF" stroke="#E6D68E" stroke-width="2"/>
-                    <rect x="55" y="110" width="25" height="25" rx="3" fill="#222222" stroke="#E6D68E" stroke-width="2"/>
-                    <circle cx="230" cy="100" r="8" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
-                    <circle cx="230" cy="125" r="8" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
-                    <text x="270" y="85" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#C5A85C" letter-spacing="1">FUJIFILM</text>
-                    <text x="275" y="98" font-family="Arial, sans-serif" font-size="6" fill="#C5A85C">instax mini 8</text>
-                    <path id="sideTextPath" d="M 55 240 L 55 340" fill="none" />
-                    <text font-family="Arial, sans-serif" font-size="12" fill="#B89A4F">
-                        <textPath href="#sideTextPath" startOffset="0%" writing-mode="vertical-rl">transparently</textPath>
-                    </text>
-                    <circle cx="210" cy="250" r="100" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
-                    <circle cx="210" cy="250" r="75" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
-                    <path id="focusPath" d="M 210 175 A 75 75 0 1 1 209 175" fill="none" />
-                    <text font-family="Arial, sans-serif" font-weight="bold" font-size="10" fill="#D1B869" letter-spacing="3">
-                        <textPath href="#focusPath" startOffset="50%" text-anchor="middle">F O C U S</textPath>
-                    </text>
-                    <circle cx="210" cy="250" r="60" fill="none" stroke="#D1B869" stroke-width="2" stroke-dasharray="4 8"/>
-                    <circle cx="210" cy="250" r="50" fill="none" stroke="#E6D68E" stroke-width="1"/>
-                    <circle cx="210" cy="250" r="35" fill="#111111"/>
-                    <circle cx="200" cy="240" r="10" fill="#333333" opacity="0.5"/>
-                    <circle cx="80" cy="200" r="18" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
-                    <path d="M 370 240 C 385 240, 390 260, 390 280 C 390 300, 380 320, 370 320" stroke="#E6D68E" stroke-width="3" fill="none"/>
-                    <path d="M 370 270 C 375 270, 378 280, 378 290 C 378 300, 375 310, 370 310" stroke="#E6D68E" stroke-width="2" fill="none"/>
-                </svg>
+                <!-- 1. CAMERA -->
+                <button class="camera-btn-wrapper" id="camera-trigger" aria-label="Open Camera">
+                    <svg class="svg-camera" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="200" cy="380" rx="120" ry="15" fill="#381413" opacity="0.15"/>
+                        <path d="M 80 120 C 80 90, 110 70, 160 65 C 200 60, 280 60, 320 65 C 360 70, 370 100, 370 140 L 370 320 C 370 360, 350 380, 300 380 L 100 380 C 50 380, 30 350, 30 300 L 30 160 C 30 130, 50 120, 80 120 Z" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
+                        <path d="M 320 65 C 350 65, 370 80, 370 110 L 370 140" stroke="#E6D68E" stroke-width="3" stroke-linecap="round"/>
+                        <rect x="130" y="90" width="45" height="70" rx="20" fill="#FFFFFF" stroke="#E6D68E" stroke-width="2"/>
+                        <rect x="55" y="110" width="25" height="25" rx="3" fill="#222222" stroke="#E6D68E" stroke-width="2"/>
+                        <circle cx="230" cy="100" r="8" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                        <circle cx="230" cy="125" r="8" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                        <text x="270" y="85" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#C5A85C" letter-spacing="1">FUJIFILM</text>
+                        <text x="275" y="98" font-family="Arial, sans-serif" font-size="6" fill="#C5A85C">instax mini 8</text>
+                        <path id="sideTextPath" d="M 55 240 L 55 340" fill="none" />
+                        <text font-family="Arial, sans-serif" font-size="12" fill="#B89A4F">
+                            <textPath href="#sideTextPath" startOffset="0%" writing-mode="vertical-rl">transparently</textPath>
+                        </text>
+                        <circle cx="210" cy="250" r="100" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
+                        <circle cx="210" cy="250" r="75" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                        <path id="focusPath" d="M 210 175 A 75 75 0 1 1 209 175" fill="none" />
+                        <text font-family="Arial, sans-serif" font-weight="bold" font-size="10" fill="#D1B869" letter-spacing="3">
+                            <textPath href="#focusPath" startOffset="50%" text-anchor="middle">F O C U S</textPath>
+                        </text>
+                        <circle cx="210" cy="250" r="60" fill="none" stroke="#D1B869" stroke-width="2" stroke-dasharray="4 8"/>
+                        <circle cx="210" cy="250" r="50" fill="none" stroke="#E6D68E" stroke-width="1"/>
+                        <circle cx="210" cy="250" r="35" fill="#111111"/>
+                        <circle cx="200" cy="240" r="10" fill="#333333" opacity="0.5"/>
+                        <circle cx="80" cy="200" r="18" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                        <path d="M 370 240 C 385 240, 390 260, 390 280 C 390 300, 380 320, 370 320" stroke="#E6D68E" stroke-width="3" fill="none"/>
+                        <path d="M 370 270 C 375 270, 378 280, 378 290 C 378 300, 375 310, 370 310" stroke="#E6D68E" stroke-width="2" fill="none"/>
+                    </svg>
+                </button>
 
-                <!-- 2. YOUR ENVELOPE (Click me text removed) -->
+                <!-- 2. ENVELOPE -->
                 <div class="svg-envelope-wrapper">
                     <svg class="svg-envelope" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 40 120 L 150 30 L 260 120 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="3" stroke-linejoin="round"/>
@@ -1630,36 +1721,30 @@
                     </svg>
                 </div>
 
-                <!-- 3. YOUR BOUQUET (Calla Lily completely removed) -->
+                <!-- 3. BOUQUET -->
                 <svg class="svg-flowers" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Stems (Background) -->
                     <path d="M 100 170 Q 70 100 50 60" stroke="#5C8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
                     <path d="M 100 170 Q 130 100 150 60" stroke="#5C8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
                     <path d="M 100 170 Q 100 100 100 50" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
                     <path d="M 100 170 Q 60 130 40 110" stroke="#5C8A3C" stroke-width="2" fill="none" stroke-linecap="round"/>
                     <path d="M 100 170 Q 140 130 160 110" stroke="#5C8A3C" stroke-width="2" fill="none" stroke-linecap="round"/>
 
-                    <!-- Lily of the Valley Flowers (Background) -->
-                    <!-- Left cluster -->
                     <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
                         <path d="M 50 60 Q 45 70 40 75 Q 50 80 55 70 Z"/>
                         <path d="M 60 80 Q 55 90 50 95 Q 60 100 65 90 Z"/>
                         <path d="M 45 90 Q 40 100 35 105 Q 45 110 50 100 Z"/>
                     </g>
-                    <!-- Right cluster -->
                     <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
                         <path d="M 150 60 Q 155 70 160 75 Q 150 80 145 70 Z"/>
                         <path d="M 140 80 Q 145 90 150 95 Q 140 100 135 90 Z"/>
                         <path d="M 155 90 Q 160 100 165 105 Q 155 110 150 100 Z"/>
                     </g>
 
-                    <!-- Large Green Leaves -->
                     <path d="M 90 160 Q 40 140 20 80 Q 60 120 90 160 Z" fill="#4A7030"/>
                     <path d="M 110 160 Q 160 140 180 80 Q 140 120 110 160 Z" fill="#4A7030"/>
                     <path d="M 85 130 Q 50 90 60 40 Q 80 90 85 130 Z" fill="#5C8A3C"/>
                     <path d="M 115 130 Q 150 90 140 40 Q 120 90 115 130 Z" fill="#5C8A3C"/>
 
-                    <!-- Lily of the Valley (Foreground) -->
                     <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
                         <path d="M 100 50 Q 95 60 90 65 Q 100 70 105 60 Z"/>
                         <path d="M 105 70 Q 100 80 95 85 Q 105 90 110 80 Z"/>
@@ -1667,37 +1752,32 @@
                         <path d="M 108 95 Q 103 105 98 110 Q 108 115 113 105 Z"/>
                     </g>
 
-                    <!-- White Wrapping Paper -->
                     <path d="M 60 160 L 140 160 L 120 290 L 80 290 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="2" stroke-linejoin="round"/>
-                    <!-- Wrapper Fold Lines -->
                     <path d="M 70 160 L 100 200 L 130 160" stroke="#E5DED8" stroke-width="2" fill="none"/>
                     <path d="M 80 290 L 100 200 L 120 290" stroke="#E5DED8" stroke-width="2" fill="none"/>
 
-                    <!-- Stem Wrap (White Ribbon) -->
                     <rect x="90" y="200" width="20" height="90" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1"/>
-                    <!-- Wrap diagonal lines -->
                     <path d="M 90 210 L 110 220 M 90 230 L 110 240 M 90 250 L 110 260 M 90 270 L 110 280" stroke="#E5DED8" stroke-width="1.5" fill="none"/>
 
-                    <!-- Ribbon Bow -->
                     <g>
-                        <!-- Loops -->
                         <path d="M 100 190 C 60 160 60 220 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
                         <path d="M 100 190 C 140 160 140 220 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
-                        <!-- Tails -->
                         <path d="M 95 200 Q 70 230 60 270 Q 80 240 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
                         <path d="M 105 200 Q 130 230 140 270 Q 120 240 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
-                        <!-- Center Knot -->
                         <circle cx="100" cy="195" r="6" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
                     </g>
                 </svg>
 
             </div>
+
+            <!-- NEW GALLERY BUTTON -->
+            <button class="gallery-btn" id="gallery-btn">📸 View Memories</button>
         </div>
     </div>
 
     <!-- CAMERA INTERFACE MODAL -->
     <div id="camera-modal">
-        <button class="camera-back-btn" id="close-camera-btn">← Back to Collection</button>
+        <button class="camera-back-btn" id="close-camera-btn">← Back</button>
         
         <div class="camera-ui">
             <div class="viewfinder">
@@ -1712,16 +1792,21 @@
             </div>
             
             <div class="camera-controls" id="camera-controls">
-                <button class="switch-btn" id="switch-camera-btn" aria-label="Switch Camera">🔄</button>
-                <button class="capture-btn" id="capture-btn" aria-label="Take Photo"></button>
-                <div style="width: 50px;"></div> <!-- Spacer to balance layout -->
+                <div class="filter-presets" id="filter-presets">
+                    <button class="preset-btn active" data-filter="warm">Warm Film</button>
+                    <button class="preset-btn" data-filter="vintage">Soft Vintage</button>
+                    <button class="preset-btn" data-filter="sepia">Classic Sepia</button>
+                </div>
+                <div class="action-row">
+                    <button class="switch-btn" id="switch-camera-btn" aria-label="Switch Camera">🔄</button>
+                    <button class="capture-btn" id="capture-btn" aria-label="Take Photo"></button>
+                    <div style="width: 45px;"></div> <!-- Spacer -->
+                </div>
             </div>
         </div>
 
-        <!-- Hidden Canvas for processing filter -->
         <canvas id="camera-canvas" style="display:none;"></canvas>
 
-        <!-- Preview State -->
         <div class="preview-container" id="preview-container">
             <div class="polaroid-frame">
                 <img id="captured-image" alt="Captured memory">
@@ -1730,9 +1815,12 @@
                 <button class="preview-btn" id="retake-btn">Retake</button>
                 <button class="preview-btn primary" id="save-btn">Save Photo</button>
             </div>
-            <div class="save-toast" id="save-toast">Photo Saved!</div>
+            <div class="save-toast" id="save-toast">Long-press the image to save.</div>
         </div>
     </div>
+
+    <!-- FLASH OVERLAY -->
+    <div id="flash-overlay"></div>
 
     <!-- MOBILE SIMULATOR -->
     <button class="sim-btn" id="openSimBtn">📱 Mobile POV</button>
@@ -1988,6 +2076,8 @@
         const switchBtn = document.getElementById('switch-camera-btn');
         const cameraError = document.getElementById('camera-error-msg');
         const cameraControls = document.getElementById('camera-controls');
+        const flashOverlay = document.getElementById('flash-overlay');
+        const galleryBtn = document.getElementById('gallery-btn');
         
         const previewContainer = document.getElementById('preview-container');
         const capturedImage = document.getElementById('captured-image');
@@ -1996,13 +2086,46 @@
         const saveToast = document.getElementById('save-toast');
 
         let stream = null;
-        let facingMode = 'environment'; // Start with rear camera
-        let hasMultipleCameras = false;
+        let facingMode = 'environment';
+        let currentFilter = 'sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg)';
 
-        // Check if camera is supported
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            cameraError.style.display = 'block';
-            cameraError.innerHTML = 'Camera API is not supported in this browser.';
+        // Filter Logic
+        const filterPresets = document.querySelectorAll('.preset-btn');
+        filterPresets.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterPresets.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const type = btn.getAttribute('data-filter');
+                if (type === 'warm') {
+                    currentFilter = 'sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg)';
+                } else if (type === 'vintage') {
+                    currentFilter = 'sepia(0.4) contrast(0.9) brightness(1.1) saturate(0.6)';
+                } else if (type === 'sepia') {
+                    currentFilter = 'sepia(0.8) contrast(1.2) brightness(0.9)';
+                }
+                videoElement.style.filter = currentFilter;
+            });
+        });
+
+        // Open Camera
+        if (cameraTrigger) {
+            cameraTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                cameraModal.classList.add('active');
+                previewContainer.classList.remove('active');
+                startCamera();
+            });
+        }
+
+        // Gallery Button Logic
+        if (galleryBtn) {
+            galleryBtn.addEventListener('click', () => {
+                document.getElementById('stage-3').classList.remove('show');
+                document.getElementById('final-scene').style.opacity = '1';
+                document.getElementById('final-scene').style.pointerEvents = 'auto';
+                document.body.classList.add('show-final-scene');
+            });
         }
 
         async function startCamera() {
@@ -2020,13 +2143,9 @@
                 cameraError.style.display = 'none';
                 cameraControls.style.display = 'flex';
 
-                // Check if multiple cameras exist to show switch button
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 const videoDevices = devices.filter(device => device.kind === 'videoinput');
-                hasMultipleCameras = videoDevices.length > 1;
-                
-                // Show switch button only if multiple cameras
-                switchBtn.style.display = hasMultipleCameras ? 'flex' : 'none';
+                switchBtn.style.display = videoDevices.length > 1 ? 'flex' : 'none';
 
             } catch (err) {
                 console.error("Camera error:", err);
@@ -2051,18 +2170,11 @@
             videoElement.srcObject = null;
         }
 
-        cameraTrigger.addEventListener('click', () => {
-            cameraModal.classList.add('active');
-            previewContainer.classList.remove('active');
-            startCamera();
-        });
-
         closeCameraBtn.addEventListener('click', () => {
             stopCamera();
             cameraModal.classList.remove('active');
         });
 
-        // Handle visibility change (stop camera if user tabs away)
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && cameraModal.classList.contains('active')) {
                 stopCamera();
@@ -2079,33 +2191,30 @@
         captureBtn.addEventListener('click', () => {
             if (!stream) return;
 
-            // Play shutter sound (optional, but let's do a quick visual flash instead)
-            const viewfinder = document.querySelector('.viewfinder');
-            viewfinder.style.backgroundColor = '#fff';
-            setTimeout(() => { viewfinder.style.backgroundColor = '#000'; }, 100);
+            // Full screen flash
+            flashOverlay.style.transition = 'none';
+            flashOverlay.style.opacity = '1';
+            setTimeout(() => {
+                flashOverlay.style.transition = 'opacity 0.3s ease';
+                flashOverlay.style.opacity = '0';
+            }, 50);
 
-            // Setup canvas
             const width = videoElement.videoWidth;
             const height = videoElement.videoHeight;
             canvasElement.width = width;
             canvasElement.height = height;
             const ctx = canvasElement.getContext('2d');
 
-            // Apply the same CSS filter to the Canvas context
-            ctx.filter = 'sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg)';
-            
-            // Draw the video frame
+            ctx.filter = currentFilter;
             ctx.drawImage(videoElement, 0, 0, width, height);
 
-            // Add Vignette manually to the canvas
-            ctx.filter = 'none'; // Reset filter for overlay
+            ctx.filter = 'none';
             const gradient = ctx.createRadialGradient(width/2, height/2, width/4, width/2, height/2, width/1.5);
             gradient.addColorStop(0, 'rgba(0,0,0,0)');
             gradient.addColorStop(1, 'rgba(0,0,0,0.6)');
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, width, height);
 
-            // Add Grain (simulated)
             const grainData = ctx.getImageData(0, 0, width, height);
             const data = grainData.data;
             for (let i = 0; i < data.length; i += 4) {
@@ -2116,16 +2225,13 @@
             }
             ctx.putImageData(grainData, 0, 0);
 
-            // Convert to data URL and show preview
             const dataURL = canvasElement.toDataURL('image/jpeg', 0.9);
             capturedImage.src = dataURL;
             
-            // Hide live view, show preview
             videoElement.style.display = 'none';
             cameraControls.style.display = 'none';
             previewContainer.classList.add('active');
             
-            // Stop the camera stream while previewing
             stopCamera();
         });
 
@@ -2138,36 +2244,38 @@
         saveBtn.addEventListener('click', async () => {
             const dataURL = capturedImage.src;
 
-            // Check for Web Share API support (mobile)
+            // If mobile / supports share
             if (navigator.share) {
                 try {
-                    // Convert dataURL to Blob
                     const res = await fetch(dataURL);
                     const blob = await res.blob();
-                    const file = new File([blob], `our-memory-${new Date().toISOString().split('T')[0]}.jpg`, { type: 'image/jpeg' });
+                    const file = new File([blob], `memory-${new Date().toISOString().split('T')[0]}.jpg`, { type: 'image/jpeg' });
 
                     await navigator.share({
                         files: [file],
-                        title: 'Our Memory',
-                        text: 'I took this photo with your birthday website!'
+                        title: 'Our Memory'
                     });
-                    
-                    showToast('Shared successfully!');
                     return;
                 } catch (err) {
-                    console.log('Share failed, falling back to download', err);
+                    console.log('Share failed, fallback to save', err);
                 }
             }
 
-            // Fallback to download (desktop)
-            const link = document.createElement('a');
-            link.href = dataURL;
-            link.download = `our-memory-${new Date().toISOString().split('T')[0]}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showToast('Photo Saved!');
+            // Fallback: Open image in new tab for long-press saving
+            const win = window.open();
+            if (win) {
+                win.document.write(`<img src="${dataURL}" style="max-width:100%;" />`);
+                showToast('Long-press the image to save.');
+            } else {
+                // If popup blocked, fallback to download link
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = `memory-${new Date().toISOString().split('T')[0]}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Photo downloaded!');
+            }
         });
 
         function showToast(msg) {
@@ -2175,7 +2283,7 @@
             saveToast.classList.add('show');
             setTimeout(() => {
                 saveToast.classList.remove('show');
-            }, 3000);
+            }, 4000);
         }
     </script>
 
