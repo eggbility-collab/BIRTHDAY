@@ -2,25 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Happy Birthday, Jessa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Scene</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-pastel: #EAE6DF;
-            --surface: #FDFBF7;
-            --pink: #fb7185;
-            --pink-dark: #e11d48;
-            --butter: #F2D46F;
-            --blush: #F2B2BE;
-            --coral: #FF9F81;
-            --cocoa: #593E3A;
-            
-            /* Vintage Scrapbook Colors */
-            --kraft: #D2B48C;
-            --kraft-dark: #C19A6B;
-            --vintage-paper: #F4EBD0;
-            --sepia: #5C4033;
+            --page-bg: #F7F5F4;
+            --main-red: #732624;
+            --envelope: #863F3F;
+            --letter-paper: #FDFCFB;
+            --text-dark: #381413;
+            --accent-gold: #D9B46D;
+            --subtle-border: #CBBDB9;
         }
 
         * {
@@ -30,1436 +23,194 @@
         }
 
         body {
-            background-color: var(--bg-pastel);
-            font-family: 'Nunito', sans-serif;
-            color: var(--cocoa);
+            background-color: var(--page-bg);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            min-height: 100dvh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Nunito', sans-serif;
+            padding: 20px;
         }
 
-        /* Background Layers */
-        #background-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-            background: linear-gradient(to bottom, var(--bg-pastel) 0%, #C5BFAF 100%);
-        }
-
-        .stars {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(1.5px 1.5px at 10% 15%, #fff, transparent),
-                radial-gradient(1px 1px at 30% 25%, #fb7185, transparent),
-                radial-gradient(2px 2px at 50% 10%, #fff, transparent),
-                radial-gradient(1px 1px at 70% 30%, #fff, transparent),
-                radial-gradient(1.5px 1.5px at 85% 15%, #F2D46F, transparent);
-            opacity: 0.6;
-        }
-
-        .moon {
-            position: absolute;
-            top: 8vh;
-            right: 12vw;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            box-shadow: inset -15px -15px 0 0 #FFF8D6;
-            filter: drop-shadow(0 0 15px rgba(255, 248, 214, 0.8));
-            z-index: 1;
-        }
-
-        .sun {
-            position: absolute;
-            bottom: 15vh;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80vw;
-            height: 80vw;
-            max-width: 1000px;
-            max-height: 1000px;
-            background: radial-gradient(circle, rgba(251, 113, 133, 0.2) 0%, rgba(242, 212, 111, 0.2) 40%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        .city-layer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            -webkit-mask-size: 100% 100%;
-            mask-size: 100% 100%;
-        }
-
-        .city-back {
-            height: 25vh;
-            background: linear-gradient(to top, rgba(100, 70, 80, 0.4) 0%, transparent 100%);
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L50,200 L50,150 L70,150 L70,220 L150,220 L150,100 L170,100 L170,180 L220,180 L220,130 L250,130 L250,250 L350,250 L350,80 L380,80 L380,200 L450,200 L450,120 L480,120 L480,160 L550,160 L550,90 L570,90 L570,220 L650,220 L650,110 L670,110 L670,200 L750,200 L750,70 L780,70 L780,150 L850,150 L850,180 L900,180 L900,100 L930,100 L930,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-            opacity: 0.6;
-        }
-
-        .city-mid {
-            height: 32vh;
-            background: linear-gradient(to top, rgba(90, 60, 70, 0.6) 0%, transparent 100%);
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,180 L30,180 L30,240 L80,240 L80,120 L110,120 L110,200 L180,200 L180,90 L210,90 L210,160 L280,160 L280,220 L340,220 L340,100 L360,100 L360,140 L420,140 L420,50 L450,50 L450,180 L520,180 L520,120 L580,120 L580,200 L620,200 L620,80 L650,80 L650,150 L720,150 L720,110 L760,110 L760,240 L820,240 L820,160 L880,160 L880,90 L910,90 L910,200 L960,200 L960,140 L1000,140 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-        }
-
-        .city-front {
-            height: 40vh;
-            background: linear-gradient(to top, rgba(60, 40, 50, 0.8) 0%, transparent 100%);
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,220 L40,220 L40,180 L60,180 L60,250 L100,250 L100,150 L120,150 L120,120 L140,120 L140,200 L180,200 L180,160 L200,160 L200,280 L250,280 L250,100 L270,100 L290,80 L310,100 L310,200 L350,200 L350,140 L370,140 L370,90 L390,90 L390,170 L430,170 L430,220 L460,220 L460,130 L480,130 L480,100 L500,100 L500,180 L520,180 L520,140 L540,140 L540,250 L580,250 L580,110 L600,110 L600,70 L620,70 L620,190 L660,190 L660,150 L680,150 L680,120 L700,120 L700,200 L750,200 L750,80 L770,80 L790,50 L810,80 L810,170 L850,170 L850,140 L870,140 L870,210 L920,210 L920,160 L940,160 L940,110 L960,110 L960,240 L1000,240 L1000,300 Z' fill='black'/%3E%3C/svg%3E");
-        }
-
-        /* DO NOT TOUCH - HEART ANIMATION STYLES */
-        #heart-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none; 
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            top: 0;
-            left: 0;
-            will-change: transform;
-        }
-
-        .heart-shape {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 24px; 
-            height: 24px;
-            border-radius: 4px;
-            z-index: 5; 
-        }
-
-        .heart-shape::before,
-        .heart-shape::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-        }
-
-        .heart-shape::before { top: -12px; left: 0; }
-        .heart-shape::after { top: 0; left: -12px; }
-
-        .yellow-heart {
-            background: var(--butter);
-            box-shadow: 0 0 15px var(--butter);
-            z-index: 10;
-        }
-        .yellow-heart::before, .yellow-heart::after {
-            background: var(--butter);
-            box-shadow: 0 0 15px var(--butter);
-        }
-
-        .ghost-wrapper {
-            animation: fadeGhost 2.5s forwards linear; 
-        }
-
-        .ghost-heart, .ghost-heart::before, .ghost-heart::after {
-            background: var(--ghost-color);
-            box-shadow: 0 0 10px var(--ghost-color);
-        }
-
-        @keyframes fadeGhost {
-            0% { opacity: 0.9; }
-            100% { opacity: 0; }
-        }
-        /* END OF HEART ANIMATION STYLES */
-
-        /* Main UI */
-        .main-content {
-            flex: 1;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 15px;
-            width: 100%;
-            z-index: 3; 
-            min-height: 100dvh;
-        }
-
-        .header {
-            width: 100%;
-            max-width: 800px;
-            background: var(--surface);
-            padding: 12px 20px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 
-                6px 6px 15px rgba(0,0,0,0.08), 
-                -6px -6px 15px rgba(255,255,255,0.9),
-                inset -2px -2px 5px rgba(0,0,0,0.05),
-                inset 2px 2px 5px rgba(255,255,255,0.8);
-            margin-bottom: 40px;
-            margin-top: 10px;
-            gap: 10px;
-        }
-
-        .progress-text {
-            font-family: 'Caveat', cursive;
-            font-size: 20px;
-            flex: 1;
-            text-align: center;
-            color: var(--cocoa);
-            line-height: 1.1;
-        }
-
-        .progress-bar {
-            width: 30%;
-            height: 10px;
-            background: #E5DEC9;
-            border-radius: 10px;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: var(--pink);
-            border-radius: 10px;
-        }
-
-        .score {
-            font-weight: 800;
-            font-size: 14px;
-            color: var(--pink-dark);
-            flex-shrink: 0;
-        }
-
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .blob {
-            background: var(--pink);
-            padding: clamp(30px, 8vw, 60px) clamp(20px, 6vw, 50px);
-            border-radius: 46% 54% 48% 52% / 55% 43% 57% 45%; 
-            box-shadow: 
-                10px 10px 25px rgba(225, 29, 72, 0.2), 
-                -10px -10px 25px rgba(255,255,255,0.8),
-                inset -6px -6px 15px rgba(225, 29, 72, 0.3),
-                inset 6px 6px 15px rgba(255,255,255,0.6);
-            text-align: center;
-            margin-bottom: 40px;
-            animation: floatBlob 6s ease-in-out infinite;
-            width: 95%;
-            max-width: 500px;
-            z-index: 4;
-        }
-
-        @keyframes floatBlob {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-
-        .blob h1 {
-            font-family: 'Caveat', cursive;
-            font-size: clamp(40px, 10vw, 65px);
-            color: #fff;
-            margin-bottom: 15px;
-            line-height: 0.9;
-            text-shadow: 2px 2px 4px rgba(225, 29, 72, 0.4);
-        }
-
-        .eyes-container {
-            display: flex;
-            gap: clamp(15px, 5vw, 30px);
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .eye-pair {
-            position: relative; 
-            display: flex;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 8px 14px;
-            border-radius: 25px;
-            box-shadow: inset 2px 2px 5px rgba(225, 29, 72, 0.2), 2px 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .eye {
-            width: 24px;
-            height: 24px;
-            background: #FFF8D6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2);
-            animation: blink 4s infinite;
-        }
-        
-        .pupil {
-            width: 12px;
-            height: 12px;
-            background: var(--cocoa);
-            border-radius: 50%;
-        }
-        
-        .looking-right .pupil { transform: translateX(4px); }
-        .looking-left .pupil { transform: translateX(-4px); }
-
-        @keyframes blink {
-            0%, 95%, 100% { transform: scaleY(1); }
-            97.5% { transform: scaleY(0.1); }
-        }
-
-        .ribbon {
-            position: absolute;
-            top: -22px;
-            right: -18px;
-            width: 45px;
-            height: 35px;
-            z-index: 10;
-            transform: rotate(15deg);
-        }
-
-        .ribbon::before, .ribbon::after {
-            content: '';
-            position: absolute;
-            width: 22px;
-            height: 18px;
-            background: var(--butter);
-            border: 2px solid var(--cocoa);
-            border-radius: 50% 50% 0 50%;
-            top: 0;
-        }
-
-        .ribbon::before { left: -2px; transform: rotate(-25deg); }
-        .ribbon::after { right: -2px; transform: rotate(25deg) scaleX(-1); }
-
-        .ribbon-knot {
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            background: var(--butter);
-            border: 2px solid var(--cocoa);
-            border-radius: 50%;
-            top: 4px;
-            left: 15.5px;
-            z-index: 2;
-        }
-
-        .start-btn {
-            background: var(--butter);
-            color: var(--cocoa);
-            font-family: 'Fredoka', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-            padding: 18px 50px;
-            min-height: 44px;
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            box-shadow: 
-                8px 8px 20px rgba(200, 160, 50, 0.3), 
-                -8px -8px 20px rgba(255,255,255,0.9),
-                inset -4px -4px 10px rgba(200, 160, 50, 0.4),
-                inset 4px 4px 10px rgba(255,255,255,0.8);
-            transition: all 0.1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            z-index: 4;
-            outline: none;
-        }
-
-        .start-btn:focus-visible {
-            outline: 3px solid var(--pink-dark);
-            outline-offset: 4px;
-        }
-
-        .start-btn:active {
-            box-shadow: 
-                inset 6px 6px 15px rgba(200, 160, 50, 0.4),
-                inset -6px -6px 15px rgba(255,255,255,0.8);
-            transform: translateY(3px);
-        }
-
-        /* --- MOBILE HEADER FIX --- */
-        @media (max-width: 600px) {
-            .header, #final-scene .header { 
-                flex-direction: column;
-                justify-content: center;
-                padding: 15px 20px; 
-                gap: 8px;
-            }
-            .progress-text { 
-                flex: unset; 
-                width: 100%; 
-                font-size: 18px; 
-            }
-            .progress-bar { 
-                width: 80%; 
-                margin: 0 auto;
-            }
-            .score { 
-                margin-left: 0; 
-                font-size: 14px; 
-            }
-            
-            #final-scene .progress-text { font-size: 24px; margin-bottom: 0; }
-            #final-scene .score { font-size: 18px; }
-        }
-
-        @media (max-height: 600px) {
-            .blob { padding: 20px 30px; margin-bottom: 20px; }
-            .blob h1 { font-size: 35px; }
-            .eyes-container { margin-top: 10px; }
-            .start-btn { padding: 12px 30px; font-size: 20px; }
-        }
-
-        /* --- THE PINK & YELLOW PIXEL SIGNAL TRANSITION --- */
-        #transition-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            pointer-events: none;
-            overflow: hidden;
-            display: none;
-        }
-
-        .transitioning #transition-overlay {
-            display: block;
-        }
-
-        #pixel-curtain {
-            position: absolute;
-            top: -200vh; 
-            left: 0;
-            width: 100vw;
-            height: 200vh; 
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,90 L90,90 L90,95 L80,95 L80,100 L70,100 L70,95 L60,95 L60,90 L50,90 L50,95 L40,95 L40,100 L30,100 L30,95 L20,95 L20,90 L10,90 L10,95 L0,95 Z' fill='black'/%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,90 L90,90 L90,95 L80,95 L80,100 L70,100 L70,95 L60,95 L60,90 L50,90 L50,95 L40,95 L40,100 L30,100 L30,95 L20,95 L20,90 L10,90 L10,95 L0,95 Z' fill='black'/%3E%3C/svg%3E");
-            -webkit-mask-size: 100% 100%;
-            mask-size: 100% 100%;
-            will-change: transform;
-            background: repeating-linear-gradient(
-                to bottom,
-                var(--butter) 0%,
-                var(--butter) 10%,
-                var(--pink) 10%,
-                var(--pink) 20%,
-                var(--butter) 20%,
-                var(--butter) 30%,
-                var(--blush) 30%,
-                var(--blush) 40%
-            );
-            background-size: 100% 40%;
-        }
-
-        .curtain-active #pixel-curtain {
-            animation: curtainSequence 4.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes curtainSequence {
-            0% { transform: translateY(0); }
-            27.27% { transform: translateY(200vh); } 
-            72.72% { transform: translateY(200vh); } 
-            100% { transform: translateY(0); }
-        }
-
-        /* --- STAGE 2: VINTAGE SCRAPBOOK --- */
-        #final-scene {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9998; 
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.1s ease;
-            
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 15px;
-            overflow-y: auto;
-            
-            /* Kraft paper background */
-            background-color: var(--kraft);
-            background-image: 
-                radial-gradient(var(--kraft-dark) 1px, transparent 1px),
-                radial-gradient(var(--kraft-dark) 1px, transparent 1px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-        }
-
-        .show-final-scene #final-scene {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Yellow Flowers Decoration */
-        .scrap-flower {
-            position: absolute;
-            pointer-events: none;
-            z-index: 1;
-            filter: drop-shadow(3px 5px 4px rgba(0,0,0,0.3)) sepia(0.4) contrast(1.1);
-            opacity: 0.85;
-        }
-
-        .flower-1 { top: 5%; left: -20px; width: 150px; transform: rotate(-15deg); }
-        .flower-2 { top: 25%; right: -30px; width: 120px; transform: rotate(25deg); }
-        .flower-3 { bottom: 10%; left: -10px; width: 180px; transform: rotate(10deg); }
-        .flower-4 { bottom: 30%; right: 2%; width: 100px; transform: rotate(-35deg); }
-        .flower-5 { top: 50%; left: 5%; width: 80px; transform: rotate(45deg); opacity: 0.6; }
-        .flower-6 { top: 60%; right: 8%; width: 130px; transform: rotate(-10deg); }
-
-        /* Torn Paper Header */
-        #final-scene .header {
-            width: 100%;
-            max-width: 800px;
-            background: var(--vintage-paper);
-            padding: 15px 25px; 
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            box-shadow: 3px 5px 15px rgba(0,0,0,0.2);
-            position: relative; /* Keep it relative so the absolute string hangs from it */
-            z-index: 100; 
-        }
-
-        #final-scene .header::before {
-            content: '';
-            position: absolute;
-            top: -5px; left: 0; right: 0; height: 10px;
-            background: var(--vintage-paper);
-            clip-path: polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%);
-        }
-
-        #final-scene .progress-text {
-            font-family: 'Caveat', cursive;
-            font-size: 32px;
-            font-weight: 600;
-            color: var(--sepia);
-            text-align: center;
-            flex: 1;
-        }
-
-        #final-scene .progress-bar {
-            width: 25%;
-            height: 8px;
-            background: #D3C5B5;
-            border-radius: 5px;
-            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-
-        #final-scene .progress-fill {
-            width: 6.66%; 
-            background: var(--sepia);
-        }
-
-        #final-scene .score {
-            font-weight: 800;
-            font-size: 20px;
-            color: var(--sepia);
-        }
-
-        /* THE RED ROPE CONTAINER */
-        #red-rope-container {
-            position: absolute;
-            top: 100%; /* Hangs from the bottom of the header */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px; /* Wider hitbox */
-            z-index: 90;
-            display: none; 
-            cursor: pointer;
-        }
-
-        /* The Rope itself */
-        #red-rope {
-            width: 6px;
-            height: 0;
-            background: #e11d48;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
-            transition: height 0.5s ease-out, opacity 0.2s ease;
-            margin: 0 auto; /* Center it */
-            position: relative;
-        }
-
-        /* The Red Circle at the bottom */
-        #red-circle {
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%) scale(1);
-            width: 30px;
-            height: 30px;
-            background: #e11d48;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
-            /* SLOWED DOWN EVEN MORE */
-            transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1); 
-            z-index: 999999;
-        }
-
-        /* When snapped, rope disappears but circle stays and expands */
-        #red-rope-container.snapped #red-rope {
-            opacity: 0;
-        }
-
-        #red-rope-container.snapped #red-circle {
-            transform: translateX(-50%) scale(500); /* Massively expand */
-            box-shadow: none;
-        }
-
-        .pluck {
-            animation: pluckAnim 0.3s ease-out;
-        }
-
-        @keyframes pluckAnim {
-            0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1); }
-            100% { transform: translateX(-50%) scale(1); }
-        }
-
-        #string-counter {
-            position: absolute;
-            top: 110%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #e11d48;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 90;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            text-shadow: 1px 1px 0 #fff;
-        }
-
-        /* Photo Grid */
-        .scrapbook-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+        /* The main deep red canvas */
+        .main-canvas {
+            background-color: var(--main-red);
             width: 100%;
             max-width: 900px;
-            padding-bottom: 50px;
+            height: 80vh;
+            min-height: 500px;
+            border-radius: 20px;
             position: relative;
-            z-index: 2;
-        }
-
-        /* Polaroid Frame */
-        .polaroid {
-            background: var(--vintage-paper);
-            padding: 15px 15px 40px 15px;
-            box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
-            position: relative;
-            transition: transform 0.3s ease;
-            border: 1px solid #e0d4c3;
-        }
-
-        /* Rotations for scrapbook feel */
-        .polaroid:nth-child(1) { transform: rotate(-3deg); }
-        .polaroid:nth-child(2) { transform: rotate(2deg); }
-        .polaroid:nth-child(3) { transform: rotate(4deg); }
-        .polaroid:nth-child(4) { transform: rotate(-2deg); }
-        .polaroid:nth-child(5) { transform: rotate(1deg); }
-        .polaroid:nth-child(6) { transform: rotate(-4deg); }
-        
-        /* 7th frame spans 2 columns */
-        .polaroid:nth-child(7) { 
-            grid-column: span 2; 
-            max-width: 450px;
-            margin: 0 auto;
-            transform: rotate(3deg);
-        }
-
-        .polaroid:hover {
-            transform: rotate(0deg) scale(1.05);
-            z-index: 10;
-        }
-
-        /* Masking tape */
-        .polaroid::before, .polaroid::after {
-            content: '';
-            position: absolute;
-            width: 80px;
-            height: 25px;
-            background: rgba(240, 230, 210, 0.7);
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .polaroid::before {
-            top: -10px;
-            left: -20px;
-            transform: rotate(-45deg);
-        }
-
-        .polaroid::after {
-            top: -10px;
-            right: -20px;
-            transform: rotate(45deg);
-        }
-
-        /* The Wrapper to keep banner centered on image only */
-        .image-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        /* Photo Container */
-        .photo-container {
-            width: 100%;
-            background: #e0d8c8; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(56, 20, 19, 0.3);
             overflow: hidden;
-            border: 1px solid #ccc;
-            position: relative;
-            display: block; 
-            line-height: 0; 
+            border: 8px solid var(--subtle-border);
         }
 
-        .photo-container img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .caption {
-            font-family: 'Caveat', cursive;
-            font-size: 26px; 
-            color: #4a2c20; 
-            text-align: center;
-            margin-top: 15px;
-            line-height: 1.4; 
-            padding: 0 5px;
-            position: relative;
-            z-index: 20; 
-        }
-
-        /* --- THE TEAR ANIMATION FOR MEMORY 6 --- */
-        .tear-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            background: #fff; 
-            cursor: pointer; 
-        }
-
-        /* FORCE FULL COVERAGE ON JPG ONLY */
-        .tear-left, .tear-right {
+        /* Scattered little hearts on the red background */
+        .bg-heart {
             position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 55%; 
-            background: #fff;
-            z-index: 10;
-            pointer-events: auto;
+            fill: var(--envelope);
+            opacity: 0.6;
         }
+        .bh-1 { width: 30px; top: 10%; left: 40%; transform: rotate(-15deg); }
+        .bh-2 { width: 20px; top: 70%; left: 15%; transform: rotate(25deg); }
+        .bh-3 { width: 40px; top: 20%; right: 15%; transform: rotate(15deg); opacity: 0.3; }
+        .bh-4 { width: 25px; bottom: 15%; right: 30%; transform: rotate(-10deg); }
 
-        .tear-left {
-            left: 0;
-            clip-path: polygon(0 0, 100% 0, 95% 5%, 100% 10%, 95% 15%, 100% 20%, 95% 25%, 100% 30%, 95% 35%, 100% 40%, 95% 45%, 100% 50%, 95% 55%, 100% 60%, 95% 65%, 100% 70%, 95% 75%, 100% 80%, 95% 85%, 100% 90%, 95% 95%, 100% 100%, 0 100%);
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
-
-        .tear-right {
-            right: 0;
-            clip-path: polygon(100% 0, 0 0, 5% 5%, 0 10%, 5% 15%, 0 20%, 5% 25%, 0 30%, 5% 35%, 0 40%, 5% 45%, 0 50%, 5% 55%, 0 60%, 5% 65%, 0 70%, 5% 75%, 0 80%, 5% 85%, 0 90%, 5% 95%, 0 100%, 100% 100%);
-            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-        }
-
-        /* The Vertical Triangle Banner */
-        .reveal-banner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: calc(100% + 24px); 
-            height: 140px;
-            background: var(--blush); 
-            color: var(--cocoa);
-            font-family: 'Caveat', cursive;
-            font-size: 34px;
+        /* The layout holding the 3 main elements */
+        .scene-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            z-index: 15;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-            padding: 10px 20px 35px 20px;
-            line-height: 1.1;
-            pointer-events: none; 
-        }
-
-        .tearing .tear-left {
-            animation: tearLeft 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .tearing .tear-right {
-            animation: tearRight 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes tearLeft {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-
-        @keyframes tearRight {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Mobile Layout */
-        @media (max-width: 600px) {
-            .scrapbook-grid {
-                grid-template-columns: 1fr; 
-                gap: 40px;
-                padding: 0 10px 50px 10px;
-            }
-            #final-scene .header {
-                flex-direction: column;
-                padding: 20px 15px;
-            }
-            #final-scene .progress-bar {
-                width: 80%;
-                margin: 5px 0;
-            }
-            .polaroid:nth-child(n) {
-                transform: rotate(0deg); 
-                grid-column: span 1;
-                max-width: 100%;
-            }
-            .polaroid::before, .polaroid::after {
-                display: none; 
-            }
-            .flower-1 { width: 100px; top: 2%; }
-            .flower-2 { width: 80px; top: 15%; right: -15px; }
-            .flower-3 { width: 120px; bottom: 5%; }
-            .flower-4 { display: none; }
-            .flower-5 { display: none; }
-            .flower-6 { width: 90px; top: 80%; right: 0; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .blob { animation: none; }
-            .curtain-active #pixel-curtain { animation: none !important; }
-            .show-final-scene #final-scene { transition: none; opacity: 1; }
-            #transition-overlay { display: none !important; }
-            .tear-left, .tear-right, .reveal-banner { display: none !important; } 
-            #red-rope-container.snapped #red-circle { transform: none !important; }
-        }
-
-        /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
-        .sim-btn {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 999999;
-            background: var(--surface);
-            color: var(--cocoa);
-            border: 2px solid var(--cocoa);
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 3px 3px 0 var(--cocoa);
-            transition: all 0.1s ease;
-        }
-
-        .sim-btn:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 var(--cocoa);
-        }
-
-        #mobile-simulator {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        #mobile-simulator.active { display: flex; }
-
-        .phone-frame {
-            width: 390px;
-            height: 844px;
-            background: #000;
-            border-radius: 45px;
-            padding: 12px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.2);
+            gap: 20px;
             position: relative;
-            transform: scale(0.85); 
+            z-index: 10;
         }
 
-        .phone-frame iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 35px;
-            background: #fff;
+        /* SVG Container sizes */
+        .svg-camera {
+            width: 150px;
+            height: auto;
+            margin-top: 80px; /* Offset to match the image */
         }
 
-        .close-sim {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: var(--pink);
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        .svg-envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+        .svg-flowers {
+            width: 140px;
+            height: auto;
+            margin-top: 40px;
+        }
+
+        /* "Click Me" text below envelope */
+        .click-me {
+            font-family: 'Caveat', cursive;
+            color: var(--letter-paper);
+            font-size: 24px;
+            margin-top: 15px;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .sim-btn { display: none; }
+            .scene-container {
+                flex-direction: column;
+                gap: 0px;
+            }
+            .svg-camera {
+                width: 100px;
+                position: absolute;
+                bottom: -20px;
+                left: 20px;
+                margin: 0;
+            }
+            .svg-envelope-wrapper {
+                width: 250px;
+            }
+            .svg-flowers {
+                width: 100px;
+                position: absolute;
+                bottom: 20px;
+                right: 10px;
+                margin: 0;
+            }
+            .main-canvas {
+                height: 90vh;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Layers -->
-    <div id="background-layer">
-        <div class="stars"></div>
-        <div class="moon"></div>
-        <div class="sun"></div>
-        <div class="city-layer city-back"></div>
-        <div class="city-layer city-mid"></div>
-        <div class="city-layer city-front"></div>
-    </div>
-
-    <!-- Heart Container -->
-    <div id="heart-container"></div>
-
-    <!-- Main UI -->
-    <div class="main-content">
-        <div class="header">
-            <span class="progress-text">TIP: you should click that button that says start now 😉</span>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-            <span class="score">0 / 15</span>
-        </div>
-
-        <div class="hero">
-            <div class="blob">
-                <h1>HAPPY BIRTHDAY<br>JESSA</h1>
-                
-                <div class="eyes-container">
-                    <div class="eye-pair looking-right">
-                        <div class="eye"><div class="pupil"></div></div>
-                        <div class="eye"><div class="pupil"></div></div>
-                    </div>
-                    <div class="eye-pair looking-left">
-                        <div class="ribbon">
-                            <div class="ribbon-knot"></div>
-                        </div>
-                        <div class="eye"><div class="pupil"></div></div>
-                        <div class="eye"><div class="pupil"></div></div>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="start-btn" id="startBtn" aria-label="Start the birthday experience">
-                Start Now ➔
-            </button>
-        </div>
-    </div>
-
-    <!-- Pixel Curtain Overlay -->
-    <div id="transition-overlay">
-        <div id="pixel-curtain"></div>
-    </div>
-
-    <!-- STAGE 2: VINTAGE SCRAPBOOK -->
-    <div id="final-scene">
+    <div class="main-canvas">
         
-        <!-- SVG Yellow Flowers -->
-        <svg class="scrap-flower flower-1" viewBox="0 0 100 100">
-            <path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/>
-            <path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/>
-            <path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/>
-            <path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/>
-            <path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/>
-            <path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/>
-            <path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/>
-            <path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/>
-            <circle cx="50" cy="50" r="15" fill="#C19A6B"/>
-            <circle cx="50" cy="50" r="10" fill="#D2B48C"/>
-        </svg>
+        <!-- Scattered background hearts -->
+        <svg class="bg-heart bh-1" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg class="bg-heart bh-2" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg class="bg-heart bh-3" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg class="bg-heart bh-4" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
 
-        <svg class="scrap-flower flower-2" viewBox="0 0 100 100">
-            <path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/>
-            <path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/>
-            <path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/>
-            <path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/>
-            <path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/>
-            <path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/>
-            <path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/>
-            <path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/>
-            <circle cx="50" cy="50" r="15" fill="#C19A6B"/>
-            <circle cx="50" cy="50" r="10" fill="#D2B48C"/>
-        </svg>
-
-        <svg class="scrap-flower flower-3" viewBox="0 0 100 100">
-            <path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/>
-            <path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/>
-            <path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/>
-            <path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/>
-            <path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/>
-            <path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/>
-            <path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/>
-            <path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/>
-            <circle cx="50" cy="50" r="15" fill="#C19A6B"/>
-            <circle cx="50" cy="50" r="10" fill="#D2B48C"/>
-        </svg>
-
-        <svg class="scrap-flower flower-4" viewBox="0 0 100 100">
-            <path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/>
-            <path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/>
-            <path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/>
-            <path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/>
-            <path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/>
-            <path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/>
-            <path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/>
-            <path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/>
-            <circle cx="50" cy="50" r="15" fill="#C19A6B"/>
-            <circle cx="50" cy="50" r="10" fill="#D2B48C"/>
-        </svg>
-
-        <svg class="scrap-flower flower-5" viewBox="0 0 100 100">
-            <path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/>
-            <path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/>
-            <path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/>
-            <path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/>
-            <path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/>
-            <path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/>
-            <path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/>
-            <path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/>
-            <circle cx="50" cy="50" r="15" fill="#C19A6B"/>
-            <circle cx="50" cy="50" r="10" fill="#D2B48C"/>
-        </svg>
-
-        <svg class="scrap-flower flower-6" viewBox="0 0 100 100">
-            <path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/>
-            <path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/>
-            <path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/>
-            <path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/>
-            <path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/>
-            <path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/>
-            <path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/>
-            <path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/>
-            <circle cx="50" cy="50" r="15" fill="#C19A6B"/>
-            <circle cx="50" cy="50" r="10" fill="#D2B48C"/>
-        </svg>
-
-        <div class="header">
-            <span class="progress-text">heres our memories 📸</span>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-            <span class="score">1 / 15</span>
+        <div class="scene-container">
             
-            <!-- The Red Rope Container -->
-            <div id="red-rope-container">
-                <div id="red-rope"></div>
-                <div id="red-circle"></div>
-            </div>
-            <div id="string-counter">0 / 4</div>
-            
-        </div>
+            <!-- 1. The Camera (SVG) -->
+            <svg class="svg-camera" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Shadow -->
+                <ellipse cx="100" cy="140" rx="80" ry="10" fill="#381413" opacity="0.3"/>
+                <!-- Camera Body -->
+                <rect x="20" y="40" width="160" height="90" rx="15" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="4"/>
+                <rect x="20" y="40" width="160" height="30" rx="15" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="4"/>
+                <!-- Top Flash -->
+                <rect x="130" y="20" width="30" height="20" rx="5" fill="#E5DED8" stroke="#CBBDB9" stroke-width="3"/>
+                <!-- Lens Outer -->
+                <circle cx="100" cy="85" r="35" fill="#E5DED8" stroke="#CBBDB9" stroke-width="4"/>
+                <!-- Lens Inner -->
+                <circle cx="100" cy="85" r="25" fill="#381413"/>
+                <circle cx="95" cy="80" r="8" fill="#FDFCFB" opacity="0.6"/>
+                <!-- Red Accents -->
+                <rect x="40" y="45" width="40" height="10" rx="5" fill="#863F3F"/>
+                <circle cx="160" cy="50" r="5" fill="#863F3F"/>
+            </svg>
 
-        <div class="scrapbook-grid">
-            
-            <!-- MEMORY 1 -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container">
-                        <img src="./assets/memory1.jpg" alt="Memory 1">
-                    </div>
-                </div>
-                <div class="caption">this was during the early days of class, tried my best to lie on your shoulders lmao 🥀</div>
-            </div>
-
-            <!-- MEMORY 2 -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container">
-                        <img src="./assets/memory2.jpg" alt="Memory 2">
-                    </div>
-                </div>
-                <div class="caption">This was somewhere during summer i believe, me, you, and raven. credits to bro for taking this peak ass photo, you look like my mom there bi LMAOO</div>
-            </div>
-
-            <!-- MEMORY 3 -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container">
-                        <img src="./assets/memory3.jpg" alt="Memory 3">
-                    </div>
-                </div>
-                <div class="caption">Heres another photo of that same summer travel, you did makeup on me. I agreed of course, another opportunity to look at your beautiful face💛💛💛</div>
-            </div>
-
-            <!-- MEMORY 4 -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container">
-                        <img src="./assets/memory4.jpg" alt="Memory 4">
-                    </div>
-                </div>
-                <div class="caption">Ah this was during Romeo and juliet, i initiated this photo cause i wanted to have your face in my phone. I love this so much we hung out alot during these times, really thought we were something that time. And WE WERE 🥳🥳🥳</div>
+            <!-- 2. The Envelope (SVG) -->
+            <div class="svg-envelope-wrapper">
+                <svg class="svg-envelope" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Letter sticking out -->
+                    <rect x="60" y="30" width="180" height="140" rx="10" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="3"/>
+                    <!-- Letter Text (Mock) -->
+                    <path d="M90 70 H210 M90 90 H210 M90 110 H170" stroke="#CBBDB9" stroke-width="4" stroke-linecap="round"/>
+                    
+                    <!-- Envelope Back -->
+                    <path d="M30 100 L270 100 L270 230 L30 230 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
+                    
+                    <!-- Envelope Flap (Open) -->
+                    <path d="M30 100 L150 180 L270 100 Z" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
+                    
+                    <!-- Envelope Front -->
+                    <path d="M30 230 L130 160 L150 175 L170 160 L270 230 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
+                    
+                    <!-- Red Heart Seal -->
+                    <path d="M150 220 C150 220 130 200 130 190 C130 180 140 175 150 185 C160 175 170 180 170 190 C170 200 150 220 150 220 Z" fill="#863F3F"/>
+                </svg>
+                <div class="click-me">click me</div>
             </div>
 
-            <!-- MEMORY 5 -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container">
-                        <img src="./assets/memory5.jpg" alt="Memory 5">
-                    </div>
-                </div>
-                <div class="caption">This was during the last day of school yes, when we went to the library near mcdo with prince, zion, me, and you. It was a really fun time, im glad we got to take pictures.</div>
-            </div>
+            <!-- 3. The Flowers (SVG) -->
+            <svg class="svg-flowers" viewBox="0 0 150 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Wrapping Paper -->
+                <path d="M40 120 L110 120 L130 240 L20 240 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
+                <path d="M40 120 L75 200 L110 120 Z" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
+                <!-- Ribbon -->
+                <path d="M20 220 Q75 240 130 220" stroke="#863F3F" stroke-width="8" stroke-linecap="round"/>
+                <path d="M75 200 L60 240 M75 200 L90 230" stroke="#863F3F" stroke-width="6" stroke-linecap="round"/>
+                
+                <!-- Flowers (Roses) -->
+                <circle cx="50" cy="90" r="25" fill="#732624"/>
+                <path d="M40 80 Q50 70 60 80 Q70 90 60 100 Q50 110 40 100 Q30 90 40 80 Z" stroke="#381413" stroke-width="3"/>
+                
+                <circle cx="100" cy="80" r="30" fill="#863F3F"/>
+                <path d="M85 65 Q100 55 115 65 Q125 80 115 95 Q100 105 85 95 Q75 80 85 65 Z" stroke="#381413" stroke-width="3"/>
 
-            <!-- MEMORY 6: TEAR EFFECT -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container tear-container" id="tear-frame-6">
-                        <img src="./assets/memory6.jpg" alt="Memory 6">
-                        
-                        <div class="tear-left"></div>
-                        <div class="tear-right"></div>
-                    </div>
-                    <div class="reveal-banner" id="banner-6">Tap to<br>reveal 💌</div>
-                </div>
-                <div class="caption">ooo you should open this, rovic took this for us😉</div>
-            </div>
-
-            <!-- MEMORY 7: THE KISS PAINTING -->
-            <div class="polaroid">
-                <div class="image-wrapper">
-                    <div class="photo-container">
-                        <img src="./assets/the-kiss.jpg" alt="The Kiss by Gustav Klimt">
-                    </div>
-                </div>
-                <div class="caption">I remember you mentioning this art, i loved it and at the time i really hoped to recreate this with you one day. And WE did i still remember that lmaooo, somewhere in term one yes😭😭</div>
-            </div>
+                <circle cx="75" cy="50" r="20" fill="#732624"/>
+                <path d="M65 40 Q75 30 85 40 Q95 50 85 60 Q75 70 65 60 Q55 50 65 40 Z" stroke="#381413" stroke-width="3"/>
+                
+                <!-- Leaves -->
+                <path d="M30 130 Q10 110 20 90 Q40 110 30 130 Z" fill="#4A5D23"/>
+                <path d="M120 130 Q140 110 130 90 Q110 110 120 130 Z" fill="#4A5D23"/>
+            </svg>
 
         </div>
     </div>
 
-    <!-- MOBILE SIMULATOR -->
-    <button class="sim-btn" id="openSimBtn">📱 Mobile POV</button>
-    <div id="mobile-simulator">
-        <div class="phone-frame">
-            <button class="close-sim" id="closeSimBtn">Close X</button>
-            <iframe id="sim-iframe" title="Mobile Preview"></iframe>
-        </div>
-    </div>
-
-    <!-- DO NOT TOUCH - HEART ANIMATION JS -->
-    <script>
-        const container = document.getElementById('heart-container');
-        
-        const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
-
-        const MAX_HEARTS = 5; 
-        let activeHearts = 0;
-        let spawnInterval;
-
-        function spawnHeart() {
-            if (activeHearts >= MAX_HEARTS) return;
-
-            const startX = Math.random() * 95 + 2; 
-            const scale = Math.random() * 0.4 + 0.8; 
-            const fallDuration = Math.random() * 2000 + 5000; 
-            const startTime = performance.now();
-
-            const wrapper = document.createElement('div');
-            wrapper.className = 'particle';
-            
-            const heart = document.createElement('div');
-            heart.className = 'yellow-heart heart-shape';
-            wrapper.appendChild(heart);
-            
-            wrapper.style.transform = `translate3d(${startX}vw, -10vh, 0)`;
-            container.appendChild(wrapper);
-            
-            activeHearts++;
-            let lastGhostTime = 0;
-
-            function animate(time) {
-                const elapsed = time - startTime;
-                const progress = elapsed / fallDuration;
-
-                if (progress >= 1) {
-                    wrapper.remove();
-                    activeHearts--;
-                    return;
-                }
-
-                const y = -10 + (progress * 120); 
-                const rotation = 45 + (progress * 720); 
-
-                wrapper.style.transform = `translate3d(${startX}vw, ${y}vh, 0)`;
-                heart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-
-                if (time - lastGhostTime > 60) {
-                    createGhost(startX, y, rotation, scale);
-                    lastGhostTime = time;
-                }
-
-                requestAnimationFrame(animate);
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        function createGhost(x, y, rotation, scale) {
-            const color = trailColors[Math.floor(Math.random() * trailColors.length)];
-
-            const ghostWrapper = document.createElement('div');
-            ghostWrapper.className = 'particle ghost-wrapper';
-            ghostWrapper.style.transform = `translate3d(${x}vw, ${y}vh, 0)`;
-            
-            const ghostHeart = document.createElement('div');
-            ghostHeart.className = 'heart-shape ghost-heart';
-            ghostHeart.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-            ghostHeart.style.setProperty('--ghost-color', color);
-
-            ghostWrapper.appendChild(ghostHeart);
-            container.appendChild(ghostWrapper);
-
-            setTimeout(() => {
-                ghostWrapper.remove();
-            }, 2500);
-        }
-
-        function startSpawning() {
-            if (!spawnInterval) {
-                spawnHeart();
-                spawnInterval = setInterval(spawnHeart, 1500); 
-            }
-        }
-
-        function stopSpawning() {
-            clearInterval(spawnInterval);
-            spawnInterval = null;
-        }
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                stopSpawning();
-            } else {
-                startSpawning();
-            }
-        });
-
-        startSpawning();
-    </script>
-
-    <!-- TRANSITION & STRING JS -->
-    <script>
-        const startBtn = document.getElementById('startBtn');
-        const redRopeContainer = document.getElementById('red-rope-container');
-        const redRope = document.getElementById('red-rope');
-        const redCircle = document.getElementById('red-circle');
-        const stringCounter = document.getElementById('string-counter');
-        const body = document.body;
-
-        let stringClicks = 0;
-        let stringActive = false;
-        let isTransitioning = false;
-
-        startBtn.addEventListener('click', () => {
-            if (isTransitioning) return; 
-            isTransitioning = true;
-            startBtn.disabled = true;
-
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            
-            if (prefersReducedMotion) {
-                document.body.classList.add('show-final-scene');
-                return;
-            }
-
-            document.body.classList.add('transitioning', 'curtain-active');
-
-            setTimeout(() => {
-                document.body.classList.add('show-final-scene');
-            }, 1250);
-            
-            setTimeout(() => {
-                document.body.classList.remove('transitioning', 'curtain-active');
-                document.getElementById('transition-overlay').style.display = 'none';
-            }, 4500);
-        });
-
-        const tearFrame = document.getElementById('tear-frame-6');
-        const banner = document.getElementById('banner-6');
-        
-        if (tearFrame && banner) {
-            tearFrame.addEventListener('click', () => {
-                tearFrame.classList.add('tearing');
-                banner.style.opacity = '0';
-                banner.style.transform = 'translate(-50%, -50%) scale(1.1)';
-                
-                if (!stringActive) {
-                    setTimeout(() => {
-                        redRopeContainer.style.display = 'block'; // Make it exist in the layout
-                        setTimeout(() => {
-                            redRope.style.height = '60vh'; // Drop the rope
-                        }, 10); 
-                        stringActive = true;
-                    }, 1000);
-                }
-            });
-        }
-
-        redRopeContainer.addEventListener('click', () => {
-            if (stringClicks >= 4) return;
-
-            stringClicks++;
-            redRopeContainer.classList.add('pluck');
-            setTimeout(() => redRopeContainer.classList.remove('pluck'), 300);
-
-            stringCounter.textContent = `${stringClicks} / 4`;
-            stringCounter.style.opacity = '1';
-
-            if (stringClicks === 4) {
-                playSnapSound();
-                
-                // Snap the rope and expand the circle
-                redRopeContainer.classList.add('snapped');
-                stringCounter.style.opacity = '0';
-                
-                // After the circle covers the screen (8s), we can trigger the next stage
-                setTimeout(() => {
-                    // Here is where the next stage would appear, but we removed it for now
-                    // The red screen will just stay there.
-                }, 8000); // Updated to match the 8s CSS transition
-            }
-        });
-
-        function playSnapSound() {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
-
-            const bufferSize = ctx.sampleRate * 0.2;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-
-            const noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-
-            const noiseFilter = ctx.createBiquadFilter();
-            noiseFilter.type = 'bandpass';
-            noiseFilter.frequency.value = 2000;
-            noiseFilter.Q.value = 1;
-
-            const noiseGain = ctx.createGain();
-            noiseGain.gain.setValueAtTime(1, ctx.currentTime);
-            noiseGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-
-            noise.connect(noiseFilter);
-            noiseFilter.connect(noiseGain);
-            noiseGain.connect(ctx.destination);
-
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(150, ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.2);
-
-            const oscGain = ctx.createGain();
-            oscGain.gain.setValueAtTime(0.5, ctx.currentTime);
-            oscGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-
-            osc.connect(oscGain);
-            oscGain.connect(ctx.destination);
-
-            noise.start();
-            osc.start();
-            osc.stop(ctx.currentTime + 0.2);
-        }
-    </script>
-
-    <!-- MOBILE SIMULATOR JS -->
-    <script>
-        const openSimBtn = document.getElementById('openSimBtn');
-        const closeSimBtn = document.getElementById('closeSimBtn');
-        const sim = document.getElementById('mobile-simulator');
-        const iframe = document.getElementById('sim-iframe');
-
-        openSimBtn.addEventListener('click', () => {
-            const currentHTML = document.documentElement.outerHTML;
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(currentHTML);
-            iframeDoc.close();
-
-            sim.classList.add('active');
-        });
-
-        closeSimBtn.addEventListener('click', () => {
-            sim.classList.remove('active');
-        });
-    </script>
 </body>
 </html>
