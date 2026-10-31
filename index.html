@@ -574,7 +574,7 @@
             margin-top: 10px;
             margin-bottom: 30px;
             box-shadow: 3px 5px 15px rgba(0,0,0,0.2);
-            position: relative; /* So the string attaches to it */
+            position: relative; /* Keep it relative so the absolute string hangs from it */
             z-index: 100; 
         }
 
@@ -620,10 +620,10 @@
             position: absolute;
             top: 100%; /* Hangs exactly from the bottom edge of the header */
             left: 50%;
-            width: 4px;
+            width: 6px; /* Made it thicker */
             height: 0;
             background: #e11d48;
-            z-index: 90; /* Below the header's z-index (100), but above the scrapbook grid */
+            z-index: 90; /* Below the header, above the rest */
             transform: translateX(-50%);
             transition: height 0.5s ease-out;
             cursor: pointer;
@@ -1601,11 +1601,10 @@
                 
                 if (!stringActive) {
                     setTimeout(() => {
-                        redString.style.display = 'block'; // Make it exist in the DOM layout
-                        // Small delay to allow browser to register display block before animating height
+                        redString.style.display = 'block'; // Make it exist in the layout
                         setTimeout(() => {
-                            redString.style.height = '60vh'; // Drop it
-                        }, 10);
+                            redString.style.height = '150vh'; // Long string
+                        }, 10); // slight delay for transition
                         stringActive = true;
                     }, 1000);
                 }
