@@ -922,6 +922,7 @@
             align-items: center;
             box-shadow: 0 20px 50px rgba(56, 20, 19, 0.3);
             overflow: hidden;
+            border: none; /* Ensures no border */
         }
 
         .bg-heart {
@@ -949,6 +950,12 @@
             height: auto;
             margin-top: 40px; 
             filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .svg-camera:active {
+            transform: scale(0.95);
         }
 
         .svg-envelope-wrapper {
@@ -974,22 +981,7 @@
             filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
         }
 
-        .click-me {
-            font-family: 'Caveat', cursive;
-            color: var(--letter-paper);
-            font-size: 28px;
-            margin-top: 15px;
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            animation: pulseText 2s infinite ease-in-out;
-        }
-        
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        /* --- MOBILE RESPONSIVE FIXES FOR STAGE 3 (NO OVERLAP) --- */
+        /* MOBILE RESPONSIVE FIXES FOR STAGE 3 (NO OVERLAP) */
         @media (max-width: 768px) {
             .scene-container {
                 display: grid;
@@ -1058,101 +1050,282 @@
             #transition-overlay { display: none !important; }
             .tear-left, .tear-right, .reveal-banner { display: none !important; } 
             #red-rope-container.snapped #red-circle { transform: none !important; }
-            .click-me { animation: none; }
             #love-text { transition: none; }
+            .svg-camera:active { transform: none; }
         }
 
-        /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
-        .sim-btn {
+        /* --- CAMERA INTERFACE MODAL --- */
+        #camera-modal {
             position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 999999;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            z-index: 100000000;
+            background-color: #1a1110; /* Very dark brown/black */
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        #camera-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .camera-back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             background: var(--surface);
-            color: var(--cocoa);
-            border: 2px solid var(--cocoa);
-            padding: 10px 15px;
-            border-radius: 20px;
+            color: var(--main-red);
+            border: 2px solid var(--main-red);
+            padding: 10px 20px;
+            border-radius: 30px;
             font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 3px 3px 0 var(--cocoa);
-            transition: all 0.1s ease;
-        }
-
-        @media (max-width: 480px) {
-            .sim-btn {
-                padding: 8px 12px;
-                font-size: 14px;
-                top: 10px;
-                right: 10px;
-            }
-        }
-
-        .sim-btn:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0 0 0 var(--cocoa);
-        }
-
-        #mobile-simulator {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999999;
-            display: none;
-            justify-content: center;
+            z-index: 100000001;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            display: flex;
             align-items: center;
-            backdrop-filter: blur(5px);
+            gap: 8px;
+            transition: transform 0.1s;
         }
 
-        #mobile-simulator.active { display: flex; }
+        .camera-back-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
 
-        .phone-frame {
-            width: 390px;
-            height: 844px;
-            background: #000;
-            border-radius: 45px;
-            padding: 12px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.2);
+        .camera-ui {
             position: relative;
-            transform: scale(0.85); 
-            max-width: 95vw;
-            max-height: 95vh;
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            max-height: 800px;
+            background: var(--main-red);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 4px solid var(--accent-gold);
         }
 
-        .phone-frame iframe {
+        .viewfinder {
+            flex: 1;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #camera-video {
             width: 100%;
             height: 100%;
-            border: none;
-            border-radius: 35px;
-            background: #fff;
+            object-fit: cover;
+            /* CSS Filter for live preview */
+            filter: sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg);
         }
 
-        .close-sim {
+        .grain-overlay {
             position: absolute;
-            top: -50px;
-            right: 0;
-            background: var(--pink);
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            z-index: 2;
+        }
+
+        .vignette-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.6) 100%);
+            z-index: 3;
+        }
+
+        .camera-controls {
+            height: 120px;
+            background: var(--main-red);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 20px;
+            border-top: 2px solid var(--accent-gold);
+            z-index: 4;
+        }
+
+        .capture-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 4px solid var(--accent-gold);
+            cursor: pointer;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .capture-btn::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--main-red);
+            transition: all 0.1s;
+        }
+
+        .capture-btn:active {
+            transform: scale(0.9);
+        }
+
+        .capture-btn:active::after {
+            background: var(--envelope);
+        }
+
+        .switch-btn {
+            background: var(--surface);
+            color: var(--main-red);
+            border: 2px solid var(--accent-gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+
+        .switch-btn:active {
+            transform: scale(0.9);
+        }
+
+        .camera-error {
+            color: var(--surface);
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            padding: 20px;
+            display: none;
+            z-index: 10;
+        }
+
+        /* PREVIEW STATE */
+        .preview-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #111;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .preview-container.active {
+            display: flex;
+        }
+
+        .polaroid-frame {
+            background: var(--surface);
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            max-width: 100%;
+            max-height: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #captured-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .preview-btn {
+            background: var(--surface);
+            color: var(--main-red);
+            border: 2px solid var(--main-red);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .preview-btn:active {
+            transform: scale(0.95);
+        }
+
+        .preview-btn.primary {
+            background: var(--butter);
+            color: var(--main-red);
+            border-color: var(--main-red);
+        }
+
+        .save-toast {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
             color: #fff;
-            border: none;
             padding: 10px 20px;
             border-radius: 20px;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 20;
+        }
+        
+        .save-toast.show {
+            opacity: 1;
         }
 
         @media (max-width: 600px) {
-            .polaroid::before, .polaroid::after {
-                width: 60px;
-                height: 20px;
+            .camera-ui {
+                height: 100vh;
+                height: 100dvh;
+                border-radius: 0;
+                border: none;
             }
-            .reveal-banner {
-                height: 110px;
-                font-size: 26px;
-                padding-bottom: 25px;
+            .camera-back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .camera-controls {
+                height: 100px;
+                padding-bottom: env(safe-area-inset-bottom);
             }
         }
     </style>
@@ -1404,8 +1577,8 @@
 
             <div class="scene-container">
                 
-                <!-- 1. YOUR CAMERA -->
-                <svg class="svg-camera" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 1. YOUR CAMERA (Clickable to open Camera UI) -->
+                <svg class="svg-camera" id="camera-trigger" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="200" cy="380" rx="120" ry="15" fill="#381413" opacity="0.15"/>
                     <path d="M 80 120 C 80 90, 110 70, 160 65 C 200 60, 280 60, 320 65 C 360 70, 370 100, 370 140 L 370 320 C 370 360, 350 380, 300 380 L 100 380 C 50 380, 30 350, 30 300 L 30 160 C 30 130, 50 120, 80 120 Z" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
                     <path d="M 320 65 C 350 65, 370 80, 370 110 L 370 140" stroke="#E6D68E" stroke-width="3" stroke-linecap="round"/>
@@ -1434,7 +1607,7 @@
                     <path d="M 370 270 C 375 270, 378 280, 378 290 C 378 300, 375 310, 370 310" stroke="#E6D68E" stroke-width="2" fill="none"/>
                 </svg>
 
-                <!-- 2. YOUR ENVELOPE -->
+                <!-- 2. YOUR ENVELOPE (Click me text removed) -->
                 <div class="svg-envelope-wrapper">
                     <svg class="svg-envelope" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 40 120 L 150 30 L 260 120 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="3" stroke-linejoin="round"/>
@@ -1455,7 +1628,6 @@
                         <path d="M 150 205 C 150 205 135 190 135 180 C 135 170 145 165 150 175 C 155 165 165 170 165 180 C 165 190 150 205 150 205 Z" fill="#732624" stroke="#381413" stroke-width="2"/>
                         <path d="M 142 180 Q 146 176 150 180" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
                     </svg>
-                    <div class="click-me">click me</div>
                 </div>
 
                 <!-- 3. YOUR BOUQUET (Calla Lily completely removed) -->
@@ -1520,6 +1692,45 @@
                 </svg>
 
             </div>
+        </div>
+    </div>
+
+    <!-- CAMERA INTERFACE MODAL -->
+    <div id="camera-modal">
+        <button class="camera-back-btn" id="close-camera-btn">← Back to Collection</button>
+        
+        <div class="camera-ui">
+            <div class="viewfinder">
+                <video id="camera-video" autoplay playsinline muted></video>
+                <div class="grain-overlay"></div>
+                <div class="vignette-overlay"></div>
+                
+                <div class="camera-error" id="camera-error-msg">
+                    Camera access is required to take photos.<br>
+                    Please allow camera permissions in your browser.
+                </div>
+            </div>
+            
+            <div class="camera-controls" id="camera-controls">
+                <button class="switch-btn" id="switch-camera-btn" aria-label="Switch Camera">🔄</button>
+                <button class="capture-btn" id="capture-btn" aria-label="Take Photo"></button>
+                <div style="width: 50px;"></div> <!-- Spacer to balance layout -->
+            </div>
+        </div>
+
+        <!-- Hidden Canvas for processing filter -->
+        <canvas id="camera-canvas" style="display:none;"></canvas>
+
+        <!-- Preview State -->
+        <div class="preview-container" id="preview-container">
+            <div class="polaroid-frame">
+                <img id="captured-image" alt="Captured memory">
+            </div>
+            <div class="preview-controls">
+                <button class="preview-btn" id="retake-btn">Retake</button>
+                <button class="preview-btn primary" id="save-btn">Save Photo</button>
+            </div>
+            <div class="save-toast" id="save-toast">Photo Saved!</div>
         </div>
     </div>
 
@@ -1709,13 +1920,10 @@
                 redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
-                // The circle begins expanding (8 seconds total). 
-                // Fade in the text at 7 seconds, right as the circle is almost done covering the screen
                 setTimeout(() => {
                     loveText.classList.add('show');
                 }, 7000);
 
-                // At 8.5 seconds, start fading out the text and fade in Stage 3
                 setTimeout(() => {
                     loveText.classList.remove('show');
                     stage3.classList.add('show');
@@ -1766,6 +1974,208 @@
             noise.start();
             osc.start();
             osc.stop(ctx.currentTime + 0.2);
+        }
+    </script>
+
+    <!-- CAMERA FEATURE JS -->
+    <script>
+        const cameraTrigger = document.getElementById('camera-trigger');
+        const cameraModal = document.getElementById('camera-modal');
+        const closeCameraBtn = document.getElementById('close-camera-btn');
+        const videoElement = document.getElementById('camera-video');
+        const canvasElement = document.getElementById('camera-canvas');
+        const captureBtn = document.getElementById('capture-btn');
+        const switchBtn = document.getElementById('switch-camera-btn');
+        const cameraError = document.getElementById('camera-error-msg');
+        const cameraControls = document.getElementById('camera-controls');
+        
+        const previewContainer = document.getElementById('preview-container');
+        const capturedImage = document.getElementById('captured-image');
+        const retakeBtn = document.getElementById('retake-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const saveToast = document.getElementById('save-toast');
+
+        let stream = null;
+        let facingMode = 'environment'; // Start with rear camera
+        let hasMultipleCameras = false;
+
+        // Check if camera is supported
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            cameraError.style.display = 'block';
+            cameraError.innerHTML = 'Camera API is not supported in this browser.';
+        }
+
+        async function startCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode },
+                    audio: false
+                });
+                
+                videoElement.srcObject = stream;
+                cameraError.style.display = 'none';
+                cameraControls.style.display = 'flex';
+
+                // Check if multiple cameras exist to show switch button
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                hasMultipleCameras = videoDevices.length > 1;
+                
+                // Show switch button only if multiple cameras
+                switchBtn.style.display = hasMultipleCameras ? 'flex' : 'none';
+
+            } catch (err) {
+                console.error("Camera error:", err);
+                cameraError.style.display = 'block';
+                cameraControls.style.display = 'none';
+                
+                if (err.name === 'NotAllowedError') {
+                    cameraError.innerHTML = 'Camera permission denied.<br>Please allow access in your browser settings.';
+                } else if (err.name === 'NotFoundError') {
+                    cameraError.innerHTML = 'No camera found on this device.';
+                } else {
+                    cameraError.innerHTML = 'Unable to access camera.<br>Please check your device.';
+                }
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            videoElement.srcObject = null;
+        }
+
+        cameraTrigger.addEventListener('click', () => {
+            cameraModal.classList.add('active');
+            previewContainer.classList.remove('active');
+            startCamera();
+        });
+
+        closeCameraBtn.addEventListener('click', () => {
+            stopCamera();
+            cameraModal.classList.remove('active');
+        });
+
+        // Handle visibility change (stop camera if user tabs away)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && cameraModal.classList.contains('active')) {
+                stopCamera();
+            } else if (!document.hidden && cameraModal.classList.contains('active') && !previewContainer.classList.contains('active')) {
+                startCamera();
+            }
+        });
+
+        switchBtn.addEventListener('click', () => {
+            facingMode = facingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+        });
+
+        captureBtn.addEventListener('click', () => {
+            if (!stream) return;
+
+            // Play shutter sound (optional, but let's do a quick visual flash instead)
+            const viewfinder = document.querySelector('.viewfinder');
+            viewfinder.style.backgroundColor = '#fff';
+            setTimeout(() => { viewfinder.style.backgroundColor = '#000'; }, 100);
+
+            // Setup canvas
+            const width = videoElement.videoWidth;
+            const height = videoElement.videoHeight;
+            canvasElement.width = width;
+            canvasElement.height = height;
+            const ctx = canvasElement.getContext('2d');
+
+            // Apply the same CSS filter to the Canvas context
+            ctx.filter = 'sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg)';
+            
+            // Draw the video frame
+            ctx.drawImage(videoElement, 0, 0, width, height);
+
+            // Add Vignette manually to the canvas
+            ctx.filter = 'none'; // Reset filter for overlay
+            const gradient = ctx.createRadialGradient(width/2, height/2, width/4, width/2, height/2, width/1.5);
+            gradient.addColorStop(0, 'rgba(0,0,0,0)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0.6)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Add Grain (simulated)
+            const grainData = ctx.getImageData(0, 0, width, height);
+            const data = grainData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const noise = (Math.random() - 0.5) * 30;
+                data[i] += noise;
+                data[i+1] += noise;
+                data[i+2] += noise;
+            }
+            ctx.putImageData(grainData, 0, 0);
+
+            // Convert to data URL and show preview
+            const dataURL = canvasElement.toDataURL('image/jpeg', 0.9);
+            capturedImage.src = dataURL;
+            
+            // Hide live view, show preview
+            videoElement.style.display = 'none';
+            cameraControls.style.display = 'none';
+            previewContainer.classList.add('active');
+            
+            // Stop the camera stream while previewing
+            stopCamera();
+        });
+
+        retakeBtn.addEventListener('click', () => {
+            previewContainer.classList.remove('active');
+            videoElement.style.display = 'block';
+            startCamera();
+        });
+
+        saveBtn.addEventListener('click', async () => {
+            const dataURL = capturedImage.src;
+
+            // Check for Web Share API support (mobile)
+            if (navigator.share) {
+                try {
+                    // Convert dataURL to Blob
+                    const res = await fetch(dataURL);
+                    const blob = await res.blob();
+                    const file = new File([blob], `our-memory-${new Date().toISOString().split('T')[0]}.jpg`, { type: 'image/jpeg' });
+
+                    await navigator.share({
+                        files: [file],
+                        title: 'Our Memory',
+                        text: 'I took this photo with your birthday website!'
+                    });
+                    
+                    showToast('Shared successfully!');
+                    return;
+                } catch (err) {
+                    console.log('Share failed, falling back to download', err);
+                }
+            }
+
+            // Fallback to download (desktop)
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = `our-memory-${new Date().toISOString().split('T')[0]}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('Photo Saved!');
+        });
+
+        function showToast(msg) {
+            saveToast.textContent = msg;
+            saveToast.classList.add('show');
+            setTimeout(() => {
+                saveToast.classList.remove('show');
+            }, 3000);
         }
     </script>
 
