@@ -962,11 +962,11 @@
             z-index: 20;
             transition: transform 0.2s ease;
             -webkit-tap-highlight-color: transparent;
-            pointer-events: none; /* Disabled by default */
+            pointer-events: none; 
         }
 
         #stage-3.show .camera-btn-wrapper {
-            pointer-events: auto; /* Enabled ONLY when stage is shown */
+            pointer-events: auto; 
         }
 
         .camera-btn-wrapper:active {
@@ -993,11 +993,11 @@
             transition: transform 0.3s ease;
             cursor: pointer;
             z-index: 20;
-            pointer-events: none; /* Disabled by default */
+            pointer-events: none; 
         }
 
         #stage-3.show .svg-envelope-wrapper {
-            pointer-events: auto; /* Enabled ONLY when stage is shown */
+            pointer-events: auto; 
         }
         
         .svg-envelope-wrapper:active {
@@ -1034,11 +1034,11 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            pointer-events: none;
+            pointer-events: none; 
         }
 
         #stage-3.show .gallery-btn {
-            pointer-events: auto;
+            pointer-events: auto; 
         }
 
         .gallery-btn:active {
@@ -2636,4 +2636,35 @@
             }
         });
 
-        function show
+        function showToast(msg) {
+            saveToast.textContent = msg;
+            saveToast.classList.add('show');
+            setTimeout(() => {
+                saveToast.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+
+    <!-- MOBILE SIMULATOR JS -->
+    <script>
+        const openSimBtn = document.getElementById('openSimBtn');
+        const closeSimBtn = document.getElementById('closeSimBtn');
+        const sim = document.getElementById('mobile-simulator');
+        const iframe = document.getElementById('sim-iframe');
+
+        openSimBtn.addEventListener('click', () => {
+            const currentHTML = document.documentElement.outerHTML;
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(currentHTML);
+            iframeDoc.close();
+
+            sim.classList.add('active');
+        });
+
+        closeSimBtn.addEventListener('click', () => {
+            sim.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
