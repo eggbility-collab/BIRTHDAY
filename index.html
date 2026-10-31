@@ -871,8 +871,8 @@
             transform: translate(-50%, -50%);
             font-family: 'Caveat', cursive;
             font-size: clamp(40px, 8vw, 80px);
-            color: var(--vintage-paper); /* White/cream color to contrast against red */
-            z-index: 10000000; /* Above everything including Stage 3 */
+            color: var(--vintage-paper); 
+            z-index: 10000000; 
             opacity: 0;
             pointer-events: none;
             transition: opacity 1.5s ease;
@@ -1692,17 +1692,16 @@
                 stringCounter.style.opacity = '0';
                 
                 // The circle begins expanding (8 seconds total). 
-                // Fade in the text after 1.5 seconds
+                // Fade in the text at 7 seconds, right as the circle is almost done covering the screen
                 setTimeout(() => {
                     loveText.classList.add('show');
-                }, 1500);
+                }, 7000);
 
-                // At 7.5 seconds, start fading out the text and fade in Stage 3
-                // Stage 3 has a 1s fade-in, so they will crossfade nicely
+                // At 8.5 seconds, start fading out the text and fade in Stage 3
                 setTimeout(() => {
                     loveText.classList.remove('show');
                     stage3.classList.add('show');
-                }, 7500); 
+                }, 8500); 
             }
         });
 
