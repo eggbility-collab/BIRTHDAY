@@ -623,11 +623,11 @@
             cursor: pointer;
         }
 
-        /* The Rope itself - FIXED COLORS */
+        /* The Rope itself - RED */
         #red-rope {
             width: 6px;
             height: 0;
-            background: var(--main-red); /* #732624 */
+            background: var(--main-red); /* RED ROPE */
             box-shadow: 0 0 10px rgba(115, 38, 36, 0.5);
             transition: height 0.5s ease-out, opacity 0.2s ease;
             margin: 0 auto; 
@@ -636,7 +636,7 @@
             border-right: 1px solid var(--accent-gold);
         }
 
-        /* The Circle at the bottom - FIXED COLORS */
+        /* The Circle at the bottom - NOW RED */
         #red-circle {
             position: absolute;
             bottom: -15px;
@@ -644,12 +644,12 @@
             transform: translateX(-50%) scale(1);
             width: 30px;
             height: 30px;
-            background: var(--accent-gold); /* #D9B46D */
+            background: var(--main-red); /* RED CIRCLE */
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(217, 180, 109, 0.8);
+            box-shadow: 0 0 15px rgba(115, 38, 36, 0.8);
             transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1); 
             z-index: 999999;
-            border: 2px solid var(--subtle-border); /* #CBBDB9 */
+            border: 2px solid var(--accent-gold); /* Gold border so you can see it against the red rope */
         }
 
         /* When snapped, rope disappears but circle stays and expands */
@@ -887,7 +887,7 @@
             pointer-events: auto;
         }
 
-        /* THE RED BACKGROUND IS RIGHT HERE */
+        /* THE RED BACKGROUND */
         .main-canvas {
             background-color: var(--main-red);
             width: 100%;
