@@ -922,34 +922,50 @@
             z-index: 10;
         }
 
+        /* Adjusted for the new detailed camera */
         .svg-camera {
-            width: 150px;
+            width: 220px;
             height: auto;
-            margin-top: 80px; 
+            margin-top: 40px; 
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
         }
 
         .svg-envelope-wrapper {
             position: relative;
-            width: 300px;
+            width: 320px;
             height: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.25));
+            transition: transform 0.3s ease;
+        }
+        
+        .svg-envelope-wrapper:hover {
+            transform: translateY(-5px) scale(1.02);
         }
 
+        /* Adjusted for the new detailed bouquet */
         .svg-flowers {
-            width: 140px;
+            width: 180px;
             height: auto;
             margin-top: 40px;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.2));
         }
 
         .click-me {
             font-family: 'Caveat', cursive;
             color: var(--letter-paper);
-            font-size: 24px;
+            font-size: 28px;
             margin-top: 15px;
             letter-spacing: 2px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            animation: pulseText 2s infinite ease-in-out;
+        }
+        
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
 
         @media (max-width: 768px) {
@@ -958,20 +974,20 @@
                 gap: 0px;
             }
             .svg-camera {
-                width: 100px;
+                width: 130px;
                 position: absolute;
                 bottom: -20px;
                 left: 20px;
                 margin: 0;
             }
             .svg-envelope-wrapper {
-                width: 250px;
+                width: 260px;
             }
             .svg-flowers {
-                width: 100px;
+                width: 120px;
                 position: absolute;
-                bottom: 20px;
-                right: 10px;
+                bottom: 10px;
+                right: 0px;
                 margin: 0;
             }
             .main-canvas {
@@ -986,6 +1002,7 @@
             #transition-overlay { display: none !important; }
             .tear-left, .tear-right, .reveal-banner { display: none !important; } 
             #red-rope-container.snapped #red-circle { transform: none !important; }
+            .click-me { animation: none; }
         }
 
         /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
@@ -1308,46 +1325,161 @@
 
             <div class="scene-container">
                 
-                <!-- 1. The Camera (SVG) -->
-                <svg class="svg-camera" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="100" cy="140" rx="80" ry="10" fill="#381413" opacity="0.3"/>
-                    <rect x="20" y="40" width="160" height="90" rx="15" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="4"/>
-                    <rect x="20" y="40" width="160" height="30" rx="15" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="4"/>
-                    <rect x="130" y="20" width="30" height="20" rx="5" fill="#E5DED8" stroke="#CBBDB9" stroke-width="3"/>
-                    <circle cx="100" cy="85" r="35" fill="#E5DED8" stroke="#CBBDB9" stroke-width="4"/>
-                    <circle cx="100" cy="85" r="25" fill="#381413"/>
-                    <circle cx="95" cy="80" r="8" fill="#FDFCFB" opacity="0.6"/>
-                    <rect x="40" y="45" width="40" height="10" rx="5" fill="#863F3F"/>
-                    <circle cx="160" cy="50" r="5" fill="#863F3F"/>
+                <!-- 1. The Detailed Camera (Based on your image) -->
+                <svg class="svg-camera" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Shadow -->
+                    <ellipse cx="200" cy="380" rx="120" ry="15" fill="#381413" opacity="0.15"/>
+                    
+                    <!-- Camera Body -->
+                    <path d="M 80 120 C 80 90, 110 70, 160 65 C 200 60, 280 60, 320 65 C 360 70, 370 100, 370 140 L 370 320 C 370 360, 350 380, 300 380 L 100 380 C 50 380, 30 350, 30 300 L 30 160 C 30 130, 50 120, 80 120 Z" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
+                    
+                    <!-- Top Right Corner detail -->
+                    <path d="M 320 65 C 350 65, 370 80, 370 110 L 370 140" stroke="#E6D68E" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- Flash Area (White) -->
+                    <rect x="130" y="90" width="45" height="70" rx="20" fill="#FFFFFF" stroke="#E6D68E" stroke-width="2"/>
+                    
+                    <!-- Viewfinder (Small Black Square) -->
+                    <rect x="55" y="110" width="25" height="25" rx="3" fill="#222222" stroke="#E6D68E" stroke-width="2"/>
+                    
+                    <!-- Top Buttons -->
+                    <circle cx="230" cy="100" r="8" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                    <circle cx="230" cy="125" r="8" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                    
+                    <!-- Fujifilm Text -->
+                    <text x="270" y="85" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#C5A85C" letter-spacing="1">FUJIFILM</text>
+                    <text x="275" y="98" font-family="Arial, sans-serif" font-size="6" fill="#C5A85C">instax mini 8</text>
+
+                    <!-- Left Side Text -->
+                    <path id="sideTextPath" d="M 55 240 L 55 340" fill="none" />
+                    <text font-family="Arial, sans-serif" font-size="12" fill="#B89A4F">
+                        <textPath href="#sideTextPath" startOffset="0%" writing-mode="vertical-rl">transparently</textPath>
+                    </text>
+
+                    <!-- Large Lens Ring Area -->
+                    <circle cx="210" cy="250" r="100" fill="#FDF7C9" stroke="#E6D68E" stroke-width="3"/>
+                    
+                    <!-- Inner Lens Ring -->
+                    <circle cx="210" cy="250" r="75" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                    
+                    <!-- FOCUS Text Circle -->
+                    <path id="focusPath" d="M 210 175 A 75 75 0 1 1 209 175" fill="none" />
+                    <text font-family="Arial, sans-serif" font-weight="bold" font-size="10" fill="#D1B869" letter-spacing="3">
+                        <textPath href="#focusPath" startOffset="50%" text-anchor="middle">F O C U S</textPath>
+                    </text>
+
+                    <!-- Lens Rings (Dashes) -->
+                    <circle cx="210" cy="250" r="60" fill="none" stroke="#D1B869" stroke-width="2" stroke-dasharray="4 8"/>
+                    <circle cx="210" cy="250" r="50" fill="none" stroke="#E6D68E" stroke-width="1"/>
+                    
+                    <!-- Inner Black Lens -->
+                    <circle cx="210" cy="250" r="35" fill="#111111"/>
+                    <!-- Lens Reflection -->
+                    <circle cx="200" cy="240" r="10" fill="#333333" opacity="0.5"/>
+                    
+                    <!-- Shutter Button (Left) -->
+                    <circle cx="80" cy="200" r="18" fill="#FDF7C9" stroke="#E6D68E" stroke-width="2"/>
+                    
+                    <!-- Right Side Bulge/Curve -->
+                    <path d="M 370 240 C 385 240, 390 260, 390 280 C 390 300, 380 320, 370 320" stroke="#E6D68E" stroke-width="3" fill="none"/>
+                    <path d="M 370 270 C 375 270, 378 280, 378 290 C 378 300, 375 310, 370 310" stroke="#E6D68E" stroke-width="2" fill="none"/>
+                    
                 </svg>
 
-                <!-- 2. The Envelope (SVG) -->
+                <!-- 2. The Detailed Envelope (SVG) -->
                 <div class="svg-envelope-wrapper">
                     <svg class="svg-envelope" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="60" y="30" width="180" height="140" rx="10" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="3"/>
-                        <path d="M90 70 H210 M90 90 H210 M90 110 H170" stroke="#CBBDB9" stroke-width="4" stroke-linecap="round"/>
-                        <path d="M30 100 L270 100 L270 230 L30 230 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
-                        <path d="M30 100 L150 180 L270 100 Z" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
-                        <path d="M30 230 L130 160 L150 175 L170 160 L270 230 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
-                        <path d="M150 220 C150 220 130 200 130 190 C130 180 140 175 150 185 C160 175 170 180 170 190 C170 200 150 220 150 220 Z" fill="#863F3F"/>
+                        <!-- Back Flap / Inner Letter -->
+                        <rect x="55" y="20" width="190" height="150" rx="8" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="2"/>
+                        <!-- Letter Lines -->
+                        <path d="M 80 60 H 220 M 80 80 H 220 M 80 100 H 180 M 80 120 H 200" stroke="#E5DED8" stroke-width="3" stroke-linecap="round"/>
+                        
+                        <!-- Envelope Body Base -->
+                        <path d="M 30 100 L 270 100 L 270 230 L 30 230 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="3" stroke-linejoin="round"/>
+                        
+                        <!-- Top Flap -->
+                        <path d="M 30 100 L 150 180 L 270 100 Z" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="3" stroke-linejoin="round"/>
+                        
+                        <!-- Bottom Flaps -->
+                        <path d="M 30 230 L 130 160 L 150 175 L 170 160 L 270 230 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="3" stroke-linejoin="round"/>
+                        
+                        <!-- Fold Lines for Detail -->
+                        <path d="M 30 100 L 150 180 L 270 100" stroke="#E5DED8" stroke-width="1" stroke-linejoin="round" opacity="0.5"/>
+                        <path d="M 30 230 L 150 175 L 270 230" stroke="#E5DED8" stroke-width="1" stroke-linejoin="round" opacity="0.5"/>
+
+                        <!-- Heart Seal -->
+                        <path d="M 150 220 C 150 220 120 190 120 175 C 120 160 135 155 150 170 C 165 155 180 160 180 175 C 180 190 150 220 150 220 Z" fill="#863F3F" stroke="#732624" stroke-width="2"/>
+                        <!-- Highlight on heart -->
+                        <path d="M 140 170 Q 145 165 150 170" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
                     </svg>
                     <div class="click-me">click me</div>
                 </div>
 
-                <!-- 3. The Flowers (SVG) -->
-                <svg class="svg-flowers" viewBox="0 0 150 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M40 120 L110 120 L130 240 L20 240 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
-                    <path d="M40 120 L75 200 L110 120 Z" fill="#F7F5F4" stroke="#CBBDB9" stroke-width="4" stroke-linejoin="round"/>
-                    <path d="M20 220 Q75 240 130 220" stroke="#863F3F" stroke-width="8" stroke-linecap="round"/>
-                    <path d="M75 200 L60 240 M75 200 L90 230" stroke="#863F3F" stroke-width="6" stroke-linecap="round"/>
-                    <circle cx="50" cy="90" r="25" fill="#732624"/>
-                    <path d="M40 80 Q50 70 60 80 Q70 90 60 100 Q50 110 40 100 Q30 90 40 80 Z" stroke="#381413" stroke-width="3"/>
-                    <circle cx="100" cy="80" r="30" fill="#863F3F"/>
-                    <path d="M85 65 Q100 55 115 65 Q125 80 115 95 Q100 105 85 95 Q75 80 85 65 Z" stroke="#381413" stroke-width="3"/>
-                    <circle cx="75" cy="50" r="20" fill="#732624"/>
-                    <path d="M65 40 Q75 30 85 40 Q95 50 85 60 Q75 70 65 60 Q55 50 65 40 Z" stroke="#381413" stroke-width="3"/>
-                    <path d="M30 130 Q10 110 20 90 Q40 110 30 130 Z" fill="#4A5D23"/>
-                    <path d="M120 130 Q140 110 130 90 Q110 110 120 130 Z" fill="#4A5D23"/>
+                <!-- 3. The Lily of the Valley Bouquet (SVG) -->
+                <svg class="svg-flowers" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    
+                    <!-- White Wrapping Paper (Back layer) -->
+                    <path d="M 60 150 L 140 150 L 170 290 L 30 290 Z" fill="#FDFCFB" stroke="#E5DED8" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M 70 150 L 130 150 L 140 290 L 60 290 Z" fill="#FFFFFF" stroke="#E5DED8" stroke-width="2" stroke-linejoin="round"/>
+                    
+                    <!-- Green Stems -->
+                    <path d="M 100 150 Q 80 100 50 60" stroke="#7BA05B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 150 Q 100 90 100 40" stroke="#7BA05B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 150 Q 120 100 150 60" stroke="#7BA05B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 150 Q 70 130 40 110" stroke="#7BA05B" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 150 Q 130 130 160 110" stroke="#7BA05B" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+                    <!-- Leaves -->
+                    <path d="M 90 140 Q 40 130 30 100 Q 60 110 90 140 Z" fill="#5C8A3C"/>
+                    <path d="M 110 140 Q 160 130 170 100 Q 140 110 110 140 Z" fill="#5C8A3C"/>
+                    <path d="M 85 120 Q 60 80 70 50 Q 80 80 85 120 Z" fill="#4A7030"/>
+                    <path d="M 115 120 Q 140 80 130 50 Q 120 80 115 120 Z" fill="#4A7030"/>
+
+                    <!-- Lily of the Valley Flowers (Bell shapes) -->
+                    <!-- Left cluster -->
+                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
+                        <path d="M 50 60 Q 45 70 40 75 Q 50 80 55 70 Z"/>
+                        <path d="M 60 80 Q 55 90 50 95 Q 60 100 65 90 Z"/>
+                        <path d="M 45 90 Q 40 100 35 105 Q 45 110 50 100 Z"/>
+                    </g>
+                    <!-- Center cluster -->
+                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
+                        <path d="M 100 40 Q 95 50 90 55 Q 100 60 105 50 Z"/>
+                        <path d="M 105 60 Q 100 70 95 75 Q 105 80 110 70 Z"/>
+                        <path d="M 95 80 Q 90 90 85 95 Q 95 100 100 90 Z"/>
+                        <path d="M 108 85 Q 103 95 98 100 Q 108 105 113 95 Z"/>
+                    </g>
+                    <!-- Right cluster -->
+                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
+                        <path d="M 150 60 Q 155 70 160 75 Q 150 80 145 70 Z"/>
+                        <path d="M 140 80 Q 145 90 150 95 Q 140 100 135 90 Z"/>
+                        <path d="M 155 90 Q 160 100 165 105 Q 155 110 150 100 Z"/>
+                    </g>
+                    <!-- Lower side clusters -->
+                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
+                        <path d="M 40 110 Q 35 120 30 125 Q 40 130 45 120 Z"/>
+                        <path d="M 160 110 Q 165 120 170 125 Q 160 130 155 120 Z"/>
+                    </g>
+
+                    <!-- White Wrapping Paper (Front fold overlay) -->
+                    <path d="M 50 180 L 150 180 L 130 290 L 70 290 Z" fill="#FDFCFB" stroke="#E5DED8" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M 60 210 L 140 210 L 120 290 L 80 290 Z" fill="#FFFFFF" stroke="#E5DED8" stroke-width="1" stroke-linejoin="round"/>
+
+                    <!-- Yellow Ribbon Tie -->
+                    <path d="M 70 200 Q 100 220 130 200" stroke="#F2D46F" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 210 L 100 230" stroke="#F2D46F" stroke-width="6" stroke-linecap="round"/>
+                    
+                    <!-- Ribbon Bow -->
+                    <path d="M 100 210 Q 70 190 60 220 Q 80 220 100 210 Z" fill="#F2D46F" stroke="#C5A85C" stroke-width="1"/>
+                    <path d="M 100 210 Q 130 190 140 220 Q 120 220 100 210 Z" fill="#F2D46F" stroke="#C5A85C" stroke-width="1"/>
+                    
+                    <!-- Ribbon Tails -->
+                    <path d="M 95 220 Q 80 250 75 270" stroke="#F2D46F" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <path d="M 105 220 Q 120 250 125 260" stroke="#F2D46F" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    
+                    <!-- Ribbon Center Knot -->
+                    <circle cx="100" cy="210" r="6" fill="#F2D46F" stroke="#C5A85C" stroke-width="1"/>
+
                 </svg>
 
             </div>
