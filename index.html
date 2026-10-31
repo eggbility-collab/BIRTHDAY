@@ -922,7 +922,7 @@
             align-items: center;
             box-shadow: 0 20px 50px rgba(56, 20, 19, 0.3);
             overflow: hidden;
-            border: none; /* White border completely removed */
+            border: none; 
         }
 
         .bg-heart {
@@ -946,14 +946,13 @@
             height: 100%;
         }
 
-        /* YOUR CAMERA WRAPPER TO ENSURE CLICKS */
+        /* YOUR CAMERA WRAPPER - pointer-events inherited from parent */
         .camera-btn-wrapper {
             background: none;
             border: none;
             padding: 0;
             cursor: pointer;
             outline: none;
-            pointer-events: auto;
             z-index: 20;
             transition: transform 0.2s ease;
             -webkit-tap-highlight-color: transparent;
@@ -971,6 +970,7 @@
             pointer-events: none;
         }
 
+        /* ENVELOPE WRAPPER - pointer-events inherited from parent */
         .svg-envelope-wrapper {
             position: relative;
             width: 320px;
@@ -981,7 +981,6 @@
             filter: drop-shadow(0 15px 20px rgba(0,0,0,0.25));
             transition: transform 0.3s ease;
             cursor: pointer;
-            pointer-events: auto;
             z-index: 20;
         }
         
@@ -1866,7 +1865,7 @@
                     </svg>
                 </button>
 
-                <!-- 2. ENVELOPE (Now clickable for transition) -->
+                <!-- 2. ENVELOPE -->
                 <div class="svg-envelope-wrapper" id="envelope-trigger" aria-label="Open Love Letter">
                     <svg class="svg-envelope" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Flap (Animated) -->
@@ -1902,7 +1901,7 @@
                     </svg>
                 </div>
 
-                <!-- 3. BOUQUET (New highly detailed Lily of the Valley) -->
+                <!-- 3. BOUQUET -->
                 <svg class="svg-flowers" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Stems -->
                     <g stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round">
