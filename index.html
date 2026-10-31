@@ -699,7 +699,7 @@
             grid-template-columns: 1fr;
             gap: 40px;
             width: 100%;
-            max-width: 500px; /* Keeps it looking like a single scrapbook column */
+            max-width: 500px;
             margin: 0 auto;
             padding-bottom: 50px;
             position: relative;
@@ -863,6 +863,27 @@
             100% { transform: translateX(100%); }
         }
 
+        /* --- LOVE TEXT TRANSITION --- */
+        #love-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Caveat', cursive;
+            font-size: clamp(40px, 8vw, 80px);
+            color: var(--vintage-paper);
+            z-index: 9999998; /* Just below Stage 3 */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s ease;
+            text-align: center;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+        }
+
+        #love-text.show {
+            opacity: 1;
+        }
+
         /* --- STAGE 3: THE RED SCENE --- */
         #stage-3 {
             position: fixed;
@@ -886,7 +907,7 @@
             pointer-events: auto;
         }
 
-        /* THE RED BACKGROUND */
+        /* THE RED BACKGROUND (Border removed) */
         .main-canvas {
             background-color: var(--main-red);
             width: 100%;
@@ -901,7 +922,6 @@
             align-items: center;
             box-shadow: 0 20px 50px rgba(56, 20, 19, 0.3);
             overflow: hidden;
-            border: 8px solid var(--subtle-border);
         }
 
         .bg-heart {
@@ -995,7 +1015,6 @@
             .main-canvas {
                 height: 90vh;
                 height: 90dvh;
-                border-width: 5px;
             }
         }
 
@@ -1040,7 +1059,6 @@
             cursor: pointer;
             box-shadow: 3px 3px 0 var(--cocoa);
             transition: all 0.1s ease;
-            /* Visible on mobile now! */
         }
 
         @media (max-width: 480px) {
@@ -1352,6 +1370,9 @@
         </div>
     </div>
 
+    <!-- LOVE TEXT TRANSITION -->
+    <div id="love-text">(i love you btw)</div>
+
     <!-- STAGE 3: THE NEW SCENE -->
     <div id="stage-3">
         <div class="main-canvas">
@@ -1418,7 +1439,7 @@
                     <div class="click-me">click me</div>
                 </div>
 
-                <!-- 3. YOUR BOUQUET (Redrawn to match the reference image) -->
+                <!-- 3. YOUR BOUQUET (Calla Lily removed) -->
                 <svg class="svg-flowers" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Stems (Background) -->
                     <path d="M 100 170 Q 70 100 50 60" stroke="#5C8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -1446,16 +1467,6 @@
                     <path d="M 110 160 Q 160 140 180 80 Q 140 120 110 160 Z" fill="#4A7030"/>
                     <path d="M 85 130 Q 50 90 60 40 Q 80 90 85 130 Z" fill="#5C8A3C"/>
                     <path d="M 115 130 Q 150 90 140 40 Q 120 90 115 130 Z" fill="#5C8A3C"/>
-
-                    <!-- Calla Lily (Center) -->
-                    <g>
-                        <!-- Petal -->
-                        <path d="M 100 150 C 50 110, 50 40, 100 30 C 150 40, 150 110, 100 150 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
-                        <!-- Inner Fold Shadow -->
-                        <path d="M 100 140 C 75 110, 75 60, 100 40 C 125 60, 125 110, 100 140 Z" fill="#F7F5F4" opacity="0.5"/>
-                        <!-- Yellow Stamen -->
-                        <path d="M 95 80 L 105 80 L 100 35 Z" fill="#F2D46F" stroke="#D9B46D" stroke-width="1"/>
-                    </g>
 
                     <!-- Lily of the Valley (Foreground) -->
                     <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
@@ -1493,7 +1504,7 @@
         </div>
     </div>
 
-    <!-- MOBILE SIMULATOR (Visible everywhere now) -->
+    <!-- MOBILE SIMULATOR -->
     <button class="sim-btn" id="openSimBtn">📱 Mobile POV</button>
     <div id="mobile-simulator">
         <div class="phone-frame">
@@ -1611,6 +1622,7 @@
         const redCircle = document.getElementById('red-circle');
         const stringCounter = document.getElementById('string-counter');
         const stage3 = document.getElementById('stage-3');
+        const loveText = document.getElementById('love-text');
         const body = document.body;
 
         let stringClicks = 0;
@@ -1678,8 +1690,13 @@
                 redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
+                // Show the love text
+                loveText.classList.add('show');
+
                 // After 8 seconds (the circle expansion), reveal Stage 3
                 setTimeout(() => {
+                    // Fade out the text just as Stage 3 comes in
+                    loveText.classList.remove('show');
                     stage3.classList.add('show');
                 }, 8000); 
             }
