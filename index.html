@@ -632,11 +632,11 @@
             transition: height 0.5s ease-out, opacity 0.2s ease;
             margin: 0 auto; 
             position: relative;
-            border-left: 1px solid var(--accent-gold);
-            border-right: 1px solid var(--accent-gold);
+            border-left: 1px solid var(--main-red); /* Matches rope */
+            border-right: 1px solid var(--main-red); /* Matches rope */
         }
 
-        /* The Circle at the bottom - NOW RED */
+        /* The Circle at the bottom - NOW FULLY RED */
         #red-circle {
             position: absolute;
             bottom: -15px;
@@ -646,10 +646,10 @@
             height: 30px;
             background: var(--main-red); /* RED CIRCLE */
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(115, 38, 36, 0.8);
+            box-shadow: 0 0 15px rgba(115, 38, 36, 0.8); /* Red glow */
             transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1); 
             z-index: 999999;
-            border: 2px solid var(--accent-gold); /* Gold border so you can see it against the red rope */
+            border: 2px solid var(--main-red); /* No more gold border, fully red */
         }
 
         /* When snapped, rope disappears but circle stays and expands */
