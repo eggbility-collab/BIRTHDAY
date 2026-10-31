@@ -21,14 +21,6 @@
             --kraft-dark: #C19A6B;
             --vintage-paper: #F4EBD0;
             --sepia: #5C4033;
-
-            /* Love Notes Palette */
-            --parchment: #F2EBDD;
-            --dusty-rose: #EFB7C2;
-            --butter-gold: #F2D46F;
-            --soft-coral: #E99482;
-            --letter-ivory: #FFF9EF;
-            --cocoa-ink: #59443F;
         }
 
         * {
@@ -423,7 +415,7 @@
 
         /* --- MOBILE HEADER FIX --- */
         @media (max-width: 600px) {
-            .header, #final-scene .header, .love-notes-header { 
+            .header, #final-scene .header { 
                 flex-direction: column;
                 justify-content: center;
                 padding: 15px 20px; 
@@ -443,8 +435,8 @@
                 font-size: 14px; 
             }
             
-            #final-scene .progress-text, .love-notes-header .progress-text { font-size: 24px; margin-bottom: 0; }
-            #final-scene .score, .love-notes-header .score { font-size: 18px; }
+            #final-scene .progress-text { font-size: 24px; margin-bottom: 0; }
+            #final-scene .score { font-size: 18px; }
         }
 
         @media (max-height: 600px) {
@@ -628,6 +620,7 @@
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
             transition: height 0.5s ease-out;
             position: relative;
+            margin: 0 auto;
         }
 
         /* The Red Circle at the bottom */
@@ -636,20 +629,18 @@
             bottom: -15px;
             left: 50%;
             transform: translateX(-50%) scale(1);
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             background: #e11d48;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scale */
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scale */
             z-index: 999999;
         }
 
-        /* When snapped */
+        /* When snapped, rope disappears but circle stays and expands */
         #red-rope-container.snapped #red-rope {
-            background: transparent !important;
-            box-shadow: none !important;
-            transition: none;
+            display: none;
         }
 
         #red-rope-container.snapped #red-circle {
@@ -859,159 +850,6 @@
             100% { transform: translateX(100%); }
         }
 
-        /* --- STAGE 3: LOVE NOTES PAGE --- */
-        #love-notes-page {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 999998; 
-            background-color: var(--parchment);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 15px;
-            overflow-y: auto;
-        }
-
-        .love-notes-header {
-            width: 100%;
-            max-width: 800px;
-            background: var(--letter-ivory);
-            padding: 15px 25px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
-            border: 1px solid var(--dusty-rose);
-        }
-
-        .love-notes-header .progress-text {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 24px;
-            color: var(--cocoa-ink);
-            font-weight: 600;
-        }
-
-        .love-notes-header .progress-bar {
-            width: 25%;
-            height: 8px;
-            background: #e0d8cd;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .love-notes-header .progress-fill {
-            width: 13.33%;
-            height: 100%;
-            background: var(--soft-coral);
-        }
-
-        .love-notes-header .score {
-            font-weight: 800;
-            font-size: 20px;
-            color: var(--soft-coral);
-        }
-
-        .envelopes-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-            width: 100%;
-            max-width: 900px;
-            padding-bottom: 50px;
-        }
-
-        .envelope {
-            background: var(--dusty-rose);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 3px 5px 15px rgba(0,0,0,0.1);
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .envelope:hover { transform: translateY(-5px); }
-
-        .wax-seal {
-            width: 40px;
-            height: 40px;
-            background: var(--butter-gold);
-            border-radius: 50%;
-            box-shadow: 1px 2px 5px rgba(0,0,0,0.2), inset -2px -2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--cocoa-ink);
-            font-size: 20px;
-            z-index: 2;
-        }
-
-        .envelope-text {
-            font-family: 'Caveat', cursive;
-            font-size: 28px;
-            color: var(--cocoa-ink);
-            margin-top: 15px;
-            text-align: center;
-            z-index: 2;
-        }
-
-        .letter-content {
-            display: none;
-            background: var(--letter-ivory);
-            color: var(--cocoa-ink);
-            padding: 20px;
-            border-radius: 5px;
-            font-family: 'Caveat', cursive;
-            font-size: 22px;
-            line-height: 1.4;
-            text-align: left;
-            width: 100%;
-            height: 100%;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-            animation: unfold 0.4s ease-out forwards;
-        }
-
-        @keyframes unfold {
-            0% { opacity: 0; transform: scaleY(0.5); }
-            100% { opacity: 1; transform: scaleY(1); }
-        }
-
-        .envelope.open {
-            background: var(--letter-ivory);
-            align-items: flex-start;
-        }
-
-        .envelope.open .wax-seal,
-        .envelope.open .envelope-text {
-            display: none;
-        }
-
-        .envelope.open .letter-content {
-            display: block;
-        }
-
-        .envelope.placeholder .letter-content {
-            color: #999;
-            font-family: 'Nunito', sans-serif;
-            font-size: 16px;
-            font-style: italic;
-            text-align: center;
-        }
-
         /* Mobile Layout */
         @media (max-width: 600px) {
             .scrapbook-grid {
@@ -1041,17 +879,6 @@
             .flower-4 { display: none; }
             .flower-5 { display: none; }
             .flower-6 { width: 90px; top: 80%; right: 0; }
-
-            .envelopes-grid {
-                grid-template-columns: 1fr;
-            }
-            .love-notes-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .love-notes-header .progress-bar {
-                width: 80%;
-            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1371,76 +1198,6 @@
         </div>
     </div>
 
-    <!-- STAGE 3: LOVE NOTES PAGE -->
-    <div id="love-notes-page">
-        
-        <div class="love-notes-header">
-            <span class="progress-text">letters for you 💌</span>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-            <span class="score">2 / 15</span>
-        </div>
-
-        <div class="envelopes-grid">
-            
-            <!-- ENVELOPE 1 -->
-            <div class="envelope" onclick="openEnvelope(this)">
-                <div class="wax-seal">♥</div>
-                <div class="envelope-text">The random post</div>
-                <div class="letter-content">
-                    I still smile thinking about when you randomly posted me a few days ago. I forgot the last time, but as of October 29 it was a few days ago.
-                </div>
-            </div>
-
-            <!-- ENVELOPE 2 -->
-            <div class="envelope" onclick="openEnvelope(this)">
-                <div class="wax-seal">♥</div>
-                <div class="envelope-text">Our first date</div>
-                <div class="letter-content">
-                    Our first date at Jollibee. We just talked. I never want to forget that.
-                </div>
-            </div>
-
-            <!-- ENVELOPE 3 -->
-            <div class="envelope" onclick="openEnvelope(this)">
-                <div class="wax-seal">♥</div>
-                <div class="envelope-text">How organized you are</div>
-                <div class="letter-content">
-                    Something I admire about you is how organized you are. You really love to make things look good and tidy.
-                </div>
-            </div>
-
-            <!-- ENVELOPE 4 -->
-            <div class="envelope" onclick="openEnvelope(this)">
-                <div class="wax-seal">♥</div>
-                <div class="envelope-text">How you push through</div>
-                <div class="letter-content">
-                    Something you do that you think goes unnoticed is how no matter how hard life throws things at you, you always push through.
-                </div>
-            </div>
-
-            <!-- ENVELOPE 5 -->
-            <div class="envelope" onclick="openEnvelope(this)">
-                <div class="wax-seal">♥</div>
-                <div class="envelope-text">For a hard day</div>
-                <div class="letter-content">
-                    My love, no matter how hard life is for you, i'll always be there. and even if im not then you'll be able to figure it out like you always do, your the greatest and most hardworking person i know. I love you and i hope no matter what happens youll still be you.
-                </div>
-            </div>
-
-            <!-- ENVELOPE 6 (PLACEHOLDER) -->
-            <div class="envelope placeholder" onclick="openEnvelope(this)">
-                <div class="wax-seal">♥</div>
-                <div class="envelope-text">For your birthday</div>
-                <div class="letter-content">
-                    [YOUR 6TH NOTE HERE - Write what this birthday means to you, or a special birthday message.]
-                </div>
-            </div>
-
-        </div>
-    </div>
-
     <!-- MOBILE SIMULATOR -->
     <button class="sim-btn" id="openSimBtn">📱 Mobile POV</button>
     <div id="mobile-simulator">
@@ -1558,7 +1315,6 @@
         const redRope = document.getElementById('red-rope');
         const redCircle = document.getElementById('red-circle');
         const stringCounter = document.getElementById('string-counter');
-        const loveNotesPage = document.getElementById('love-notes-page');
         const body = document.body;
 
         let stringClicks = 0;
@@ -1602,8 +1358,8 @@
                     setTimeout(() => {
                         redRopeContainer.style.display = 'block'; // Make it exist in the layout
                         setTimeout(() => {
-                            redRope.style.height = '60vh'; // Long string
-                        }, 10); // slight delay for transition
+                            redRope.style.height = '60vh'; // Drop the rope
+                        }, 10); 
                         stringActive = true;
                     }, 1000);
                 }
@@ -1623,21 +1379,15 @@
             if (stringClicks === 4) {
                 playSnapSound();
                 
-                // Snap the string and expand the circle
+                // Snap the rope and expand the circle
                 redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
-                // Wait for the circle to cover the screen, then reveal the page
+                // After the circle covers the screen, we can trigger the next stage
                 setTimeout(() => {
-                    loveNotesPage.style.display = 'flex';
-                    document.getElementById('final-scene').style.opacity = '0';
-                    
-                    // Wait a split second, then fade out the expanded red circle so the parchment shows
-                    setTimeout(() => {
-                        redRopeContainer.style.opacity = '0';
-                        redRopeContainer.style.transition = 'opacity 0.5s ease';
-                    }, 100);
-                }, 800); // Wait for the 0.6s scale animation to finish
+                    // Here is where the next stage would appear, but we removed it for now
+                    // The red screen will just stay there.
+                }, 800); 
             }
         });
 
@@ -1684,10 +1434,6 @@
             noise.start();
             osc.start();
             osc.stop(ctx.currentTime + 0.2);
-        }
-
-        function openEnvelope(el) {
-            el.classList.toggle('open');
         }
     </script>
 
