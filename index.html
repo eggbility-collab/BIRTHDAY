@@ -871,11 +871,11 @@
             transform: translate(-50%, -50%);
             font-family: 'Caveat', cursive;
             font-size: clamp(40px, 8vw, 80px);
-            color: var(--vintage-paper);
-            z-index: 9999998; /* Just below Stage 3 */
+            color: var(--vintage-paper); /* White/cream color to contrast against red */
+            z-index: 10000000; /* Above everything including Stage 3 */
             opacity: 0;
             pointer-events: none;
-            transition: opacity 2s ease;
+            transition: opacity 1.5s ease;
             text-align: center;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
         }
@@ -1041,6 +1041,7 @@
             .tear-left, .tear-right, .reveal-banner { display: none !important; } 
             #red-rope-container.snapped #red-circle { transform: none !important; }
             .click-me { animation: none; }
+            #love-text { transition: none; }
         }
 
         /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
@@ -1439,7 +1440,7 @@
                     <div class="click-me">click me</div>
                 </div>
 
-                <!-- 3. YOUR BOUQUET (Calla Lily removed) -->
+                <!-- 3. YOUR BOUQUET (Calla Lily completely removed) -->
                 <svg class="svg-flowers" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Stems (Background) -->
                     <path d="M 100 170 Q 70 100 50 60" stroke="#5C8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -1690,15 +1691,18 @@
                 redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
-                // Show the love text
-                loveText.classList.add('show');
-
-                // After 8 seconds (the circle expansion), reveal Stage 3
+                // The circle begins expanding (8 seconds total). 
+                // Fade in the text after 1.5 seconds
                 setTimeout(() => {
-                    // Fade out the text just as Stage 3 comes in
+                    loveText.classList.add('show');
+                }, 1500);
+
+                // At 7.5 seconds, start fading out the text and fade in Stage 3
+                // Stage 3 has a 1s fade-in, so they will crossfade nicely
+                setTimeout(() => {
                     loveText.classList.remove('show');
                     stage3.classList.add('show');
-                }, 8000); 
+                }, 7500); 
             }
         });
 
