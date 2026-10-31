@@ -608,8 +608,10 @@
             top: 100%; /* Hangs from the bottom of the header */
             left: 50%;
             transform: translateX(-50%);
+            width: 60px; /* Wider hitbox */
             z-index: 90;
             display: none; 
+            cursor: pointer;
         }
 
         /* The Rope itself */
@@ -618,9 +620,9 @@
             height: 0;
             background: #e11d48;
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
-            transition: height 0.5s ease-out;
+            transition: height 0.5s ease-out, opacity 0.2s ease;
+            margin: 0 auto; /* Center it */
             position: relative;
-            margin: 0 auto;
         }
 
         /* The Red Circle at the bottom */
@@ -634,13 +636,14 @@
             background: #e11d48;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scale */
+            /* SLOWED DOWN THE TRANSITION HERE */
+            transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1); 
             z-index: 999999;
         }
 
         /* When snapped, rope disappears but circle stays and expands */
         #red-rope-container.snapped #red-rope {
-            display: none;
+            opacity: 0;
         }
 
         #red-rope-container.snapped #red-circle {
@@ -653,9 +656,9 @@
         }
 
         @keyframes pluckAnim {
-            0% { transform: translateX(-50%) scaleX(1); }
-            50% { transform: translateX(-50%) scaleX(3); }
-            100% { transform: translateX(-50%) scaleX(1); }
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); }
         }
 
         #string-counter {
@@ -1370,8 +1373,8 @@
             if (stringClicks >= 4) return;
 
             stringClicks++;
-            redRope.classList.add('pluck');
-            setTimeout(() => redRope.classList.remove('pluck'), 300);
+            redRopeContainer.classList.add('pluck');
+            setTimeout(() => redRopeContainer.classList.remove('pluck'), 300);
 
             stringCounter.textContent = `${stringClicks} / 4`;
             stringCounter.style.opacity = '1';
@@ -1383,11 +1386,11 @@
                 redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
-                // After the circle covers the screen, we can trigger the next stage
+                // After the circle covers the screen (2.5s), we can trigger the next stage
                 setTimeout(() => {
                     // Here is where the next stage would appear, but we removed it for now
                     // The red screen will just stay there.
-                }, 800); 
+                }, 2500); // Updated to match the 2.5s CSS transition
             }
         });
 
