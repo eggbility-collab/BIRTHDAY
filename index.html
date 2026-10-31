@@ -209,6 +209,7 @@
             padding: 30px 15px;
             width: 100%;
             z-index: 3; 
+            min-height: 100vh;
             min-height: 100dvh;
         }
 
@@ -233,7 +234,7 @@
 
         .progress-text {
             font-family: 'Caveat', cursive;
-            font-size: 20px;
+            font-size: clamp(16px, 4vw, 20px);
             flex: 1;
             text-align: center;
             color: var(--cocoa);
@@ -462,6 +463,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             z-index: 9999;
             pointer-events: none;
             overflow: hidden;
@@ -515,6 +517,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             z-index: 9998; 
             opacity: 0;
             pointer-events: none;
@@ -525,6 +528,7 @@
             align-items: center;
             padding: 20px 15px;
             overflow-y: auto;
+            overflow-x: hidden;
             
             /* Kraft paper background */
             background-color: var(--kraft);
@@ -627,16 +631,16 @@
         #red-rope {
             width: 6px;
             height: 0;
-            background: var(--main-red); /* RED ROPE */
+            background: var(--main-red);
             box-shadow: 0 0 10px rgba(115, 38, 36, 0.5);
             transition: height 0.5s ease-out, opacity 0.2s ease;
             margin: 0 auto; 
             position: relative;
-            border-left: 1px solid var(--main-red); /* Matches rope */
-            border-right: 1px solid var(--main-red); /* Matches rope */
+            border-left: 1px solid var(--main-red);
+            border-right: 1px solid var(--main-red);
         }
 
-        /* The Circle at the bottom - NOW FULLY RED */
+        /* The Circle at the bottom - FULLY RED */
         #red-circle {
             position: absolute;
             bottom: -15px;
@@ -644,12 +648,12 @@
             transform: translateX(-50%) scale(1);
             width: 30px;
             height: 30px;
-            background: var(--main-red); /* RED CIRCLE */
+            background: var(--main-red);
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(115, 38, 36, 0.8); /* Red glow */
+            box-shadow: 0 0 15px rgba(115, 38, 36, 0.8);
             transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1); 
             z-index: 999999;
-            border: 2px solid var(--main-red); /* No more gold border, fully red */
+            border: 2px solid var(--main-red);
         }
 
         /* When snapped, rope disappears but circle stays and expands */
@@ -689,13 +693,14 @@
             text-shadow: 1px 1px 0 #fff;
         }
 
-        /* Photo Grid */
+        /* Photo Grid - SINGLE COLUMN */
         .scrapbook-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+            grid-template-columns: 1fr;
+            gap: 40px;
             width: 100%;
-            max-width: 900px;
+            max-width: 500px; /* Keeps it looking like a single scrapbook column */
+            margin: 0 auto;
             padding-bottom: 50px;
             position: relative;
             z-index: 2;
@@ -712,23 +717,16 @@
         }
 
         /* Rotations for scrapbook feel */
-        .polaroid:nth-child(1) { transform: rotate(-3deg); }
+        .polaroid:nth-child(1) { transform: rotate(-2deg); }
         .polaroid:nth-child(2) { transform: rotate(2deg); }
-        .polaroid:nth-child(3) { transform: rotate(4deg); }
-        .polaroid:nth-child(4) { transform: rotate(-2deg); }
-        .polaroid:nth-child(5) { transform: rotate(1deg); }
-        .polaroid:nth-child(6) { transform: rotate(-4deg); }
-        
-        /* 7th frame spans 2 columns */
-        .polaroid:nth-child(7) { 
-            grid-column: span 2; 
-            max-width: 450px;
-            margin: 0 auto;
-            transform: rotate(3deg);
-        }
+        .polaroid:nth-child(3) { transform: rotate(-1deg); }
+        .polaroid:nth-child(4) { transform: rotate(2.5deg); }
+        .polaroid:nth-child(5) { transform: rotate(-2deg); }
+        .polaroid:nth-child(6) { transform: rotate(1.5deg); }
+        .polaroid:nth-child(7) { transform: rotate(-1.5deg); }
 
         .polaroid:hover {
-            transform: rotate(0deg) scale(1.05);
+            transform: rotate(0deg) scale(1.02);
             z-index: 10;
         }
 
@@ -780,7 +778,7 @@
 
         .caption {
             font-family: 'Caveat', cursive;
-            font-size: 26px; 
+            font-size: clamp(20px, 5vw, 26px);
             color: #4a2c20; 
             text-align: center;
             margin-top: 15px;
@@ -872,7 +870,8 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 9999999; /* Above the circle */
+            height: 100dvh;
+            z-index: 9999999;
             background-color: var(--page-bg);
             display: flex;
             justify-content: center;
@@ -893,6 +892,7 @@
             width: 100%;
             max-width: 900px;
             height: 80vh;
+            height: 80dvh;
             min-height: 500px;
             border-radius: 20px;
             position: relative;
@@ -969,30 +969,48 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
+        /* MOBILE RESPONSIVE FIXES FOR STAGE 3 */
         @media (max-width: 768px) {
             .scene-container {
                 flex-direction: column;
                 gap: 0px;
             }
             .svg-camera {
-                width: 130px;
+                width: clamp(80px, 25vw, 130px);
                 position: absolute;
-                bottom: -20px;
-                left: 20px;
+                bottom: 10px;
+                left: 10px;
                 margin: 0;
             }
             .svg-envelope-wrapper {
-                width: 260px;
+                width: min(260px, 75vw);
             }
             .svg-flowers {
-                width: 120px;
+                width: clamp(80px, 25vw, 120px);
                 position: absolute;
                 bottom: 10px;
-                right: 0px;
+                right: 5px;
                 margin: 0;
             }
             .main-canvas {
                 height: 90vh;
+                height: 90dvh;
+                border-width: 5px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .main-canvas {
+                min-height: 400px;
+            }
+            .svg-envelope-wrapper {
+                width: min(200px, 60vw);
+            }
+            .svg-camera {
+                bottom: 5px;
+            }
+            .svg-flowers {
+                bottom: 5px;
             }
         }
 
@@ -1022,6 +1040,16 @@
             cursor: pointer;
             box-shadow: 3px 3px 0 var(--cocoa);
             transition: all 0.1s ease;
+            /* Visible on mobile now! */
+        }
+
+        @media (max-width: 480px) {
+            .sim-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+                top: 10px;
+                right: 10px;
+            }
         }
 
         .sim-btn:active {
@@ -1031,7 +1059,7 @@
 
         #mobile-simulator {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: rgba(0,0,0,0.8);
             z-index: 9999999;
             display: none;
@@ -1051,6 +1079,8 @@
             box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.2);
             position: relative;
             transform: scale(0.85); 
+            max-width: 95vw;
+            max-height: 95vh;
         }
 
         .phone-frame iframe {
@@ -1068,7 +1098,7 @@
             background: var(--pink);
             color: #fff;
             border: none;
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 20px;
             font-family: 'Fredoka', sans-serif;
             font-size: 18px;
@@ -1077,8 +1107,16 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        @media (max-width: 768px) {
-            .sim-btn { display: none; }
+        @media (max-width: 600px) {
+            .polaroid::before, .polaroid::after {
+                width: 60px;
+                height: 20px;
+            }
+            .reveal-banner {
+                height: 110px;
+                font-size: 26px;
+                padding-bottom: 25px;
+            }
         }
     </style>
 </head>
@@ -1380,55 +1418,82 @@
                     <div class="click-me">click me</div>
                 </div>
 
-                <!-- 3. YOUR BOUQUET -->
+                <!-- 3. YOUR BOUQUET (Redrawn to match the reference image) -->
                 <svg class="svg-flowers" viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M 60 150 L 140 150 L 170 290 L 30 290 Z" fill="#FDFCFB" stroke="#E5DED8" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M 70 150 L 130 150 L 140 290 L 60 290 Z" fill="#FFFFFF" stroke="#E5DED8" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M 100 150 Q 80 100 50 60" stroke="#7BA05B" stroke-width="3" fill="none" stroke-linecap="round"/>
-                    <path d="M 100 150 Q 100 90 100 40" stroke="#7BA05B" stroke-width="3" fill="none" stroke-linecap="round"/>
-                    <path d="M 100 150 Q 120 100 150 60" stroke="#7BA05B" stroke-width="3" fill="none" stroke-linecap="round"/>
-                    <path d="M 100 150 Q 70 130 40 110" stroke="#7BA05B" stroke-width="2" fill="none" stroke-linecap="round"/>
-                    <path d="M 100 150 Q 130 130 160 110" stroke="#7BA05B" stroke-width="2" fill="none" stroke-linecap="round"/>
-                    <path d="M 90 140 Q 40 130 30 100 Q 60 110 90 140 Z" fill="#5C8A3C"/>
-                    <path d="M 110 140 Q 160 130 170 100 Q 140 110 110 140 Z" fill="#5C8A3C"/>
-                    <path d="M 85 120 Q 60 80 70 50 Q 80 80 85 120 Z" fill="#4A7030"/>
-                    <path d="M 115 120 Q 140 80 130 50 Q 120 80 115 120 Z" fill="#4A7030"/>
-                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
+                    <!-- Stems (Background) -->
+                    <path d="M 100 170 Q 70 100 50 60" stroke="#5C8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 170 Q 130 100 150 60" stroke="#5C8A3C" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 170 Q 100 100 100 50" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 170 Q 60 130 40 110" stroke="#5C8A3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M 100 170 Q 140 130 160 110" stroke="#5C8A3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+                    <!-- Lily of the Valley Flowers (Background) -->
+                    <!-- Left cluster -->
+                    <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
                         <path d="M 50 60 Q 45 70 40 75 Q 50 80 55 70 Z"/>
                         <path d="M 60 80 Q 55 90 50 95 Q 60 100 65 90 Z"/>
                         <path d="M 45 90 Q 40 100 35 105 Q 45 110 50 100 Z"/>
                     </g>
-                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
-                        <path d="M 100 40 Q 95 50 90 55 Q 100 60 105 50 Z"/>
-                        <path d="M 105 60 Q 100 70 95 75 Q 105 80 110 70 Z"/>
-                        <path d="M 95 80 Q 90 90 85 95 Q 95 100 100 90 Z"/>
-                        <path d="M 108 85 Q 103 95 98 100 Q 108 105 113 95 Z"/>
-                    </g>
-                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
+                    <!-- Right cluster -->
+                    <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
                         <path d="M 150 60 Q 155 70 160 75 Q 150 80 145 70 Z"/>
                         <path d="M 140 80 Q 145 90 150 95 Q 140 100 135 90 Z"/>
                         <path d="M 155 90 Q 160 100 165 105 Q 155 110 150 100 Z"/>
                     </g>
-                    <g fill="#FFFFFF" stroke="#E5DED8" stroke-width="1.5">
-                        <path d="M 40 110 Q 35 120 30 125 Q 40 130 45 120 Z"/>
-                        <path d="M 160 110 Q 165 120 170 125 Q 160 130 155 120 Z"/>
+
+                    <!-- Large Green Leaves -->
+                    <path d="M 90 160 Q 40 140 20 80 Q 60 120 90 160 Z" fill="#4A7030"/>
+                    <path d="M 110 160 Q 160 140 180 80 Q 140 120 110 160 Z" fill="#4A7030"/>
+                    <path d="M 85 130 Q 50 90 60 40 Q 80 90 85 130 Z" fill="#5C8A3C"/>
+                    <path d="M 115 130 Q 150 90 140 40 Q 120 90 115 130 Z" fill="#5C8A3C"/>
+
+                    <!-- Calla Lily (Center) -->
+                    <g>
+                        <!-- Petal -->
+                        <path d="M 100 150 C 50 110, 50 40, 100 30 C 150 40, 150 110, 100 150 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
+                        <!-- Inner Fold Shadow -->
+                        <path d="M 100 140 C 75 110, 75 60, 100 40 C 125 60, 125 110, 100 140 Z" fill="#F7F5F4" opacity="0.5"/>
+                        <!-- Yellow Stamen -->
+                        <path d="M 95 80 L 105 80 L 100 35 Z" fill="#F2D46F" stroke="#D9B46D" stroke-width="1"/>
                     </g>
-                    <path d="M 50 180 L 150 180 L 130 290 L 70 290 Z" fill="#FDFCFB" stroke="#E5DED8" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M 60 210 L 140 210 L 120 290 L 80 290 Z" fill="#FFFFFF" stroke="#E5DED8" stroke-width="1" stroke-linejoin="round"/>
-                    <path d="M 70 200 Q 100 220 130 200" stroke="#F2D46F" stroke-width="6" fill="none" stroke-linecap="round"/>
-                    <path d="M 100 210 L 100 230" stroke="#F2D46F" stroke-width="6" stroke-linecap="round"/>
-                    <path d="M 100 210 Q 70 190 60 220 Q 80 220 100 210 Z" fill="#F2D46F" stroke="#C5A85C" stroke-width="1"/>
-                    <path d="M 100 210 Q 130 190 140 220 Q 120 220 100 210 Z" fill="#F2D46F" stroke="#C5A85C" stroke-width="1"/>
-                    <path d="M 95 220 Q 80 250 75 270" stroke="#F2D46F" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <path d="M 105 220 Q 120 250 125 260" stroke="#F2D46F" stroke-width="4" fill="none" stroke-linecap="round"/>
-                    <circle cx="100" cy="210" r="6" fill="#F2D46F" stroke="#C5A85C" stroke-width="1"/>
+
+                    <!-- Lily of the Valley (Foreground) -->
+                    <g fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1.5">
+                        <path d="M 100 50 Q 95 60 90 65 Q 100 70 105 60 Z"/>
+                        <path d="M 105 70 Q 100 80 95 85 Q 105 90 110 80 Z"/>
+                        <path d="M 95 90 Q 90 100 85 105 Q 95 110 100 100 Z"/>
+                        <path d="M 108 95 Q 103 105 98 110 Q 108 115 113 105 Z"/>
+                    </g>
+
+                    <!-- White Wrapping Paper -->
+                    <path d="M 60 160 L 140 160 L 120 290 L 80 290 Z" fill="#FDFCFB" stroke="#CBBDB9" stroke-width="2" stroke-linejoin="round"/>
+                    <!-- Wrapper Fold Lines -->
+                    <path d="M 70 160 L 100 200 L 130 160" stroke="#E5DED8" stroke-width="2" fill="none"/>
+                    <path d="M 80 290 L 100 200 L 120 290" stroke="#E5DED8" stroke-width="2" fill="none"/>
+
+                    <!-- Stem Wrap (White Ribbon) -->
+                    <rect x="90" y="200" width="20" height="90" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1"/>
+                    <!-- Wrap diagonal lines -->
+                    <path d="M 90 210 L 110 220 M 90 230 L 110 240 M 90 250 L 110 260 M 90 270 L 110 280" stroke="#E5DED8" stroke-width="1.5" fill="none"/>
+
+                    <!-- Ribbon Bow -->
+                    <g>
+                        <!-- Loops -->
+                        <path d="M 100 190 C 60 160 60 220 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
+                        <path d="M 100 190 C 140 160 140 220 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
+                        <!-- Tails -->
+                        <path d="M 95 200 Q 70 230 60 270 Q 80 240 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
+                        <path d="M 105 200 Q 130 230 140 270 Q 120 240 100 200 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
+                        <!-- Center Knot -->
+                        <circle cx="100" cy="195" r="6" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="2"/>
+                    </g>
                 </svg>
 
             </div>
         </div>
     </div>
 
-    <!-- MOBILE SIMULATOR -->
+    <!-- MOBILE SIMULATOR (Visible everywhere now) -->
     <button class="sim-btn" id="openSimBtn">📱 Mobile POV</button>
     <div id="mobile-simulator">
         <div class="phone-frame">
