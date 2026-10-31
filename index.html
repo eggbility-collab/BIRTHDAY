@@ -989,28 +989,44 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* MOBILE RESPONSIVE FIXES FOR STAGE 3 */
+        /* --- MOBILE RESPONSIVE FIXES FOR STAGE 3 (NO OVERLAP) --- */
         @media (max-width: 768px) {
             .scene-container {
-                flex-direction: column;
-                gap: 0px;
-            }
-            .svg-camera {
-                width: clamp(80px, 25vw, 130px);
-                position: absolute;
-                bottom: 10px;
-                left: 10px;
-                margin: 0;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr auto;
+                gap: 10px;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-items: center;
             }
             .svg-envelope-wrapper {
+                grid-column: 1 / -1; /* Span full width */
+                grid-row: 1; /* Top row */
                 width: min(260px, 75vw);
             }
-            .svg-flowers {
+            .svg-camera {
+                grid-column: 1;
+                grid-row: 2; /* Bottom left */
                 width: clamp(80px, 25vw, 120px);
-                position: absolute;
-                bottom: 10px;
-                right: 5px;
+                position: static;
                 margin: 0;
+                align-self: end;
+                justify-self: start;
+                margin-left: 5vw;
+                margin-bottom: 5vh;
+            }
+            .svg-flowers {
+                grid-column: 2;
+                grid-row: 2; /* Bottom right */
+                width: clamp(80px, 25vw, 110px);
+                position: static;
+                margin: 0;
+                align-self: end;
+                justify-self: end;
+                margin-right: 5vw;
+                margin-bottom: 5vh;
             }
             .main-canvas {
                 height: 90vh;
@@ -1023,13 +1039,15 @@
                 min-height: 400px;
             }
             .svg-envelope-wrapper {
-                width: min(200px, 60vw);
+                width: min(180px, 60vw);
             }
             .svg-camera {
-                bottom: 5px;
+                width: 60px;
+                margin-bottom: 2vh;
             }
             .svg-flowers {
-                bottom: 5px;
+                width: 60px;
+                margin-bottom: 2vh;
             }
         }
 
