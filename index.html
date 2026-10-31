@@ -637,7 +637,7 @@
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
             /* SLOWED DOWN THE TRANSITION HERE */
-            transition: transform 2.5s cubic-bezier(0.25, 1, 0.5, 1); 
+            transition: transform 4s ease-in-out; 
             z-index: 999999;
         }
 
@@ -1386,11 +1386,11 @@
                 redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
-                // After the circle covers the screen (2.5s), we can trigger the next stage
+                // After the circle covers the screen (4s), we can trigger the next stage
                 setTimeout(() => {
                     // Here is where the next stage would appear, but we removed it for now
                     // The red screen will just stay there.
-                }, 2500); // Updated to match the 2.5s CSS transition
+                }, 4000); // Updated to match the 4s CSS transition
             }
         });
 
