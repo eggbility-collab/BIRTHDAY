@@ -623,12 +623,12 @@
             cursor: pointer;
         }
 
-        /* The Rope itself */
+        /* The Rope itself - FIXED COLORS */
         #red-rope {
             width: 6px;
             height: 0;
-            background: #F7F5F4;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background: var(--main-red); /* Changed to #732624 */
+            box-shadow: 0 0 10px rgba(115, 38, 36, 0.5);
             transition: height 0.5s ease-out, opacity 0.2s ease;
             margin: 0 auto; 
             position: relative;
@@ -636,7 +636,7 @@
             border-right: 1px solid var(--accent-gold);
         }
 
-        /* The Circle at the bottom */
+        /* The Circle at the bottom - FIXED COLORS */
         #red-circle {
             position: absolute;
             bottom: -15px;
@@ -644,12 +644,12 @@
             transform: translateX(-50%) scale(1);
             width: 30px;
             height: 30px;
-            background: #F7F5F4;
+            background: var(--accent-gold); /* Changed to #D9B46D */
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(217, 180, 109, 0.8);
             transition: transform 8s cubic-bezier(0.4, 0, 0.2, 1); 
             z-index: 999999;
-            border: 2px solid var(--accent-gold);
+            border: 2px solid var(--subtle-border); /* Changed to #CBBDB9 */
         }
 
         /* When snapped, rope disappears but circle stays and expands */
