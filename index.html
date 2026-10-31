@@ -610,51 +610,51 @@
             color: var(--sepia);
         }
 
-        /* The Red String attached to the Header */
-        #red-string {
+        /* THE RED ROPE CONTAINER */
+        #red-rope-container {
             position: absolute;
-            top: 100%; /* Hangs exactly from the bottom edge of the header */
+            top: 100%; /* Hangs from the bottom of the header */
             left: 50%;
-            width: 6px; 
-            height: 0;
-            background: #e11d48;
-            z-index: 90; 
             transform: translateX(-50%);
-            transition: height 0.5s ease-out;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+            z-index: 90;
             display: none; 
         }
 
-        /* The Red Dot at the end of the string */
-        #red-string::after {
-            content: '';
+        /* The Rope itself */
+        #red-rope {
+            width: 6px;
+            height: 0;
+            background: #e11d48;
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+            transition: height 0.5s ease-out;
+            position: relative;
+        }
+
+        /* The Red Circle at the bottom */
+        #red-circle {
             position: absolute;
-            bottom: -10px;
+            bottom: -15px;
             left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
+            transform: translateX(-50%) scale(1);
+            width: 24px;
+            height: 24px;
             background: #e11d48;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth scale */
             z-index: 999999;
-            transition: width 0.6s ease-in, height 0.6s ease-in;
         }
 
-        /* When snapped, the line disappears */
-        #red-string.snapped {
+        /* When snapped */
+        #red-rope-container.snapped #red-rope {
             background: transparent !important;
             box-shadow: none !important;
+            transition: none;
         }
 
-        /* The dot expands massively */
-        #red-string.snapped::after {
-            width: 300vmax;
-            height: 300vmax;
-            /* Center the expansion on the dot's original position */
-            bottom: -150vmax; 
-            left: -150vmax; 
+        #red-rope-container.snapped #red-circle {
+            transform: translateX(-50%) scale(500); /* Massively expand */
+            box-shadow: none;
         }
 
         .pluck {
@@ -1060,7 +1060,7 @@
             .show-final-scene #final-scene { transition: none; opacity: 1; }
             #transition-overlay { display: none !important; }
             .tear-left, .tear-right, .reveal-banner { display: none !important; } 
-            #red-string.snapped::after { transition: none !important; }
+            #red-rope-container.snapped #red-circle { transform: none !important; }
         }
 
         /* --- MOBILE SIMULATOR BUTTON & OVERLAY --- */
@@ -1282,9 +1282,14 @@
                 <div class="progress-fill"></div>
             </div>
             <span class="score">1 / 15</span>
-            <!-- Red string and counter are now INSIDE the header -->
-            <div id="red-string"></div>
+            
+            <!-- The Red Rope Container -->
+            <div id="red-rope-container">
+                <div id="red-rope"></div>
+                <div id="red-circle"></div>
+            </div>
             <div id="string-counter">0 / 4</div>
+            
         </div>
 
         <div class="scrapbook-grid">
@@ -1549,7 +1554,9 @@
     <!-- TRANSITION & STRING JS -->
     <script>
         const startBtn = document.getElementById('startBtn');
-        const redString = document.getElementById('red-string');
+        const redRopeContainer = document.getElementById('red-rope-container');
+        const redRope = document.getElementById('red-rope');
+        const redCircle = document.getElementById('red-circle');
         const stringCounter = document.getElementById('string-counter');
         const loveNotesPage = document.getElementById('love-notes-page');
         const body = document.body;
@@ -1593,9 +1600,9 @@
                 
                 if (!stringActive) {
                     setTimeout(() => {
-                        redString.style.display = 'block'; // Make it exist in the layout
+                        redRopeContainer.style.display = 'block'; // Make it exist in the layout
                         setTimeout(() => {
-                            redString.style.height = '150vh'; // Long string
+                            redRope.style.height = '60vh'; // Long string
                         }, 10); // slight delay for transition
                         stringActive = true;
                     }, 1000);
@@ -1603,12 +1610,12 @@
             });
         }
 
-        redString.addEventListener('click', () => {
+        redRopeContainer.addEventListener('click', () => {
             if (stringClicks >= 4) return;
 
             stringClicks++;
-            redString.classList.add('pluck');
-            setTimeout(() => redString.classList.remove('pluck'), 300);
+            redRope.classList.add('pluck');
+            setTimeout(() => redRope.classList.remove('pluck'), 300);
 
             stringCounter.textContent = `${stringClicks} / 4`;
             stringCounter.style.opacity = '1';
@@ -1616,8 +1623,8 @@
             if (stringClicks === 4) {
                 playSnapSound();
                 
-                // Snap the string and expand the dot
-                redString.classList.add('snapped');
+                // Snap the string and expand the circle
+                redRopeContainer.classList.add('snapped');
                 stringCounter.style.opacity = '0';
                 
                 // Wait for the circle to cover the screen, then reveal the page
@@ -1627,10 +1634,10 @@
                     
                     // Wait a split second, then fade out the expanded red circle so the parchment shows
                     setTimeout(() => {
-                        redString.style.opacity = '0';
-                        redString.style.transition = 'opacity 0.5s ease';
+                        redRopeContainer.style.opacity = '0';
+                        redRopeContainer.style.transition = 'opacity 0.5s ease';
                     }, 100);
-                }, 700); // Wait for the 0.6s scale animation to finish
+                }, 800); // Wait for the 0.6s scale animation to finish
             }
         });
 
