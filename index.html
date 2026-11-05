@@ -134,7 +134,7 @@
         @keyframes tearLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
         @keyframes tearRight { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
 
-        /* STAGE 3: RED SCENE (Arrow instead of bouquet) */
+        /* STAGE 3: RED SCENE */
         #stage-3 { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 9999999; background-color: var(--main-red); display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 1s ease, visibility 0s 1s; }
         #stage-3.show { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 1s ease; }
         .main-canvas { background-color: var(--main-red); width: 100%; max-width: none; height: 100%; border-radius: 0; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; border: none; }
@@ -158,7 +158,7 @@
         #stage-3.show .gallery-btn { pointer-events: auto; }
         .gallery-btn:active { transform: translateX(-50%) scale(0.95); }
 
-        /* HEART SCENE (NEW) */
+        /* HEART SCENE */
         #heart-scene { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 1000000001; pointer-events: none; visibility: hidden; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--main-red); opacity: 0; transition: opacity 1s ease, visibility 0s 1s; }
         #heart-scene.active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 1s ease; }
         
@@ -172,15 +172,11 @@
         .beating-heart::after { top: 0; left: 50px; }
         @keyframes heartBeat { 0% { transform: rotate(-45deg) scale(1); } 14% { transform: rotate(-45deg) scale(1.1); } 28% { transform: rotate(-45deg) scale(1); } 42% { transform: rotate(-45deg) scale(1.1); } 70% { transform: rotate(-45deg) scale(1); } }
         
-        /* Echo Rings */
         .heart-echo { position: absolute; top: 50%; left: 50%; width: 150px; height: 150px; border: 4px solid var(--pink); border-radius: 50%; transform: translate(-50%, -50%) scale(1); opacity: 0; pointer-events: none; }
         .heart-echo.echoing { animation: echoExpand 1s ease-out forwards; }
         @keyframes echoExpand { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(3); opacity: 0; } }
 
-        /* Flower Growth SVG (Wrapping the Heart) */
         #growth-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; pointer-events: none; z-index: 5; transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* The rise up effect */
         #heart-scene.rise-bouquet #growth-svg { transform: translate(-50%, calc(-50% - 120px)); }
 
         .stem { fill: none; stroke-linecap: round; stroke-dasharray: 2000; stroke-dashoffset: 2000; transition: stroke-dashoffset 3s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -609,8 +605,7 @@
     <div id="mobile-simulator">
         <div class="phone-frame"><button class="close-sim" id="closeSimBtn">Close X</button><iframe id="sim-iframe" title="Mobile Preview"></iframe></div>
     </div>
-
-    <!-- ================= JAVASCRIPT ================= -->
+        <!-- ================= JAVASCRIPT ================= -->
     <script>
         // ================= HEART ANIMATION =================
         const container = document.getElementById('heart-container');
@@ -993,58 +988,4 @@
                 const ctx = canvasElement.getContext('2d');
                 ctx.filter = currentFilter; ctx.drawImage(videoElement, 0, 0, width, height); ctx.filter = 'none';
                 const gradient = ctx.createRadialGradient(width / 2, height / 2, width / 4, width / 2, height / 2, width / 1.5);
-                gradient.addColorStop(0, 'rgba(0,0,0,0)'); gradient.addColorStop(1, 'rgba(0,0,0,0.6)');
-                ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
-                const grainData = ctx.getImageData(0, 0, width, height); const data = grainData.data;
-                for (let i = 0; i < data.length; i += 4) { const noise = (Math.random() - 0.5) * 30; data[i] += noise; data[i + 1] += noise; data[i + 2] += noise; }
-                ctx.putImageData(grainData, 0, 0);
-                capturedImage.src = canvasElement.toDataURL('image/jpeg', 0.9);
-                videoElement.style.display = 'none'; cameraControls.style.display = 'none'; previewContainer.classList.add('active');
-                stopCamera(); retakeBtn.focus({ preventScroll: true });
-            });
-
-            retakeBtn.addEventListener('click', () => { previewContainer.classList.remove('active'); videoElement.style.display = 'block'; cameraControls.style.display = 'flex'; startCamera(); });
-
-            function showToast(msg) { saveToast.textContent = msg; saveToast.classList.add('show'); clearTimeout(showToast.t); showToast.t = setTimeout(() => saveToast.classList.remove('show'), 4000); }
-
-            saveBtn.addEventListener('click', async () => {
-                const name = 'memory-' + new Date().toISOString().split('T')[0] + '.jpg';
-                let blob;
-                try { blob = await (await fetch(capturedImage.src)).blob(); } catch (e) { showToast('Long-press the photo to save it.'); return; }
-                const file = new File([blob], name, { type: 'image/jpeg' });
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try { await navigator.share({ files: [file], title: 'Our Memory' }); return; } catch (err) { if (err && err.name === 'AbortError') return; }
-                }
-                if ('download' in HTMLAnchorElement.prototype) {
-                    const url = URL.createObjectURL(blob); const a = document.createElement('a');
-                    a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(url), 5000); showToast('Photo saved to your downloads!');
-                } else { showToast('Long-press the photo to save it.'); }
-            });
-
-            const galleryBtn = $('gallery-btn'), finalScene = $('final-scene');
-            const shutter = $('shutter'), dark = $('shutter-dark'), flash = $('shutter-flash');
-
-            function hexagon(r, vw, vh) {
-                const cx = vw / 2, cy = vh / 2, pts = [];
-                for (let k = 0; k < 6; k++) { const a = (Math.PI / 3) * k + Math.PI / 12; pts.push((cx + r * Math.cos(a)).toFixed(1) + 'px ' + (cy + r * Math.sin(a)).toFixed(1) + 'px'); }
-                return 'polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ' + pts.join(', ') + ', ' + pts[0] + ', 0 0)';
-            }
-
-            function swapToGallery(polaroids) {
-                stage3.style.transition = 'none'; stage3.classList.remove('show'); stage3.style.visibility = 'hidden'; stage3.inert = true;
-                document.body.classList.add('show-final-scene', 'gallery-revisit'); polaroids.forEach((p) => p.classList.add('mem-hide')); finalScene.scrollTop = 0;
-            }
-
-            async function openMemories() {
-                if (window.__s3busy || cameraModal.classList.contains('active')) return; window.__s3busy = true;
-                const polaroids = Array.from(finalScene.querySelectorAll('.scrapbook-grid .polaroid'));
-                const first = polaroids[0], firstImg = first.querySelector('img');
-                if (reduced()) { swapToGallery(polaroids); polaroids.forEach((p) => p.classList.remove('mem-hide')); window.__s3busy = false; return; }
-                
-                galleryBtn.animate([{ scale: '1' }, { scale: '0.94' }, { scale: '1' }], { duration: 260, easing: 'ease-out' });
-                showBrackets(galleryBtn); await wait(520);
-                const vw = window.innerWidth, vh = window.innerHeight; const R0 = Math.hypot(vw, vh) / 2 * 1.3;
-                shutter.classList.add('on'); dark.style.clipPath = hexagon(R0, vw, vh);
-                const close = dark.animate([{ clipPath: hexagon(R0, vw, vh) }, { clipPath: hexagon(0.5, vw, vh) }], { duration: 430, easing: 'cubic-bezier(0.55, 0.06, 0.45, 1)', fill: 'forwards' });
-                wait(330).then(() => flash.animate([{ opacity: 0 }, { opacity: 0.5, offset: 0.
+                gradient.addColorStop(0, 'rgba(0,0,0,0)'); gradient.addColorStop(1, 'rgba(0,0,0,
