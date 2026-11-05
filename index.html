@@ -177,11 +177,15 @@
         .heart-echo.echoing { animation: echoExpand 1s ease-out forwards; }
         @keyframes echoExpand { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(3); opacity: 0; } }
 
-        /* Flower Growth SVG */
-        #growth-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; pointer-events: none; z-index: 5; }
-        .stem { fill: none; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; transition: stroke-dashoffset 2.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .leaf { opacity: 0; transition: opacity 1s ease, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; transform: scale(0); }
-        .bloom { opacity: 0; transition: opacity 1s ease, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; transform: scale(0); }
+        /* Flower Growth SVG (Wrapping the Heart) */
+        #growth-svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; pointer-events: none; z-index: 5; transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* The rise up effect */
+        #heart-scene.rise-bouquet #growth-svg { transform: translate(-50%, calc(-50% - 120px)); }
+
+        .stem { fill: none; stroke-linecap: round; stroke-dasharray: 2000; stroke-dashoffset: 2000; transition: stroke-dashoffset 3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .leaf { opacity: 0; transition: opacity 1s ease, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; transform: scale(0); }
+        .bloom { opacity: 0; transition: opacity 1s ease, transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; transform: scale(0); }
         .lotv { opacity: 0; transition: opacity 1s ease, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; transform: scale(0); }
         
         #heart-scene.grow-stems .stem { stroke-dashoffset: 0; }
@@ -431,7 +435,7 @@
                     </svg>
                 </div>
 
-                <!-- 3. YELLOW ARROW (Replaces Bouquet) -->
+                <!-- 3. YELLOW ARROW -->
                 <div class="yellow-arrow-btn" id="arrow-trigger" role="button" tabindex="0" aria-label="Go to Heart Scene">
                     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 20 80 C 20 40, 50 20, 80 20" stroke="var(--butter)" stroke-width="12" stroke-linecap="round" fill="none"/>
@@ -445,7 +449,7 @@
         </div>
     </div>
 
-    <!-- HEART SCENE (NEW) -->
+    <!-- HEART SCENE -->
     <div id="heart-scene">
         <div class="return-arrow-left" id="close-heart-btn" aria-label="Return to collection"></div>
         
@@ -454,73 +458,77 @@
             <!-- Echo rings will be injected here -->
         </div>
 
-        <!-- Flower Growth SVG -->
+        <!-- Flower Growth SVG (Wrapping the Heart) -->
         <svg id="growth-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Stems (Wrapping the Heart contour) -->
             <g id="stems">
-                <!-- Multiple shades of green stems looping -->
-                <path class="stem" d="M 300 300 C 200 200, 100 400, 150 500" stroke="#4A7030" stroke-width="6"/>
-                <path class="stem" d="M 300 300 C 400 200, 500 400, 450 500" stroke="#5C8A3C" stroke-width="6"/>
-                <path class="stem" d="M 300 300 C 300 100, 200 100, 100 200" stroke="#2F5D3A" stroke-width="5"/>
-                <path class="stem" d="M 300 300 C 300 100, 400 100, 500 200" stroke="#6E9A68" stroke-width="5"/>
-                <path class="stem" d="M 300 300 C 150 250, 100 150, 200 50" stroke="#3F7048" stroke-width="4"/>
-                <path class="stem" d="M 300 300 C 450 250, 500 150, 400 50" stroke="#547F55" stroke-width="4"/>
+                <!-- Left side wrapping up -->
+                <path class="stem" d="M 300 400 C 200 380, 150 300, 180 200 C 200 150, 230 130, 260 120" stroke="#4A7030" stroke-width="6"/>
+                <!-- Right side wrapping up -->
+                <path class="stem" d="M 300 400 C 400 380, 450 300, 420 200 C 400 150, 370 130, 340 120" stroke="#5C8A3C" stroke-width="6"/>
+                <!-- Center looping -->
+                <path class="stem" d="M 300 400 C 250 350, 350 250, 300 150" stroke="#2F5D3A" stroke-width="5"/>
+                <!-- Outer left loop -->
+                <path class="stem" d="M 300 400 C 150 350, 100 200, 200 100" stroke="#3F7048" stroke-width="4"/>
+                <!-- Outer right loop -->
+                <path class="stem" d="M 300 400 C 450 350, 500 200, 400 100" stroke="#547F55" stroke-width="4"/>
             </g>
             
+            <!-- Leaves -->
             <g id="leaves">
-                <!-- Leaves along the stems -->
-                <path class="leaf" d="M 150 500 C 100 480, 100 450, 150 450 C 180 450, 180 480, 150 500 Z" fill="#4A7030"/>
-                <path class="leaf" d="M 450 500 C 500 480, 500 450, 450 450 C 420 450, 420 480, 450 500 Z" fill="#5C8A3C"/>
-                <path class="leaf" d="M 100 200 C 50 180, 50 150, 100 150 C 130 150, 130 180, 100 200 Z" fill="#2F5D3A"/>
-                <path class="leaf" d="M 500 200 C 550 180, 550 150, 500 150 C 470 150, 470 180, 500 200 Z" fill="#6E9A68"/>
-                <path class="leaf" d="M 200 50 C 150 30, 150 0, 200 0 C 230 0, 230 30, 200 50 Z" fill="#3F7048"/>
-                <path class="leaf" d="M 400 50 C 450 30, 450 0, 400 0 C 370 0, 370 30, 400 50 Z" fill="#547F55"/>
-                <!-- More smaller leaves -->
-                <path class="leaf" d="M 220 400 C 180 380, 180 360, 220 360 C 240 360, 240 380, 220 400 Z" fill="#3F7048"/>
-                <path class="leaf" d="M 380 400 C 420 380, 420 360, 380 360 C 360 360, 360 380, 380 400 Z" fill="#5C8A3C"/>
+                <path class="leaf" d="M 200 250 C 150 230, 150 200, 200 200 C 230 200, 230 230, 200 250 Z" fill="#4A7030"/>
+                <path class="leaf" d="M 400 250 C 450 230, 450 200, 400 200 C 370 200, 370 230, 400 250 Z" fill="#5C8A3C"/>
+                <path class="leaf" d="M 230 150 C 190 130, 190 100, 230 100 C 260 100, 260 130, 230 150 Z" fill="#2F5D3A"/>
+                <path class="leaf" d="M 370 150 C 410 130, 410 100, 370 100 C 340 100, 340 130, 370 150 Z" fill="#6E9A68"/>
+                <path class="leaf" d="M 150 250 C 110 230, 110 200, 150 200 C 180 200, 180 230, 150 250 Z" fill="#3F7048"/>
+                <path class="leaf" d="M 450 250 C 490 230, 490 200, 450 200 C 420 200, 420 230, 450 250 Z" fill="#547F55"/>
+                <path class="leaf" d="M 250 300 C 210 280, 210 260, 250 260 C 270 260, 270 280, 250 300 Z" fill="#4A7030"/>
+                <path class="leaf" d="M 350 300 C 390 280, 390 260, 350 260 C 330 260, 330 280, 350 300 Z" fill="#5C8A3C"/>
             </g>
 
+            <!-- Flowers -->
             <g id="flowers">
-                <!-- Rose (center) -->
-                <g class="bloom" transform="translate(300, 250)">
-                    <circle cx="0" cy="0" r="30" fill="#d32f2f"/>
-                    <path d="M 0 -20 C 15 -20, 20 -5, 10 5 C 0 15, -15 10, -15 0 C -15 -10, -5 -15, 0 -20 Z" fill="#b71c1c" opacity="0.6"/>
-                    <path d="M 0 -10 C 8 -10, 10 0, 5 5 C 0 10, -8 8, -8 0 C -8 -5, -4 -8, 0 -10 Z" fill="#ff5252" opacity="0.4"/>
+                <!-- Roses (Center) -->
+                <g class="bloom" transform="translate(300, 200)">
+                    <circle cx="0" cy="0" r="35" fill="#d32f2f"/>
+                    <path d="M 0 -25 C 15 -25, 20 -10, 10 0 C 0 10, -15 5, -15 -5 C -15 -15, -5 -20, 0 -25 Z" fill="#b71c1c" opacity="0.6"/>
+                    <path d="M 0 -15 C 8 -15, 10 -5, 5 0 C 0 5, -8 3, -8 -5 C -8 -10, -4 -13, 0 -15 Z" fill="#ff5252" opacity="0.4"/>
                 </g>
-                <!-- Sunflowers (left & right) -->
-                <g class="bloom" transform="translate(150, 480)">
+                <!-- Sunflowers (Bottom Left & Right) -->
+                <g class="bloom" transform="translate(180, 350)">
                     <circle cx="0" cy="0" r="25" fill="#5C4033"/>
                     <path d="M 0 -35 L 8 -25 L 25 -25 L 15 -10 L 20 5 L 0 -5 L -20 5 L -15 -10 L -25 -25 L -8 -25 Z" fill="#F2D46F"/>
                 </g>
-                <g class="bloom" transform="translate(450, 480)">
+                <g class="bloom" transform="translate(420, 350)">
                     <circle cx="0" cy="0" r="25" fill="#5C4033"/>
                     <path d="M 0 -35 L 8 -25 L 25 -25 L 15 -10 L 20 5 L 0 -5 L -20 5 L -15 -10 L -25 -25 L -8 -25 Z" fill="#F2D46F"/>
                 </g>
-                <!-- Orchids (top left & right) -->
-                <g class="bloom" transform="translate(100, 200)">
+                <!-- Orchids (Top Left & Right) -->
+                <g class="bloom" transform="translate(200, 100)">
                     <path d="M 0 -30 C 20 -30, 30 -10, 0 10 C -30 -10, -20 -30, 0 -30 Z" fill="#fb7185"/>
                     <path d="M -20 -10 C -40 -10, -40 10, -20 15 C 0 15, 0 -10, -20 -10 Z" fill="#fb7185"/>
                     <path d="M 20 -10 C 40 -10, 40 10, 20 15 C 0 15, 0 -10, 20 -10 Z" fill="#fb7185"/>
                 </g>
-                <g class="bloom" transform="translate(500, 200)">
+                <g class="bloom" transform="translate(400, 100)">
                     <path d="M 0 -30 C 20 -30, 30 -10, 0 10 C -30 -10, -20 -30, 0 -30 Z" fill="#fb7185"/>
                     <path d="M -20 -10 C -40 -10, -40 10, -20 15 C 0 15, 0 -10, -20 -10 Z" fill="#fb7185"/>
                     <path d="M 20 -10 C 40 -10, 40 10, 20 15 C 0 15, 0 -10, 20 -10 Z" fill="#fb7185"/>
                 </g>
-                <!-- Jasmine (white 5-petal stars) -->
-                <g class="bloom" transform="translate(200, 50)">
+                <!-- Jasmine (Mid-Top Left & Right) -->
+                <g class="bloom" transform="translate(260, 120)">
                     <path d="M 0 -20 L 5 -5 L 20 -5 L 8 5 L 12 20 L 0 10 L -12 20 L -8 5 L -20 -5 L -5 -5 Z" fill="#FFF8D6"/>
                 </g>
-                <g class="bloom" transform="translate(400, 50)">
+                <g class="bloom" transform="translate(340, 120)">
                     <path d="M 0 -20 L 5 -5 L 20 -5 L 8 5 L 12 20 L 0 10 L -12 20 L -8 5 L -20 -5 L -5 -5 Z" fill="#FFF8D6"/>
                 </g>
-                <!-- Wildflowers (tiny clusters) -->
-                <g class="bloom" transform="translate(220, 400)">
+                <!-- Wildflowers (Lower Mid Left & Right) -->
+                <g class="bloom" transform="translate(230, 280)">
                     <circle cx="0" cy="0" r="6" fill="#F2D46F"/>
                     <circle cx="10" cy="-5" r="5" fill="#fb7185"/>
                     <circle cx="-10" cy="-5" r="5" fill="#F2D46F"/>
                     <circle cx="0" cy="-15" r="6" fill="#fb7185"/>
                 </g>
-                <g class="bloom" transform="translate(380, 400)">
+                <g class="bloom" transform="translate(370, 280)">
                     <circle cx="0" cy="0" r="6" fill="#F2D46F"/>
                     <circle cx="10" cy="-5" r="5" fill="#fb7185"/>
                     <circle cx="-10" cy="-5" r="5" fill="#F2D46F"/>
@@ -528,14 +536,16 @@
                 </g>
             </g>
 
-            <!-- Lily of the Valley (finally, on the heart humps) -->
+            <!-- Lily of the Valley (On the humps) -->
             <g id="lily-of-the-valley">
-                <g class="lotv" transform="translate(250, 240)">
+                <!-- Left hump -->
+                <g class="lotv" transform="translate(240, 240)">
                     <path d="M 0 0 Q -10 -20 -20 -30" stroke="#7FA070" stroke-width="2" fill="none"/>
                     <path d="M -20 -30 Q -25 -25 -22 -20 Q -15 -20 -20 -30 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1"/>
                     <path d="M -15 -25 Q -20 -20 -17 -15 Q -10 -15 -15 -25 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1"/>
                 </g>
-                <g class="lotv" transform="translate(350, 240)">
+                <!-- Right hump -->
+                <g class="lotv" transform="translate(360, 240)">
                     <path d="M 0 0 Q 10 -20 20 -30" stroke="#7FA070" stroke-width="2" fill="none"/>
                     <path d="M 20 -30 Q 25 -25 22 -20 Q 15 -20 20 -30 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1"/>
                     <path d="M 15 -25 Q 20 -20 17 -15 Q 10 -15 15 -25 Z" fill="#FFFFFF" stroke="#CBBDB9" stroke-width="1"/>
@@ -750,42 +760,37 @@
             
             // 1. Four Beats & Echos
             for (let i = 0; i < 4; i++) {
-                // Create echo ring
                 const echo = document.createElement('div');
                 echo.className = 'heart-echo';
                 heartClickTarget.appendChild(echo);
-                
-                // Trigger CSS animation
                 setTimeout(() => echo.classList.add('echoing'), 10);
-                
-                // Remove after animation
                 setTimeout(() => echo.remove(), 1000);
                 
-                // Pulse the heart itself
                 beatingHeart.style.transform = 'rotate(-45deg) scale(1.2)';
                 setTimeout(() => beatingHeart.style.transform = 'rotate(-45deg) scale(1)', 300);
                 
-                await new Promise(r => setTimeout(r, 600)); // Wait between beats
+                await new Promise(r => setTimeout(r, 600));
             }
 
             // 2. Start Flower Growth Sequence
-            // Step 1: Stems
             heartScene.classList.add('grow-stems');
-            await new Promise(r => setTimeout(r, 2500)); // Wait for stems
+            await new Promise(r => setTimeout(r, 2500));
 
-            // Step 2: Leaves
             heartScene.classList.add('grow-leaves');
-            await new Promise(r => setTimeout(r, 1000)); // Wait for leaves
+            await new Promise(r => setTimeout(r, 1000));
 
-            // Step 3: Flowers
             heartScene.classList.add('grow-flowers');
-            await new Promise(r => setTimeout(r, 1500)); // Wait for flowers
+            await new Promise(r => setTimeout(r, 1500));
 
-            // Step 4: Lily of the Valley
+            // 3. The bouquet RISES UP
+            heartScene.classList.add('rise-bouquet');
+            await new Promise(r => setTimeout(r, 3000));
+
+            // 4. Lily of the Valley on the humps
             heartScene.classList.add('grow-lotv');
-            await new Promise(r => setTimeout(r, 2000)); // Wait for final bloom
+            await new Promise(r => setTimeout(r, 2000));
 
-            // 3. Show Return Arrow
+            // 5. Show Return Arrow
             closeHeartBtn.classList.add('show');
             heartBusy = false;
         });
@@ -797,8 +802,7 @@
             
             setTimeout(() => {
                 stage3.classList.add('show');
-                // Reset Heart Scene
-                heartScene.classList.remove('grow-stems', 'grow-leaves', 'grow-flowers', 'grow-lotv');
+                heartScene.classList.remove('grow-stems', 'grow-leaves', 'grow-flowers', 'rise-bouquet', 'grow-lotv');
                 closeHeartBtn.classList.remove('show');
                 beatingHeart.style.transform = 'rotate(-45deg) scale(1)';
                 document.querySelectorAll('.heart-echo').forEach(el => el.remove());
@@ -1018,102 +1022,4 @@
             });
 
             const galleryBtn = $('gallery-btn'), finalScene = $('final-scene');
-            const shutter = $('shutter'), dark = $('shutter-dark'), flash = $('shutter-flash');
-
-            function hexagon(r, vw, vh) {
-                const cx = vw / 2, cy = vh / 2, pts = [];
-                for (let k = 0; k < 6; k++) { const a = (Math.PI / 3) * k + Math.PI / 12; pts.push((cx + r * Math.cos(a)).toFixed(1) + 'px ' + (cy + r * Math.sin(a)).toFixed(1) + 'px'); }
-                return 'polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ' + pts.join(', ') + ', ' + pts[0] + ', 0 0)';
-            }
-
-            function swapToGallery(polaroids) {
-                stage3.style.transition = 'none'; stage3.classList.remove('show'); stage3.style.visibility = 'hidden'; stage3.inert = true;
-                document.body.classList.add('show-final-scene', 'gallery-revisit'); polaroids.forEach((p) => p.classList.add('mem-hide')); finalScene.scrollTop = 0;
-            }
-
-            async function openMemories() {
-                if (window.__s3busy || cameraModal.classList.contains('active')) return; window.__s3busy = true;
-                const polaroids = Array.from(finalScene.querySelectorAll('.scrapbook-grid .polaroid'));
-                const first = polaroids[0], firstImg = first.querySelector('img');
-                if (reduced()) { swapToGallery(polaroids); polaroids.forEach((p) => p.classList.remove('mem-hide')); window.__s3busy = false; return; }
-                
-                galleryBtn.animate([{ scale: '1' }, { scale: '0.94' }, { scale: '1' }], { duration: 260, easing: 'ease-out' });
-                showBrackets(galleryBtn); await wait(520);
-                const vw = window.innerWidth, vh = window.innerHeight; const R0 = Math.hypot(vw, vh) / 2 * 1.3;
-                shutter.classList.add('on'); dark.style.clipPath = hexagon(R0, vw, vh);
-                const close = dark.animate([{ clipPath: hexagon(R0, vw, vh) }, { clipPath: hexagon(0.5, vw, vh) }], { duration: 430, easing: 'cubic-bezier(0.55, 0.06, 0.45, 1)', fill: 'forwards' });
-                wait(330).then(() => flash.animate([{ opacity: 0 }, { opacity: 0.5, offset: 0.3 }, { opacity: 0 }], { duration: 300, easing: 'ease-out' }));
-                await fin(close);
-                dark.style.clipPath = 'none'; hideBrackets(); swapToGallery(polaroids);
-                try { await firstImg.decode(); } catch (e) {}
-                
-                const w = first.offsetWidth, h = first.offsetHeight; const tr = first.getBoundingClientRect();
-                const cx = tr.left + tr.width / 2, cy = tr.top + tr.height / 2; const flyer = first.cloneNode(true);
-                flyer.classList.remove('mem-hide'); flyer.classList.add('polaroid-flyer');
-                Object.assign(flyer.style, { left: (cx - w / 2) + 'px', top: (cy - h / 2) + 'px', width: w + 'px', height: h + 'px', opacity: '0' });
-                document.body.appendChild(flyer);
-                try { await flyer.querySelector('img').decode(); } catch (e) {}
-                
-                const endTransform = getComputedStyle(first).transform;
-                const fly = flyer.animate([{ transform: 'translate(' + (vw / 2 - cx) + 'px, ' + (vh / 2 - cy) + 'px) scale(0.42) rotate(-7deg)', opacity: 0 }, { opacity: 1, offset: 0.18 }, { transform: endTransform === 'none' ? 'none' : endTransform, opacity: 1 }], { duration: 860, easing: 'cubic-bezier(0.22, 0.8, 0.24, 1)', fill: 'forwards' });
-                const lift = dark.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 650, delay: 110, easing: 'ease-out', fill: 'forwards' });
-                
-                await wait(450);
-                polaroids.slice(1).forEach((p, i) => { p.style.setProperty('--d', (Math.min(i, 5) * 90) + 'ms'); p.classList.remove('mem-hide'); p.classList.add('mem-in'); });
-                await fin(fly); first.classList.remove('mem-hide'); flyer.remove(); await fin(lift);
-                
-                shutter.classList.remove('on'); dark.getAnimations().forEach((a) => a.cancel());
-                setTimeout(() => polaroids.forEach((p) => { p.classList.remove('mem-in'); p.style.removeProperty('--d'); }), 1600);
-                window.__s3busy = false;
-            }
-            galleryBtn.addEventListener('click', openMemories);
-        })();
-
-        // ================= MOBILE SIMULATOR =================
-        (function () {
-            'use strict';
-            if (window.top !== window.self) document.documentElement.classList.add('in-sim');
-            const openSimBtn = document.getElementById('openSimBtn');
-            const closeSimBtn = document.getElementById('closeSimBtn');
-            const sim = document.getElementById('mobile-simulator');
-            const iframe = document.getElementById('sim-iframe');
-            if (!openSimBtn || !closeSimBtn || !sim || !iframe) return;
-
-            const frame = sim.querySelector('.phone-frame');
-            const W = 390, H = 844;
-            function fit() {
-                const scale = Math.min(1, (window.innerHeight - 96) / (H + 24), (window.innerWidth - 24) / (W + 24));
-                frame.style.setProperty('--sim-scale', Math.max(0.2, scale).toFixed(3));
-            }
-
-            function snapshot() {
-                const clone = document.documentElement.cloneNode(true);
-                clone.classList.add('in-sim');
-                ['mobile-simulator', 'openSimBtn'].forEach((id) => { const n = clone.querySelector('#' + id); if (n) n.remove(); });
-                ['camera-modal', 'letter-scene'].forEach((id) => { const n = clone.querySelector('#' + id); if (n) n.classList.remove('active', 'reading', 'settled'); });
-                const shutter = clone.querySelector('#shutter'); if (shutter) shutter.classList.remove('on');
-                return '<!DOCTYPE html>' + clone.outerHTML;
-            }
-
-            function openSim() {
-                fit(); iframe.srcdoc = snapshot(); sim.classList.add('active');
-                requestAnimationFrame(() => requestAnimationFrame(() => sim.classList.add('visible')));
-                closeSimBtn.focus({ preventScroll: true });
-            }
-
-            function closeSim() {
-                if (!sim.classList.contains('active')) return;
-                sim.classList.remove('visible');
-                setTimeout(() => { sim.classList.remove('active'); iframe.removeAttribute('srcdoc'); iframe.src = 'about:blank'; }, 260);
-                openSimBtn.focus({ preventScroll: true });
-            }
-
-            openSimBtn.addEventListener('click', openSim);
-            closeSimBtn.addEventListener('click', closeSim);
-            sim.addEventListener('click', (e) => { if (e.target === sim) closeSim(); });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSim(); });
-            window.addEventListener('resize', fit);
-        })();
-    </script>
-</body>
-</html>
+            const shutter = $('shutter'), dark = $('shutter-dark'), flash = $
