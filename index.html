@@ -189,7 +189,7 @@
         .lotv { opacity: 0; transition: opacity 1s ease, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: center; transform: scale(0); }
         
         #heart-scene.grow-stems .stem { stroke-dashoffset: 0; }
-        #heart-scene.grow-leaves .leaf { opacity: 1; transform: scale(1); }
+        #heart-scene.grow-vine-leaves .leaf { opacity: 1; transform: scale(1); }
         #heart-scene.grow-flowers .bloom { opacity: 1; transform: scale(1); }
         #heart-scene.grow-lotv .lotv { opacity: 1; transform: scale(1); }
 
@@ -460,75 +460,76 @@
 
         <!-- Flower Growth SVG (Wrapping the Heart) -->
         <svg id="growth-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Stems (Wrapping the Heart contour) -->
+            <!-- Stems (Complex curling vines like the reference) -->
             <g id="stems">
-                <!-- Left side wrapping up -->
-                <path class="stem" d="M 300 400 C 200 380, 150 300, 180 200 C 200 150, 230 130, 260 120" stroke="#4A7030" stroke-width="6"/>
-                <!-- Right side wrapping up -->
-                <path class="stem" d="M 300 400 C 400 380, 450 300, 420 200 C 400 150, 370 130, 340 120" stroke="#5C8A3C" stroke-width="6"/>
-                <!-- Center looping -->
-                <path class="stem" d="M 300 400 C 250 350, 350 250, 300 150" stroke="#2F5D3A" stroke-width="5"/>
-                <!-- Outer left loop -->
-                <path class="stem" d="M 300 400 C 150 350, 100 200, 200 100" stroke="#3F7048" stroke-width="4"/>
-                <!-- Outer right loop -->
-                <path class="stem" d="M 300 400 C 450 350, 500 200, 400 100" stroke="#547F55" stroke-width="4"/>
+                <!-- Left side curls -->
+                <path class="stem" d="M 300 450 C 250 450, 180 400, 180 320 C 180 250, 220 200, 260 180 C 280 170, 280 150, 250 140 C 220 130, 190 160, 200 190" stroke="#4A7030" stroke-width="6"/>
+                <path class="stem" d="M 300 450 C 200 420, 100 300, 150 200 C 180 140, 250 100, 280 120 C 300 130, 290 160, 260 160" stroke="#5C8A3C" stroke-width="5"/>
+                <!-- Right side curls -->
+                <path class="stem" d="M 300 450 C 350 450, 420 400, 420 320 C 420 250, 380 200, 340 180 C 320 170, 320 150, 350 140 C 380 130, 410 160, 400 190" stroke="#2F5D3A" stroke-width="6"/>
+                <path class="stem" d="M 300 450 C 400 420, 500 300, 450 200 C 420 140, 350 100, 320 120 C 300 130, 310 160, 340 160" stroke="#3F7048" stroke-width="5"/>
+                <!-- Center vine -->
+                <path class="stem" d="M 300 450 C 300 350, 250 250, 300 150 C 330 100, 270 80, 250 100" stroke="#547F55" stroke-width="4"/>
             </g>
             
-            <!-- Leaves -->
-            <g id="leaves">
-                <path class="leaf" d="M 200 250 C 150 230, 150 200, 200 200 C 230 200, 230 230, 200 250 Z" fill="#4A7030"/>
-                <path class="leaf" d="M 400 250 C 450 230, 450 200, 400 200 C 370 200, 370 230, 400 250 Z" fill="#5C8A3C"/>
-                <path class="leaf" d="M 230 150 C 190 130, 190 100, 230 100 C 260 100, 260 130, 230 150 Z" fill="#2F5D3A"/>
-                <path class="leaf" d="M 370 150 C 410 130, 410 100, 370 100 C 340 100, 340 130, 370 150 Z" fill="#6E9A68"/>
-                <path class="leaf" d="M 150 250 C 110 230, 110 200, 150 200 C 180 200, 180 230, 150 250 Z" fill="#3F7048"/>
-                <path class="leaf" d="M 450 250 C 490 230, 490 200, 450 200 C 420 200, 420 230, 450 250 Z" fill="#547F55"/>
-                <path class="leaf" d="M 250 300 C 210 280, 210 260, 250 260 C 270 260, 270 280, 250 300 Z" fill="#4A7030"/>
-                <path class="leaf" d="M 350 300 C 390 280, 390 260, 350 260 C 330 260, 330 280, 350 300 Z" fill="#5C8A3C"/>
+            <!-- Vine Leaves (These grow with the stems) -->
+            <g id="vine-leaves">
+                <!-- Leaves on left vines -->
+                <path class="leaf" d="M 220 370 C 200 360, 200 340, 220 340 C 240 340, 240 360, 220 370 Z" fill="#4A7030"/>
+                <path class="leaf" d="M 190 280 C 170 270, 170 250, 190 250 C 210 250, 210 270, 190 280 Z" fill="#5C8A3C"/>
+                <path class="leaf" d="M 230 200 C 210 190, 210 170, 230 170 C 250 170, 250 190, 230 200 Z" fill="#2F5D3A"/>
+                <!-- Leaves on right vines -->
+                <path class="leaf" d="M 380 370 C 400 360, 400 340, 380 340 C 360 340, 360 360, 380 370 Z" fill="#3F7048"/>
+                <path class="leaf" d="M 410 280 C 430 270, 430 250, 410 250 C 390 250, 390 270, 410 280 Z" fill="#547F55"/>
+                <path class="leaf" d="M 370 200 C 390 190, 390 170, 370 170 C 350 170, 350 190, 370 200 Z" fill="#4A7030"/>
+                <!-- Leaves on center vine -->
+                <path class="leaf" d="M 280 300 C 260 290, 260 270, 280 270 C 300 270, 300 290, 280 300 Z" fill="#5C8A3C"/>
+                <path class="leaf" d="M 310 220 C 330 210, 330 190, 310 190 C 290 190, 290 210, 310 220 Z" fill="#2F5D3A"/>
             </g>
 
-            <!-- Flowers -->
+            <!-- Flowers (Bloom on the vines) -->
             <g id="flowers">
                 <!-- Roses (Center) -->
-                <g class="bloom" transform="translate(300, 200)">
+                <g class="bloom" transform="translate(300, 180)">
                     <circle cx="0" cy="0" r="35" fill="#d32f2f"/>
                     <path d="M 0 -25 C 15 -25, 20 -10, 10 0 C 0 10, -15 5, -15 -5 C -15 -15, -5 -20, 0 -25 Z" fill="#b71c1c" opacity="0.6"/>
                     <path d="M 0 -15 C 8 -15, 10 -5, 5 0 C 0 5, -8 3, -8 -5 C -8 -10, -4 -13, 0 -15 Z" fill="#ff5252" opacity="0.4"/>
                 </g>
                 <!-- Sunflowers (Bottom Left & Right) -->
-                <g class="bloom" transform="translate(180, 350)">
+                <g class="bloom" transform="translate(180, 380)">
                     <circle cx="0" cy="0" r="25" fill="#5C4033"/>
                     <path d="M 0 -35 L 8 -25 L 25 -25 L 15 -10 L 20 5 L 0 -5 L -20 5 L -15 -10 L -25 -25 L -8 -25 Z" fill="#F2D46F"/>
                 </g>
-                <g class="bloom" transform="translate(420, 350)">
+                <g class="bloom" transform="translate(420, 380)">
                     <circle cx="0" cy="0" r="25" fill="#5C4033"/>
                     <path d="M 0 -35 L 8 -25 L 25 -25 L 15 -10 L 20 5 L 0 -5 L -20 5 L -15 -10 L -25 -25 L -8 -25 Z" fill="#F2D46F"/>
                 </g>
                 <!-- Orchids (Top Left & Right) -->
-                <g class="bloom" transform="translate(200, 100)">
+                <g class="bloom" transform="translate(230, 120)">
                     <path d="M 0 -30 C 20 -30, 30 -10, 0 10 C -30 -10, -20 -30, 0 -30 Z" fill="#fb7185"/>
                     <path d="M -20 -10 C -40 -10, -40 10, -20 15 C 0 15, 0 -10, -20 -10 Z" fill="#fb7185"/>
                     <path d="M 20 -10 C 40 -10, 40 10, 20 15 C 0 15, 0 -10, 20 -10 Z" fill="#fb7185"/>
                 </g>
-                <g class="bloom" transform="translate(400, 100)">
+                <g class="bloom" transform="translate(370, 120)">
                     <path d="M 0 -30 C 20 -30, 30 -10, 0 10 C -30 -10, -20 -30, 0 -30 Z" fill="#fb7185"/>
                     <path d="M -20 -10 C -40 -10, -40 10, -20 15 C 0 15, 0 -10, -20 -10 Z" fill="#fb7185"/>
                     <path d="M 20 -10 C 40 -10, 40 10, 20 15 C 0 15, 0 -10, 20 -10 Z" fill="#fb7185"/>
                 </g>
                 <!-- Jasmine (Mid-Top Left & Right) -->
-                <g class="bloom" transform="translate(260, 120)">
+                <g class="bloom" transform="translate(260, 150)">
                     <path d="M 0 -20 L 5 -5 L 20 -5 L 8 5 L 12 20 L 0 10 L -12 20 L -8 5 L -20 -5 L -5 -5 Z" fill="#FFF8D6"/>
                 </g>
-                <g class="bloom" transform="translate(340, 120)">
+                <g class="bloom" transform="translate(340, 150)">
                     <path d="M 0 -20 L 5 -5 L 20 -5 L 8 5 L 12 20 L 0 10 L -12 20 L -8 5 L -20 -5 L -5 -5 Z" fill="#FFF8D6"/>
                 </g>
                 <!-- Wildflowers (Lower Mid Left & Right) -->
-                <g class="bloom" transform="translate(230, 280)">
+                <g class="bloom" transform="translate(220, 300)">
                     <circle cx="0" cy="0" r="6" fill="#F2D46F"/>
                     <circle cx="10" cy="-5" r="5" fill="#fb7185"/>
                     <circle cx="-10" cy="-5" r="5" fill="#F2D46F"/>
                     <circle cx="0" cy="-15" r="6" fill="#fb7185"/>
                 </g>
-                <g class="bloom" transform="translate(370, 280)">
+                <g class="bloom" transform="translate(380, 300)">
                     <circle cx="0" cy="0" r="6" fill="#F2D46F"/>
                     <circle cx="10" cy="-5" r="5" fill="#fb7185"/>
                     <circle cx="-10" cy="-5" r="5" fill="#F2D46F"/>
@@ -776,7 +777,7 @@
             heartScene.classList.add('grow-stems');
             await new Promise(r => setTimeout(r, 2500));
 
-            heartScene.classList.add('grow-leaves');
+            heartScene.classList.add('grow-vine-leaves');
             await new Promise(r => setTimeout(r, 1000));
 
             heartScene.classList.add('grow-flowers');
@@ -802,7 +803,7 @@
             
             setTimeout(() => {
                 stage3.classList.add('show');
-                heartScene.classList.remove('grow-stems', 'grow-leaves', 'grow-flowers', 'rise-bouquet', 'grow-lotv');
+                heartScene.classList.remove('grow-stems', 'grow-vine-leaves', 'grow-flowers', 'rise-bouquet', 'grow-lotv');
                 closeHeartBtn.classList.remove('show');
                 beatingHeart.style.transform = 'rotate(-45deg) scale(1)';
                 document.querySelectorAll('.heart-echo').forEach(el => el.remove());
@@ -1022,4 +1023,27 @@
             });
 
             const galleryBtn = $('gallery-btn'), finalScene = $('final-scene');
-            const shutter = $('shutter'), dark = $('shutter-dark'), flash = $
+            const shutter = $('shutter'), dark = $('shutter-dark'), flash = $('shutter-flash');
+
+            function hexagon(r, vw, vh) {
+                const cx = vw / 2, cy = vh / 2, pts = [];
+                for (let k = 0; k < 6; k++) { const a = (Math.PI / 3) * k + Math.PI / 12; pts.push((cx + r * Math.cos(a)).toFixed(1) + 'px ' + (cy + r * Math.sin(a)).toFixed(1) + 'px'); }
+                return 'polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ' + pts.join(', ') + ', ' + pts[0] + ', 0 0)';
+            }
+
+            function swapToGallery(polaroids) {
+                stage3.style.transition = 'none'; stage3.classList.remove('show'); stage3.style.visibility = 'hidden'; stage3.inert = true;
+                document.body.classList.add('show-final-scene', 'gallery-revisit'); polaroids.forEach((p) => p.classList.add('mem-hide')); finalScene.scrollTop = 0;
+            }
+
+            async function openMemories() {
+                if (window.__s3busy || cameraModal.classList.contains('active')) return; window.__s3busy = true;
+                const polaroids = Array.from(finalScene.querySelectorAll('.scrapbook-grid .polaroid'));
+                const first = polaroids[0], firstImg = first.querySelector('img');
+                if (reduced()) { swapToGallery(polaroids); polaroids.forEach((p) => p.classList.remove('mem-hide')); window.__s3busy = false; return; }
+                
+                galleryBtn.animate([{ scale: '1' }, { scale: '0.94' }, { scale: '1' }], { duration: 260, easing: 'ease-out' });
+                showBrackets(galleryBtn); await wait(520);
+                const vw = window.innerWidth, vh = window.innerHeight; const R0 = Math.hypot(vw, vh) / 2 * 1.3;
+                shutter.classList.add('on'); dark.style.clipPath = hexagon(R0, vw, vh);
+                const close = dark.animate([{ clipPath: hexagon(R0, vw, vh) }, {
