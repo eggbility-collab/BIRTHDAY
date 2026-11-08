@@ -108,7 +108,7 @@
         .tearing .tear-left { animation: tearLeft 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .tearing .tear-right { animation: tearRight 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes tearLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        @keyframes tearRight { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+        @e @keyframes tearRight { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
         .mem-hide { opacity: 0; }
         .mem-in { animation: memIn 0.7s cubic-bezier(0.22, 0.8, 0.24, 1) var(--d, 0ms) backwards; }
         @keyframes memIn { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
@@ -144,19 +144,15 @@
         .heart-echo { position: absolute; top: 50%; left: 50%; width: 150px; height: 150px; border: 4px solid var(--pink); border-radius: 50%; transform: translate(-50%, -50%) scale(1); opacity: 0; pointer-events: none; }
         .heart-echo.echoing { animation: echoExpand 1s ease-out forwards; }
         @keyframes echoExpand { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(3); opacity: 0; } }
-        /* GROWTH SVG (GSAP-driven, nested g so CSS scale doesn't override translate) */
-        #growth-svg { position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; margin-left: -300px; margin-top: -300px; pointer-events: none; z-index: 5; }
+        #growth-svg { position: absolute; top: 50%; left: 50%; width: 600px; height: 600px; margin-left: -300px; margin-top: -300px; pointer-events: none; z-index: 20; }
         .stem { fill: none; stroke-linecap: round; stroke-dasharray: 800; stroke-dashoffset: 800; }
         .leaf, .bloom, .lotv, .garden-flower { opacity: 0; transform: scale(0); transform-box: fill-box; transform-origin: center; }
-        /* GARDEN (rises from bottom, below the heart) */
         #garden-svg { position: absolute; left: 50%; bottom: 0; width: min(900px, 100vw); height: 52vh; margin-left: max(-450px, -50vw); pointer-events: none; z-index: 4; }
         .garden-stem { fill: none; stroke-linecap: round; }
-        /* Heart dissolve glow */
         #heart-final-glow { position: absolute; top: 50%; left: 50%; width: 400px; height: 400px; margin-left: -200px; margin-top: -200px; border-radius: 50%; background: radial-gradient(circle, rgba(251, 113, 133, 0.75) 0%, rgba(251, 113, 133, 0.3) 40%, transparent 75%); opacity: 0; pointer-events: none; z-index: 9; }
-        #love-jessa-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Caveat', cursive; font-size: clamp(44px, 9vw, 96px); color: var(--butter); text-shadow: 0 0 30px rgba(242, 212, 111, 0.95), 0 4px 14px rgba(56, 20, 19, 0.75); opacity: 0; pointer-events: none; z-index: 10000002; text-align: center; padding: 0 20px; white-space: nowrap; letter-spacing: 1px; }
-        /* Ribbon on final bouquet (inside growth-svg) */
+        #floral-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(700px, 96vw); height: auto; pointer-events: none; z-index: 10000002; opacity: 0; }
+        .phrase-flower { transform-box: fill-box; transform-origin: center; }
         #ribbon-group { opacity: 0; }
-        /* Love text (existing) */
         #love-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Caveat', cursive; font-size: clamp(40px, 9vw, 88px); color: var(--butter); text-shadow: 0 0 30px rgba(242, 212, 111, 0.7), 0 4px 10px rgba(56, 20, 19, 0.6); opacity: 0; transition: opacity 1s ease; pointer-events: none; z-index: 10000000; text-align: center; padding: 0 20px; white-space: nowrap; }
         #love-text.show { opacity: 1; }
         #camera-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 100000000; background-color: #1a1110; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.35s ease; }
@@ -287,8 +283,8 @@
         <svg class="scrap-flower flower-2" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
         <svg class="scrap-flower flower-3" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
         <svg class="scrap-flower flower-4" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
-        <svg class="scrap-flower flower-5" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg
-               <svg class="scrap-flower flower-6" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
+        <svg class="scrap-flower flower-5" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
+        <svg class="scrap-flower flower-6" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
         <div class="header">
             <span class="progress-text">heres our memories 📸</span>
             <div class="progress-bar"><div class="progress-fill"></div></div>
@@ -390,78 +386,49 @@
     <div id="heart-scene">
         <div class="return-arrow-left" id="close-heart-btn" aria-label="Return to collection"></div>
         <div class="beating-heart-container" id="heart-click-target"><div class="beating-heart"></div></div>
-
         <svg id="growth-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="stems" stroke-linecap="round" stroke-linejoin="round" fill="none">
-                <path class="stem" d="M300 400 C300 340 300 260 300 215" stroke="#547F55" stroke-width="4"/>
-                <path class="stem" d="M300 400 C270 380 240 340 255 235" stroke="#4A7030" stroke-width="5"/>
-                <path class="stem" d="M300 400 C330 380 360 340 345 235" stroke="#2F5D3A" stroke-width="5"/>
-                <path class="stem" d="M270 375 C250 340 230 300 225 275" stroke="#5C8A3C" stroke-width="3"/>
-                <path class="stem" d="M330 375 C350 340 370 300 375 275" stroke="#3F7048" stroke-width="3"/>
+                <path class="stem" d="M300 360 C270 350 245 325 238 300 C232 275 240 255 262 248" stroke="#4A7030" stroke-width="5"/>
+                <path class="stem" d="M300 360 C330 350 355 325 362 300 C368 275 360 255 338 248" stroke="#2F5D3A" stroke-width="5"/>
+                <path class="stem" d="M300 360 C300 330 300 300 300 278" stroke="#547F55" stroke-width="4"/>
+                <path class="stem" d="M288 345 C265 320 252 290 268 268" stroke="#5C8A3C" stroke-width="3"/>
+                <path class="stem" d="M312 345 C335 320 348 290 332 268" stroke="#3F7048" stroke-width="3"/>
             </g>
             <g id="vine-leaves">
-                <ellipse class="leaf" cx="270" cy="355" rx="5" ry="9" fill="#4A7030"/>
-                <ellipse class="leaf" cx="245" cy="305" rx="5" ry="9" fill="#5C8A3C"/>
-                <ellipse class="leaf" cx="260" cy="255" rx="5" ry="9" fill="#2F5D3A"/>
-                <ellipse class="leaf" cx="330" cy="355" rx="5" ry="9" fill="#3F7048"/>
-                <ellipse class="leaf" cx="355" cy="305" rx="5" ry="9" fill="#547F55"/>
-                <ellipse class="leaf" cx="340" cy="255" rx="5" ry="9" fill="#4A7030"/>
-                <ellipse class="leaf" cx="295" cy="330" rx="5" ry="9" fill="#5C8A3C"/>
-                <ellipse class="leaf" cx="305" cy="290" rx="5" ry="9" fill="#2F5D3A"/>
+                <ellipse class="leaf" cx="262" cy="335" rx="6" ry="10" fill="#4A7030" transform="rotate(-40 262 335)"/>
+                <ellipse class="leaf" cx="244" cy="298" rx="6" ry="10" fill="#5C8A3C" transform="rotate(-60 244 298)"/>
+                <ellipse class="leaf" cx="338" cy="335" rx="6" ry="10" fill="#3F7048" transform="rotate(40 338 335)"/>
+                <ellipse class="leaf" cx="356" cy="298" rx="6" ry="10" fill="#547F55" transform="rotate(60 356 298)"/>
+                <ellipse class="leaf" cx="290" cy="308" rx="5" ry="9" fill="#2F5D3A" transform="rotate(-20 290 308)"/>
+                <ellipse class="leaf" cx="310" cy="308" rx="5" ry="9" fill="#5C8A3C" transform="rotate(20 310 308)"/>
             </g>
             <g id="flowers">
-                <g transform="translate(300,215)"><g class="bloom"><circle r="30" fill="#d32f2f"/><path d="M0 -20 C13 -20 17 -8 8 0 C0 7 -12 4 -12 -5 C-12 -13 -4 -18 0 -20 Z" fill="#b71c1c" opacity=".65"/><path d="M0 -10 C6 -10 8 -3 4 0 C0 3 -6 2 -6 -4 C-6 -8 -2 -10 0 -10 Z" fill="#ff5252" opacity=".45"/></g></g>
-                <g transform="translate(225,275)"><g class="bloom"><path d="M0 -22 C15 -22 22 -7 0 7 C-22 -7 -15 -22 0 -22 Z" fill="#fb7185"/><path d="M-15 -7 C-30 -7 -30 7 -15 10 C0 10 0 -7 -15 -7 Z" fill="#fb7185"/><path d="M15 -7 C30 -7 30 7 15 10 C0 10 0 -7 15 -7 Z" fill="#fb7185"/></g></g>
-                <g transform="translate(375,275)"><g class="bloom"><path d="M0 -22 C15 -22 22 -7 0 7 C-22 -7 -15 -22 0 -22 Z" fill="#fb7185"/><path d="M-15 -7 C-30 -7 -30 7 -15 10 C0 10 0 -7 -15 -7 Z" fill="#fb7185"/><path d="M15 -7 C30 -7 30 7 15 10 C0 10 0 -7 15 -7 Z" fill="#fb7185"/></g></g>
-                <g transform="translate(280,255)"><g class="bloom"><path d="M0 -15 L4 -4 L15 -4 L6 3 L9 15 L0 8 L-9 15 L-6 3 L-15 -4 L-4 -4 Z" fill="#FFF8D6"/></g></g>
-                <g transform="translate(320,255)"><g class="bloom"><path d="M0 -15 L4 -4 L15 -4 L6 3 L9 15 L0 8 L-9 15 L-6 3 L-15 -4 L-4 -4 Z" fill="#FFF8D6"/></g></g>
-                <g transform="translate(255,340)"><g class="bloom"><circle r="4" fill="#F2D46F"/><circle cx="8" cy="-3" r="3" fill="#fb7185"/><circle cx="-8" cy="-3" r="3" fill="#F2D46F"/><circle cy="-10" r="4" fill="#fb7185"/></g></g>
-                <g transform="translate(345,340)"><g class="bloom"><circle r="4" fill="#F2D46F"/><circle cx="8" cy="-3" r="3" fill="#fb7185"/><circle cx="-8" cy="-3" r="3" fill="#F2D46F"/><circle cy="-10" r="4" fill="#fb7185"/></g></g>
+                <g transform="translate(300, 272)"><g class="bloom"><circle r="26" fill="#d32f2f"/><path d="M0 -17 C11 -17 15 -7 7 0 C0 6 -10 3 -10 -4 C-10 -11 -3 -15 0 -17 Z" fill="#b71c1c"/><path d="M0 -8 C5 -8 6 -2 3 0 C0 2 -5 1 -5 -3 C-5 -6 -2 -8 0 -8 Z" fill="#ff5252" opacity="0.6"/></g></g>
+                <g transform="translate(262, 248)"><g class="bloom"><path d="M0 -16 C11 -16 16 -6 0 5 C-16 -6 -11 -16 0 -16 Z" fill="#fb7185"/><path d="M-11 -6 C-22 -6 -22 6 -11 8 C0 8 0 -6 -11 -6 Z" fill="#fb7185"/><path d="M11 -6 C22 -6 22 6 11 8 C0 8 0 -6 11 -6 Z" fill="#fb7185"/></g></g>
+                <g transform="translate(338, 248)"><g class="bloom"><path d="M0 -16 C11 -16 16 -6 0 5 C-16 -6 -11 -16 0 -16 Z" fill="#fb7185"/><path d="M-11 -6 C-22 -6 -22 6 -11 8 C0 8 0 -6 -11 -6 Z" fill="#fb7185"/><path d="M11 -6 C22 -6 22 6 11 8 C0 8 0 -6 11 -6 Z" fill="#fb7185"/></g></g>
+                <g transform="translate(283, 288)"><g class="bloom"><path d="M0 -11 L3 -3 L11 -3 L5 2 L7 11 L0 7 L-7 11 L-5 2 L-11 -3 L-3 -3 Z" fill="#FFF8D6"/></g></g>
+                <g transform="translate(317, 288)"><g class="bloom"><path d="M0 -11 L3 -3 L11 -3 L5 2 L7 11 L0 7 L-7 11 L-5 2 L-11 -3 L-3 -3 Z" fill="#FFF8D6"/></g></g>
+                <g transform="translate(265, 328)"><g class="bloom"><circle r="3" fill="#F2D46F"/><circle cx="6" cy="-2" r="2.5" fill="#fb7185"/><circle cx="-6" cy="-2" r="2.5" fill="#F2D46F"/><circle cy="-8" r="3" fill="#fb7185"/></g></g>
+                <g transform="translate(335, 328)"><g class="bloom"><circle r="3" fill="#F2D46F"/><circle cx="6" cy="-2" r="2.5" fill="#fb7185"/><circle cx="-6" cy="-2" r="2.5" fill="#F2D46F"/><circle cy="-8" r="3" fill="#fb7185"/></g></g>
             </g>
             <g id="lily-of-the-valley">
-                <g transform="translate(255,235)"><g class="lotv"><path d="M0 0 Q-8 -10 -10 -15" stroke="#7FA070" stroke-width="2" fill="none"/><path d="M-10 -15 Q-14 -12 -11 -9 Q-7 -9 -10 -15 Z" fill="#fff" stroke="#CBBDB9" stroke-width="1"/></g></g>
-                <g transform="translate(345,235)"><g class="lotv"><path d="M0 0 Q8 -10 10 -15" stroke="#7FA070" stroke-width="2" fill="none"/><path d="M10 -15 Q14 -12 11 -9 Q7 -9 10 -15 Z" fill="#fff" stroke="#CBBDB9" stroke-width="1"/></g></g>
+                <g transform="translate(258, 252)"><g class="lotv"><path d="M0 0 Q-7 -10 -10 -16" stroke="#7FA070" stroke-width="2" fill="none"/><path d="M-10 -16 Q-14 -12 -11 -9 Q-7 -9 -10 -16 Z" fill="#fff" stroke="#CBBDB9" stroke-width="0.8"/><path d="M-6 -11 Q-10 -7 -8 -4 Q-4 -4 -6 -11 Z" fill="#fff" stroke="#CBBDB9" stroke-width="0.8"/></g></g>
+                <g transform="translate(342, 252)"><g class="lotv"><path d="M0 0 Q7 -10 10 -16" stroke="#7FA070" stroke-width="2" fill="none"/><path d="M10 -16 Q14 -12 11 -9 Q7 -9 10 -16 Z" fill="#fff" stroke="#CBBDB9" stroke-width="0.8"/><path d="M6 -11 Q10 -7 8 -4 Q4 -4 6 -11 Z" fill="#fff" stroke="#CBBDB9" stroke-width="0.8"/></g></g>
             </g>
-            <g id="thorn-group" transform="translate(300, 250)"><path d="M-3 8 L0 -8 L3 8 Z" fill="#2F5D3A"/></g>
-            <g id="ribbon-group" transform="translate(300, 430)">
-                <path d="M-35 -12 Q0 -18 35 -12 L35 12 Q0 18 -35 12 Z" fill="#F2D46F"/>
-                <ellipse cx="0" cy="0" rx="10" ry="6" fill="#E5C255"/>
-                <path d="M-8 -4 L-25 -12 L-22 4 Z" fill="#F2D46F" stroke="#B89240" stroke-width="0.5"/>
-                <path d="M8 -4 L25 -12 L22 4 Z" fill="#F2D46F" stroke="#B89240" stroke-width="0.5"/>
-                <path d="M-6 4 Q-15 20 -25 30" stroke="#F2D46F" stroke-width="4" fill="none" stroke-linecap="round"/>
-                <path d="M6 4 Q15 20 25 30" stroke="#F2D46F" stroke-width="4" fill="none" stroke-linecap="round"/>
-            </g>
-        </svg>
-
-        <svg id="garden-svg" viewBox="0 0 900 400" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-            <g class="garden-back" opacity="0.7">
-                <g transform="translate(80,260)"><path class="garden-stem" d="M0 0 L0 140" stroke="#4A7030" stroke-width="1.5" fill="none"/><g class="garden-flower"><path d="M0 -6 L2 -2 L7 -2 L3 2 L5 7 L0 4 L-5 7 L-3 2 L-7 -2 L-2 -2 Z" fill="#fff"/><circle r="2" fill="#F2D46F"/></g></g>
-                <g transform="translate(200,240)"><path class="garden-stem" d="M0 0 L0 160" stroke="#3F7048" stroke-width="1.5" fill="none"/><g class="garden-flower"><circle cy="-5" r="3" fill="#ffc0d4"/><circle cx="5" cy="-2" r="3" fill="#ffc0d4"/><circle cx="3" cy="5" r="3" fill="#ffc0d4"/><circle cx="-3" cy="5" r="3" fill="#ffc0d4"/><circle cx="-5" cy="-2" r="3" fill="#ffc0d4"/><circle r="1.5" fill="#F2D46F"/></g></g>
-                <g transform="translate(520,250)"><path class="garden-stem" d="M0 0 L0 150" stroke="#5C8A3C" stroke-width="1.5" fill="none"/><g class="garden-flower"><path d="M-4 -10 C-4 -15 -2 -18 0 -18 C2 -18 4 -15 4 -10 L4 0 C2 2 -2 2 -4 0 Z" fill="#fbcfe8"/></g></g>
-                <g transform="translate(700,250)"><path class="garden-stem" d="M0 0 L0 150" stroke="#4A7030" stroke-width="1.5" fill="none"/><g class="garden-flower"><path d="M0 -6 L2 -2 L7 -2 L3 2 L5 7 L0 4 L-5 7 L-3 2 L-7 -2 L-2 -2 Z" fill="#fff"/><circle r="2" fill="#F2D46F"/></g></g>
-                <g transform="translate(820,240)"><path class="garden-stem" d="M0 0 L0 160" stroke="#3F7048" stroke-width="1.5" fill="none"/><g class="garden-flower"><circle cy="-4" r="2.5" fill="#ffc0d4"/><circle cx="4" cy="-2" r="2.5" fill="#ffc0d4"/><circle cx="3" cy="4" r="2.5" fill="#ffc0d4"/><circle cx="-3" cy="4" r="2.5" fill="#ffc0d4"/><circle cx="-4" cy="-2" r="2.5" fill="#ffc0d4"/><circle r="1" fill="#F2D46F"/></g></g>
-            </g>
-            <g class="garden-mid">
-                <g transform="translate(150,290)"><path class="garden-stem" d="M0 0 L0 110" stroke="#7FA070" stroke-width="2" fill="none"/><g class="garden-flower"><path d="M0 0 Q-4 -12 3 -22" stroke="#7FA070" stroke-width="1.5" fill="none"/><ellipse cx="-2" cy="-6" rx="3" ry="4" fill="#fff"/><ellipse cx="1" cy="-14" rx="3" ry="4" fill="#fff"/><ellipse cx="-2" cy="-20" rx="3" ry="4" fill="#fff"/></g></g>
-                <g transform="translate(300,280)"><path class="garden-stem" d="M0 0 L0 120" stroke="#3F7048" stroke-width="2" fill="none"/><g class="garden-flower"><circle r="10" fill="#d32f2f"/><path d="M0 -7 C5 -7 7 -2 3 2 C0 5 -5 3 -5 0 C-5 -3 -2 -6 0 -7 Z" fill="#b71c1c"/></g></g>
-                <g transform="translate(450,300)"><path class="garden-stem" d="M0 0 L0 100" stroke="#4A7030" stroke-width="2" fill="none"/><g class="garden-flower"><path d="M0 -8 L2 -2 L9 -2 L4 2 L6 9 L0 5 L-6 9 L-4 2 L-9 -2 L-2 -2 Z" fill="#fff"/><circle r="2.5" fill="#F2D46F"/></g></g>
-                <g transform="translate(580,270)"><path class="garden-stem" d="M0 0 L0 130" stroke="#5C8A3C" stroke-width="2" fill="none"/><g class="garden-flower"><path d="M-5 -12 C-5 -18 -2 -22 0 -22 C2 -22 5 -18 5 -12 L5 0 C2 2 -2 2 -5 0 Z" fill="#fb7185"/></g></g>
-                <g transform="translate(720,280)"><path class="garden-stem" d="M0 0 L0 120" stroke="#3F7048" stroke-width="2" fill="none"/><g class="garden-flower"><circle r="10" fill="#be185d"/><path d="M0 -7 C5 -7 7 -2 3 2 C0 5 -5 3 -5 0 C-5 -3 -2 -6 0 -7 Z" fill="#831843"/></g></g>
-                <g transform="translate(830,290)"><path class="garden-stem" d="M0 0 L0 110" stroke="#4A7030" stroke-width="2" fill="none"/><g class="garden-flower"><path d="M0 -12 L3 -4 L11 0 L3 4 L0 12 L-3 4 L-11 0 L-3 -4 Z" fill="#fff"/><circle r="2" fill="#F2D46F"/></g></g>
-            </g>
-            <g class="garden-front">
-                <g transform="translate(180,330)"><path class="garden-stem" d="M0 0 L0 70" stroke="#4A7030" stroke-width="2.5" fill="none"/><g class="garden-flower"><circle r="14" fill="#f9a8d4"/><path d="M0 -9 C7 -9 11 -3 7 3 C3 8 -3 8 -7 3 C-11 -3 -7 -9 0 -9 Z" fill="#ec4899"/><path d="M0 -4 C3 -4 4 -1 2 2 C0 3 -3 2 -3 0 C-3 -2 -1 -4 0 -4 Z" fill="#be185d"/></g></g>
-                <g transform="translate(360,340)"><path class="garden-stem" d="M0 0 L0 60" stroke="#7FA070" stroke-width="2" fill="none"/><g class="garden-flower"><path d="M0 0 Q-5 -14 4 -26" stroke="#7FA070" stroke-width="1.5" fill="none"/><ellipse cx="-3" cy="-7" rx="4" ry="5" fill="#fff"/><ellipse cx="2" cy="-16" rx="4" ry="5" fill="#fff"/><ellipse cx="-3" cy="-24" rx="4" ry="5" fill="#fff"/></g></g>
-                <g transform="translate(510,350)"><path class="garden-stem" d="M0 0 L0 50" stroke="#3F7048" stroke-width="2.5" fill="none"/><g class="garden-flower"><circle r="12" fill="#d32f2f"/><path d="M0 -8 C6 -8 8 -2 4 2 C0 6 -6 4 -6 0 C-6 -4 -3 -7 0 -8 Z" fill="#b71c1c"/><path d="M0 -4 C3 -4 3 -1 1 1 C0 2 -2 1 -2 0 C-2 -2 -1 -4 0 -4 Z" fill="#ff5252"/></g></g>
-                <g transform="translate(670,360)"><path class="garden-stem" d="M0 0 L0 40" stroke="#4A7030" stroke-width="2.5" fill="none"/><g class="garden-flower"><circle r="16" fill="#fbcfe8"/><path d="M0 -11 C8 -11 13 -4 8 3 C3 9 -3 9 -8 3 C-13 -4 -8 -11 0 -11 Z" fill="#f9a8d4"/><path d="M0 -5 C4 -5 5 -1 2 2 C-1 4 -5 3 -5 0 C-5 -3 -2 -5 0 -5 Z" fill="#ec4899"/></g></g>
-                <g transform="translate(800,340)"><path class="garden-stem" d="M0 0 L0 60" stroke="#3F7048" stroke-width="2.5" fill="none"/><g class="garden-flower"><path d="M0 -16 L4 -6 L10 0 L4 6 L0 16 L-4 6 L-10 0 L-4 -6 Z" fill="#fff"/><path d="M0 -12 L3 -5 L7 0 L3 5 L0 12 L-3 5 L-7 0 L-3 -5 Z" fill="#fbcfe8" opacity="0.7"/><circle r="3" fill="#F2D46F"/></g></g>
-                <g transform="translate(60,350)"><path class="garden-stem" d="M0 0 L0 50" stroke="#4A7030" stroke-width="2.5" fill="none"/><g class="garden-flower"><circle r="10" fill="#be185d"/><path d="M0 -7 C5 -7 7 -2 3 2 C0 5 -5 3 -5 0 C-5 -3 -2 -6 0 -7 Z" fill="#831843"/></g></g>
+            <g id="thorn-group" transform="translate(300, 335)" style="opacity:0"><path d="M-2 6 L0 -6 L2 6 Z" fill="#2F5D3A"/></g>
+            <g id="ribbon-group" transform="translate(300, 420)" style="opacity:0">
+                <path d="M-42 -12 Q0 -18 42 -12 L42 12 Q0 18 -42 12 Z" fill="#F2D46F"/>
+                <ellipse cx="0" cy="0" rx="11" ry="6" fill="#E5C255"/>
+                <path d="M-9 -4 L-30 -14 L-26 5 Z" fill="#F2D46F" stroke="#B89240" stroke-width="0.6"/>
+                <path d="M9 -4 L30 -14 L26 5 Z" fill="#F2D46F" stroke="#B89240" stroke-width="0.6"/>
+                <path d="M-6 4 Q-18 24 -32 36" stroke="#F2D46F" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M6 4 Q18 24 32 36" stroke="#F2D46F" stroke-width="5" fill="none" stroke-linecap="round"/>
             </g>
         </svg>
-
+        <svg id="garden-svg" viewBox="0 0 900 400" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg"></svg>
         <div id="heart-final-glow"></div>
     </div>
-    <div id="love-jessa-text">i love you jessa</div>
+    <svg id="floral-message" viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg"></svg>
     <div id="letter-scene" role="dialog" aria-modal="true" aria-label="Love letter" aria-hidden="true">
         <div class="crumpled-paper-bg"></div>
         <div class="letter-paper-overlay"></div>
@@ -511,7 +478,7 @@
     <div id="mobile-simulator">
         <div class="phone-frame"><button class="close-sim" id="closeSimBtn">Close X</button><iframe id="sim-iframe" title="Mobile Preview"></iframe></div>
     </div>
-    <script>
+        <script>
         // ================= HEART ANIMATION (unchanged) =================
         const container = document.getElementById('heart-container');
         const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
@@ -641,6 +608,137 @@
             setTimeout(() => { heartBusy = false; }, 1000);
         });
 
+        // ================= BUILD GARDEN (procedural, 32 flowers, 3 rows) =================
+        (function buildGarden() {
+            const svg = document.getElementById('garden-svg');
+            if (!svg) return;
+            const NS = 'http://www.w3.org/2000/svg';
+            const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+            const TYPES = ['rose', 'daisy', 'tulip', 'peony', 'lily', 'lotv'];
+
+            function drawFlower(g, type) {
+                if (type === 'rose') {
+                    g.appendChild(mk('circle', { r: 12, fill: '#d32f2f' }));
+                    g.appendChild(mk('circle', { r: 8, fill: '#b71c1c' }));
+                    g.appendChild(mk('circle', { r: 4, fill: '#7f1d1d' }));
+                } else if (type === 'daisy') {
+                    for (let i = 0; i < 8; i++) {
+                        const a = (i / 8) * Math.PI * 2;
+                        const cx = Math.cos(a) * 10, cy = Math.sin(a) * 10;
+                        g.appendChild(mk('ellipse', { cx: cx.toFixed(2), cy: cy.toFixed(2), rx: 4, ry: 8, fill: '#fff', transform: 'rotate(' + (a * 180 / Math.PI + 90).toFixed(1) + ' ' + cx.toFixed(2) + ' ' + cy.toFixed(2) + ')' }));
+                    }
+                    g.appendChild(mk('circle', { r: 5, fill: '#F2D46F' }));
+                } else if (type === 'tulip') {
+                    g.appendChild(mk('path', { d: 'M-8 -15 C-8 -25 8 -25 8 -15 L8 5 C5 8 -5 8 -8 5 Z', fill: '#f9a8d4' }));
+                    g.appendChild(mk('path', { d: 'M-3 -18 L0 -10 L3 -18', stroke: '#db2777', 'stroke-width': 1.5, fill: 'none' }));
+                } else if (type === 'peony') {
+                    g.appendChild(mk('circle', { r: 15, fill: '#f9a8d4' }));
+                    g.appendChild(mk('circle', { r: 10, fill: '#ec4899' }));
+                    g.appendChild(mk('circle', { r: 5, fill: '#be185d' }));
+                } else if (type === 'lily') {
+                    for (let i = 0; i < 6; i++) {
+                        const a = (i / 6) * Math.PI * 2;
+                        g.appendChild(mk('path', { d: 'M0 0 L' + (Math.cos(a) * 15).toFixed(2) + ' ' + (Math.sin(a) * 15).toFixed(2) + ' L' + (Math.cos(a + 0.4) * 12).toFixed(2) + ' ' + (Math.sin(a + 0.4) * 12).toFixed(2) + ' Z', fill: '#fff' }));
+                    }
+                    g.appendChild(mk('circle', { r: 4, fill: '#fb7185' }));
+                } else if (type === 'lotv') {
+                    for (let i = 0; i < 3; i++) {
+                        g.appendChild(mk('ellipse', { cx: (i - 1) * 6, cy: -5 + i * 3, rx: 4, ry: 5, fill: '#fff', stroke: '#CBBDB9', 'stroke-width': 0.5 }));
+                    }
+                }
+            }
+
+            const rows = [
+                { yBase: 140, count: 10, scaleMin: 0.5, scaleMax: 0.7 },
+                { yBase: 230, count: 12, scaleMin: 0.75, scaleMax: 0.95 },
+                { yBase: 315, count: 10, scaleMin: 1.0, scaleMax: 1.25 }
+            ];
+
+            for (const row of rows) {
+                for (let i = 0; i < row.count; i++) {
+                    const x = (900 / (row.count + 1)) * (i + 1) + (Math.random() - 0.5) * 45;
+                    const y = row.yBase + (Math.random() - 0.5) * 50;
+                    const scale = row.scaleMin + Math.random() * (row.scaleMax - row.scaleMin);
+                    const type = TYPES[Math.floor(Math.random() * TYPES.length)];
+
+                    const stem = mk('path', {
+                        class: 'garden-stem',
+                        d: 'M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' Q' + (x + 4).toFixed(1) + ' ' + ((y + 400) / 2).toFixed(1) + ' ' + x.toFixed(1) + ' 400',
+                        stroke: '#4A7030',
+                        'stroke-width': (2 * scale).toFixed(2),
+                        fill: 'none'
+                    });
+                    svg.appendChild(stem);
+
+                    const g = mk('g', { class: 'garden-flower', transform: 'translate(' + x.toFixed(1) + ', ' + y.toFixed(1) + ') scale(' + scale.toFixed(2) + ')' });
+                    drawFlower(g, type);
+                    svg.appendChild(g);
+                }
+            }
+        })();
+
+        // ================= BUILD FLORAL TYPOGRAPHY ("i love you jessa") =================
+        (function buildFloralMessage() {
+            const svg = document.getElementById('floral-message');
+            if (!svg) return;
+            const NS = 'http://www.w3.org/2000/svg';
+            const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+            const LETTERS = {
+                'i': [[20,25],[20,45],[20,65],[20,85]],
+                'l': [[20,25],[20,45],[20,65],[20,85]],
+                'o': [[25,55],[30,35],[45,25],[60,35],[65,55],[60,75],[45,85],[30,75]],
+                'v': [[15,30],[25,50],[35,70],[45,85],[55,70],[65,50],[75,30]],
+                'e': [[25,55],[30,35],[45,28],[60,38],[60,55],[35,55],[60,72],[45,85],[30,78]],
+                'y': [[15,30],[25,50],[35,70],[45,50],[55,30],[40,100]],
+                'u': [[15,30],[15,55],[21,75],[38,85],[55,75],[61,55],[61,30]],
+                'j': [[40,25],[40,45],[40,65],[37,85],[22,92]],
+                's': [[55,35],[40,28],[27,38],[37,52],[52,57],[57,72],[43,88],[27,82]],
+                'a': [[40,40],[53,50],[55,70],[47,85],[33,82],[27,65],[35,50],[57,85]],
+                ' ': null
+            };
+
+            const TYPES = [
+                { petals: '#fb7185', center: '#e11d48', r: 5 },
+                { petals: '#f9a8d4', center: '#db2777', r: 6 },
+                { petals: '#F2D46F', center: '#b45309', r: 5 },
+                { petals: '#ffffff', center: '#F2D46F', r: 4 },
+                { petals: '#a7d4f0', center: '#0369a1', r: 4.5 }
+            ];
+
+            const LETTER_W = 60, GAP = 15;
+
+            function renderLine(phrase, lineY) {
+                const totalWidth = phrase.length * LETTER_W + (phrase.length - 1) * GAP;
+                const startX = (700 - totalWidth) / 2;
+                let x = startX;
+                for (const ch of phrase) {
+                    const skel = LETTERS[ch];
+                    if (skel) {
+                        for (const point of skel) {
+                            const t = TYPES[Math.floor(Math.random() * TYPES.length)];
+                            const g = mk('g', { class: 'phrase-flower', transform: 'translate(' + (x + point[0]) + ', ' + (lineY + point[1]) + ')' });
+                            for (let i = 0; i < 5; i++) {
+                                const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+                                g.appendChild(mk('circle', {
+                                    cx: (Math.cos(a) * t.r).toFixed(2),
+                                    cy: (Math.sin(a) * t.r).toFixed(2),
+                                    r: (t.r * 0.7).toFixed(2),
+                                    fill: t.petals
+                                }));
+                            }
+                            g.appendChild(mk('circle', { r: (t.r * 0.5).toFixed(2), fill: t.center }));
+                            svg.appendChild(g);
+                        }
+                    }
+                    x += LETTER_W + GAP;
+                }
+            }
+
+            renderLine('i love you', 60);
+            renderLine('jessa', 240);
+        })();
+
         // ================= HEART GROWTH SEQUENCE (GSAP) =================
         const heartClickTarget = document.getElementById('heart-click-target');
 
@@ -650,9 +748,10 @@
                 strokeDashoffset: (i, el) => el.getTotalLength ? el.getTotalLength() : 800
             });
             gsap.set(".leaf, .bloom, .lotv, .garden-flower", { scale: 0, opacity: 0 });
-            gsap.set("#garden-svg", { y: 150, opacity: 0 });
+            gsap.set(".phrase-flower", { scale: 0.3, opacity: 0 });
+            gsap.set("#garden-svg", { y: 200, opacity: 0 });
             gsap.set("#heart-final-glow", { opacity: 0, scale: 0.3 });
-            gsap.set("#love-jessa-text", { opacity: 0 });
+            gsap.set("#floral-message", { opacity: 0 });
             gsap.set("#ribbon-group", { opacity: 0 });
             gsap.set("#thorn-group", { opacity: 0, scale: 0 });
             gsap.set(closeHeartBtn, { opacity: 0 });
@@ -662,40 +761,36 @@
 
         const growthTl = gsap.timeline({ paused: true });
         growthTl
-            // Phase 1: vines embrace the heart
+            // Vines embrace the heart
             .to(".stem", { strokeDashoffset: 0, duration: 2.5, stagger: 0.1, ease: "power2.inOut" })
             .to(".leaf", { scale: 1, opacity: 1, duration: 0.6, stagger: 0.05, ease: "back.out(2)" }, "-=1.5")
             .to(".bloom", { scale: 1, opacity: 1, duration: 0.8, stagger: 0.08, ease: "back.out(1.7)" }, "-=0.4")
-            // Phase 2: garden rises from the bottom
-            .to("#garden-svg", { y: 0, opacity: 1, duration: 2.5, ease: "power2.out" }, "-=0.3")
-            .to(".garden-stem", { strokeDashoffset: 0, duration: 1.8, stagger: 0.05, ease: "power2.out" }, "-=2.2")
-            .to(".garden-flower", { scale: 1, opacity: 1, duration: 0.7, stagger: 0.04, ease: "back.out(1.8)" }, "-=1.4")
-            // Phase 3: bouquet lifts
-            .to("#growth-svg", { y: -120, duration: 2.5, ease: "power2.inOut" })
-            // Phase 4: Lily of the Valley on the humps (last to appear on the heart)
+            // Garden rises from bottom
+            .to("#garden-svg", { y: 0, opacity: 1, duration: 2.2, ease: "power2.out" }, "-=0.3")
+            .to(".garden-stem", { strokeDashoffset: 0, duration: 1.8, stagger: 0.03, ease: "power2.out" }, "-=1.8")
+            .to(".garden-flower", { scale: 1, opacity: 1, duration: 0.7, stagger: 0.03, ease: "back.out(1.8)" }, "-=1.4")
+            // Bouquet lifts
+            .to("#growth-svg", { y: -100, duration: 2.5, ease: "power2.inOut" })
+            // Lily of the Valley appears on heart humps (last on heart)
             .to(".lotv", { scale: 1, opacity: 1, duration: 1, stagger: 0.15, ease: "back.out(2)" }, "-=1")
-            // Phase 5: thorn appears and pierces
+            // Thorn pierces
             .to("#thorn-group", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, "-=0.5")
             .to("#thorn-group", { scale: 1.2, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out" })
-            // Phase 6: final heartbeat glow
-            .fromTo("#heart-final-glow",
-                { opacity: 0, scale: 0.4 },
-                { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" })
-            .to("#heart-final-glow", { opacity: 0, scale: 2.2, duration: 1.6, ease: "power2.out" })
-            // Phase 7: "i love you jessa" appears
-            .to("#love-jessa-text", { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=1.2")
-            // Phase 8: heart dissolves
-            .to(beatingHeart, { opacity: 0, duration: 2, ease: "power2.in" }, "-=0.5")
-            .to("#love-jessa-text", { opacity: 0, duration: 1, ease: "power2.in" }, "-=0.8")
-            // Phase 9: ribbon wraps the bouquet
-            .to("#ribbon-group", { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.8")
-            // Phase 10: close button appears
-            .to(closeHeartBtn, { opacity: 1, duration: 0.5, onComplete: () => { heartBusy = false; } }, "-=0.5");
+            // Final heartbeat glow
+            .fromTo("#heart-final-glow", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" })
+            .to("#heart-final-glow", { opacity: 0, scale: 2.5, duration: 1.6, ease: "power2.out" })
+            // Heart dissolves, floral typography blooms into place
+            .to(beatingHeart, { opacity: 0, duration: 1.8, ease: "power2.in" }, "-=0.5")
+            .to("#floral-message", { opacity: 1, duration: 0.3 }, "-=1")
+            .to(".phrase-flower", { scale: 1, opacity: 1, duration: 0.5, stagger: 0.008, ease: "back.out(2)" }, "-=0.15")
+            // Ribbon wraps bouquet
+            .to("#ribbon-group", { opacity: 1, duration: 1.2, ease: "power2.out" }, "-=0.3")
+            // Close button
+            .to(closeHeartBtn, { opacity: 1, duration: 0.5, onComplete: function () { heartBusy = false; } }, "-=0.5");
 
         heartClickTarget.addEventListener('click', async () => {
             if (heartBusy || growthTl.isActive() || growthTl.progress() > 0) return;
             heartBusy = true;
-            // Preserved 4-beat loop
             for (let i = 0; i < 4; i++) {
                 const echo = document.createElement('div'); echo.className = 'heart-echo';
                 heartClickTarget.appendChild(echo);
@@ -966,4 +1061,4 @@
         })();
     </script>
 </body>
-</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+</html>
