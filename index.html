@@ -136,7 +136,7 @@
         #stage-3.show .gallery-btn { pointer-events: auto; }
         .gallery-btn:active { transform: translateX(-50%) scale(0.95); }
 
-        /* ================= HEART SCENE (OVERHAULED) ================= */
+        /* ================= HEART SCENE ================= */
         #heart-scene { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 1000000001; pointer-events: none; visibility: hidden; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--main-red); opacity: 0; transition: opacity 1s ease, visibility 0s 1s; }
         #heart-scene.active { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 1s ease; }
         .beating-heart-container { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; z-index: 10; cursor: pointer; }
@@ -163,7 +163,6 @@
         @keyframes drawCurve { to { stroke-dashoffset: 0; } }
         @keyframes arrowDot { 0% { opacity: 0; transform: scale(0.3); } 40% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
         @keyframes arrowHead { 0% { opacity: 0; transform: scale(0.4); } 100% { opacity: 1; transform: scale(1); } }
-
         #love-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Caveat', cursive; font-size: clamp(40px, 9vw, 88px); color: var(--butter); text-shadow: 0 0 30px rgba(242, 212, 111, 0.7), 0 4px 10px rgba(56, 20, 19, 0.6); opacity: 0; transition: opacity 1s ease; pointer-events: none; z-index: 10000000; text-align: center; padding: 0 20px; white-space: nowrap; }
         #love-text.show { opacity: 1; }
         #camera-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 100000000; background-color: #1a1110; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.35s ease; }
@@ -593,14 +592,305 @@
         });
         arrowTrigger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); arrowTrigger.click(); } });
 
-        // ================= TEXT-FLOWER CANVAS GARDEN =================
+        // ================= TEXT-FLOWER CANVAS GARDEN (TYPEWRITER) =================
         const canvas = document.getElementById('flower-canvas');
         const ctx = canvas.getContext('2d');
         const PHRASE = 'i love you jessa ';
         let dpr = 1;
         let canvasAnimRAF = 0;
         let growthStartTime = 0;
-        const GROWTH_DURATION = 7500;
+        const GROWTH_DURATION = 9000;
+        const FADE_DISTANCE = 40;
+
+        let cachedCanvas = null;
+        let cachedCtx = null;
+        let allGlyphs = [];
+
+        const easeOutQuad = (t) => t * (2 - t);
+        const FONT_CACHE = {};
+        function getFont(size) {
+            const key = Math.round(size * 10) / 10;
+            if (!FONT_CACHE[key]) FONT_CACHE[key] = key + "px 'Caveat', cursive";
+            return FONT_CACHE[key];
+        }
+
+        function lerpColor(c1, c2, t) {
+            t = Math.max(0, Math.min(1, t));
+            const r1 = parseInt(c1.slice(1,3), 16), g1 = parseInt(c1.slice(3,5), 16), b1 = parseInt(c1.slice(5,7), 16);
+            const r2 = parseInt(c2.slice(1,3), 16), g2 = parseInt(c2.slice(3,5), 16), b2 = parseInt(c2.slice(5,7), 16);
+            return '#' + Math.round(r1+(r2-r1)*t).toString(16).padStart(2,'0')
+                       + Math.round(g1+(g2-g1)*t).toString(16).padStart(2,'0')
+                       + Math.round(b1+(b2-b1)*t).toString(16).padStart(2,'0');
+        }
+
+        function pointInEllipse(px, py, cx, cy, rx, ry, angle) {
+            angle = angle || 0;
+            const cos = Math.cos(-angle), sin = Math.sin(-angle);
+            const dx = px - cx, dy = py - cy;
+            const lx = dx * cos - dy * sin;
+            const ly = dx * sin + dy * cos;
+            return (lx*lx)/(rx*rx) + (ly*ly)/(ry*ry) <= 1;
+        }
+
+        const FLOWERS = [
+            { type: 'rose',  baseX: 0.50, baseY: 0.94, topX: 0.50, topY: 0.28, scale: 1.00 },
+            { type: 'lily',  baseX: 0.47, baseY: 0.94, topX: 0.30, topY: 0.32, scale: 0.85 },
+            { type: 'lily',  baseX: 0.53, baseY: 0.94, topX: 0.70, topY: 0.30, scale: 0.85 },
+            { type: 'daisy', baseX: 0.44, baseY: 0.94, topX: 0.28, topY: 0.54, scale: 0.65 },
+            { type: 'daisy', baseX: 0.56, baseY: 0.94, topX: 0.72, topY: 0.55, scale: 0.65 },
+            { type: 'daisy', baseX: 0.54, baseY: 0.94, topX: 0.82, topY: 0.68, scale: 0.55 },
+            { type: 'lotv',  baseX: 0.46, baseY: 0.94, topX: 0.20, topY: 0.55, scale: 1.10 },
+        ];
+
+        let _phraseCursor = 0;
+        function nextChar() {
+            const c = PHRASE[_phraseCursor % PHRASE.length];
+            _phraseCursor++;
+            return c;
+        }
+
+        function addGlyph(glyphs, x, y, char, color, fontSize, rotation) {
+            if (char === ' ') return;
+            glyphs.push({
+                x, y, char, color, fontSize,
+                rotation: rotation || 0,
+                randomOffset: (Math.random() - 0.5) * 30,
+                cached: false,
+                alpha: 0,
+            });
+        }
+
+        function buildStemGlyphs(glyphs, bx, by, tx, ty, f) {
+            const stemW = 2.8 * f.scale;
+            const curveDir = f.topX > 0.5 ? 1 : -1;
+            const curveAmt = 25 * f.scale * curveDir;
+            const rowStep = 8 * f.scale;
+            for (let y = by; y >= ty; y -= rowStep) {
+                const t = (by - y) / Math.max(1, (by - ty));
+                const curveOff = Math.sin(t * Math.PI) * curveAmt;
+                const cx = bx + (tx - bx) * t + curveOff;
+                for (let x = cx - stemW; x <= cx + stemW; x += 4.5 * f.scale) {
+                    addGlyph(glyphs, x, y, nextChar(), lerpColor('#4a7030', '#2f5d3a', t), 9 * f.scale);
+                }
+            }
+        }
+
+        function buildLeafGlyphs(glyphs, bx, by, tx, ty, f) {
+            const leaves = [
+                { at: 0.40, side: -1, size: 1.0 },
+                { at: 0.62, side: 1, size: 0.85 },
+            ];
+            for (const leaf of leaves) {
+                const t = leaf.at;
+                const curveDir = f.topX > 0.5 ? 1 : -1;
+                const curveOff = Math.sin(t * Math.PI) * 25 * f.scale * curveDir;
+                const lx = bx + (tx - bx) * t + curveOff;
+                const ly = by + (ty - by) * t;
+                const angle = leaf.side * 0.8;
+                const lw = 32 * f.scale * leaf.size;
+                const lh = 12 * f.scale * leaf.size;
+                const ecx = lx + Math.cos(angle) * lw / 2;
+                const ecy = ly + Math.sin(angle) * lw / 2;
+                const step = 4.5;
+                const rowStep = 9;
+                for (let y = ecy - lh; y <= ecy + lh; y += rowStep) {
+                    for (let x = ecx - lw; x <= ecx + lw; x += step) {
+                        if (pointInEllipse(x, y, ecx, ecy, lw/2, lh/2, angle)) {
+                            const dist = Math.hypot(x - ecx, y - ecy) / Math.max(lw, lh);
+                            addGlyph(glyphs, x, y, nextChar(), lerpColor('#5c8a3c', '#2f5d3a', dist), 8 * f.scale, angle);
+                        }
+                    }
+                }
+            }
+        }
+
+        function buildRosePetals(glyphs, cx, cy, f) {
+            const baseR = 65 * f.scale;
+            const rings = [
+                { count: 5, radius: baseR * 0.85, pw: baseR * 0.85, ph: baseR * 1.00, rot: 0, colorA: '#e11d48', colorB: '#7f1d1d' },
+                { count: 4, radius: baseR * 0.55, pw: baseR * 0.65, ph: baseR * 0.80, rot: 0.6, colorA: '#be123c', colorB: '#881337' },
+                { count: 3, radius: baseR * 0.25, pw: baseR * 0.40, ph: baseR * 0.55, rot: 0.9, colorA: '#881337', colorB: '#4c0519' },
+            ];
+            for (const ring of rings) {
+                for (let i = 0; i < ring.count; i++) {
+                    const angle = (i / ring.count) * Math.PI * 2 + ring.rot;
+                    const px = cx + Math.cos(angle) * ring.radius;
+                    const py = cy + Math.sin(angle) * ring.radius;
+                    const rot = angle + Math.PI / 2;
+                    const step = 4.5;
+                    const rowStep = 10;
+                    for (let ly = -ring.ph; ly <= ring.ph; ly += rowStep) {
+                        for (let lx = -ring.pw; lx <= ring.pw; lx += step) {
+                            const cos = Math.cos(rot), sin = Math.sin(rot);
+                            const wx = px + lx * cos - ly * sin;
+                            const wy = py + lx * sin + ly * cos;
+                            if (pointInEllipse(wx, wy, px, py, ring.pw, ring.ph, rot)) {
+                                const dist = Math.hypot(lx, ly) / ring.ph;
+                                addGlyph(glyphs, wx, wy, nextChar(), lerpColor(ring.colorA, ring.colorB, Math.min(1, dist)), 10 * f.scale, rot);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function buildLilyPetals(glyphs, cx, cy, f) {
+            const petalLen = 55 * f.scale, petalW = 15 * f.scale;
+            for (let i = 0; i < 6; i++) {
+                const rot = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                const step = 4.5;
+                const rowStep = 10;
+                for (let ly = -petalW; ly <= petalW; ly += rowStep) {
+                    for (let lx = 0; lx <= petalLen; lx += step) {
+                        const cos = Math.cos(rot), sin = Math.sin(rot);
+                        const wx = cx + lx * cos - ly * sin;
+                        const wy = cy + lx * sin + ly * cos;
+                        const centeredX = lx - petalLen * 0.6;
+                        if ((centeredX*centeredX)/((petalLen*0.6)*(petalLen*0.6)) + (ly*ly)/(petalW*petalW) <= 1) {
+                            const t = lx / petalLen;
+                            addGlyph(glyphs, wx, wy, nextChar(), lerpColor('#fff8e7', '#d4a574', t), 9 * f.scale, rot);
+                        }
+                    }
+                }
+            }
+            for (let y = cy - 5; y <= cy + 5; y += 5) {
+                for (let x = cx - 5; x <= cx + 5; x += 4) {
+                    if (pointInEllipse(x, y, cx, cy, 5 * f.scale, 5 * f.scale)) {
+                        addGlyph(glyphs, x, y, nextChar(), '#F2D46F', 8 * f.scale);
+                    }
+                }
+            }
+        }
+
+        function buildDaisyPetals(glyphs, cx, cy, f) {
+            const petalLen = 32 * f.scale, petalW = 9 * f.scale;
+            const petalColors = ['#F2D46F', '#fb7185', '#e5e7eb'];
+            const petalColor = petalColors[Math.floor((cx + cy) % 3)] || '#F2D46F';
+            for (let i = 0; i < 8; i++) {
+                const rot = (i / 8) * Math.PI * 2;
+                const step = 4;
+                const rowStep = 8;
+                for (let ly = -petalW; ly <= petalW; ly += rowStep) {
+                    for (let lx = 0; lx <= petalLen; lx += step) {
+                        const cos = Math.cos(rot), sin = Math.sin(rot);
+                        const wx = cx + lx * cos - ly * sin;
+                        const wy = cy + lx * sin + ly * cos;
+                        const centeredX = lx - petalLen * 0.6;
+                        if ((centeredX*centeredX)/((petalLen*0.6)*(petalLen*0.6)) + (ly*ly)/(petalW*petalW) <= 1) {
+                            addGlyph(glyphs, wx, wy, nextChar(), petalColor, 8 * f.scale, rot);
+                        }
+                    }
+                }
+            }
+            for (let y = cy - 7; y <= cy + 7; y += 6) {
+                for (let x = cx - 7; x <= cx + 7; x += 4) {
+                    if (pointInEllipse(x, y, cx, cy, 7 * f.scale, 7 * f.scale)) {
+                        addGlyph(glyphs, x, y, nextChar(), '#b45309', 8 * f.scale);
+                    }
+                }
+            }
+        }
+
+        function buildBudGlyphs(glyphs, cx, cy, f) {
+            const r = 12 * f.scale;
+            for (let y = cy - r*1.2; y <= cy + r*1.2; y += 8) {
+                for (let x = cx - r*0.8; x <= cx + r*0.8; x += 4) {
+                    if (pointInEllipse(x, y, cx, cy, r*0.8, r*1.2)) {
+                        const t = (y - (cy - r*1.2)) / (r*2.4);
+                        addGlyph(glyphs, x, y, nextChar(), lerpColor('#fef3c7', '#d4a574', t), 8 * f.scale);
+                    }
+                }
+            }
+        }
+
+        // LOTV: arching stalk + hanging bells + lance leaves
+        function buildLOTV(glyphs, bx, by, tx, ty, f) {
+            // 1. Two lance-shaped basal leaves
+            for (let li = 0; li < 2; li++) {
+                const side = li === 0 ? -1 : 1;
+                const leafAngle = side * 0.35;
+                const leafLen = 95 * f.scale;
+                const leafW = 22 * f.scale;
+                const leafBaseX = bx + side * 8 * f.scale;
+                const leafBaseY = by - 5;
+                const leafTipX = leafBaseX + Math.sin(leafAngle) * leafLen;
+                const leafTipY = leafBaseY - Math.cos(leafAngle) * leafLen;
+                const perpX = Math.cos(leafAngle);
+                const perpY = Math.sin(leafAngle);
+                for (let t = 0; t <= 1; t += 0.025) {
+                    const px = leafBaseX + (leafTipX - leafBaseX) * t;
+                    const py = leafBaseY + (leafTipY - leafBaseY) * t;
+                    const width = leafW * Math.sin(t * Math.PI) * 0.5;
+                    for (let d = -width; d <= width; d += 4.5) {
+                        addGlyph(glyphs, px + perpX * d, py + perpY * d, nextChar(), lerpColor('#5c8a3c', '#2f5d3a', t), 8 * f.scale, leafAngle);
+                    }
+                }
+            }
+
+            // 2. Arching stalk (quadratic bezier)
+            const ctrlX = bx + (tx - bx) * 0.35;
+            const ctrlY = by - (by - ty) * 0.95;
+            const bezierPoint = (t) => {
+                const x = (1-t)*(1-t)*bx + 2*(1-t)*t*ctrlX + t*t*tx;
+                const y = (1-t)*(1-t)*by + 2*(1-t)*t*ctrlY + t*t*ty;
+                return { x, y };
+            };
+            const stalkW = 2.4 * f.scale;
+            for (let t = 0; t <= 1; t += 0.012) {
+                const pt = bezierPoint(t);
+                for (let d = -stalkW; d <= stalkW; d += 2.8 * f.scale) {
+                    addGlyph(glyphs, pt.x + d, pt.y, nextChar(), lerpColor('#4a7030', '#5c8a3c', t), 7 * f.scale);
+                }
+            }
+
+            // 3. Bells hanging from upper arc
+            const bellCount = 7;
+            for (let i = 0; i < bellCount; i++) {
+                const t = 0.55 + (i / (bellCount - 1)) * 0.42;
+                const pt = bezierPoint(t);
+                const sideOffset = (i % 2 === 0 ? -1 : 1) * 3 * f.scale;
+                const bellX = pt.x + sideOffset;
+                const pedicelLen = 8 * f.scale;
+                const bellY = pt.y + pedicelLen;
+
+                for (let py = pt.y; py <= bellY; py += 4) {
+                    addGlyph(glyphs, pt.x, py, nextChar(), '#7FA070', 6 * f.scale);
+                }
+
+                const bellH = 13 * f.scale;
+                const bellW = 6 * f.scale;
+                for (let bOffset = 0; bOffset <= bellH; bOffset += 6 * f.scale) {
+                    const y2 = bellY + bOffset;
+                    const prog = bOffset / bellH;
+                    const width = bellW * (0.4 + 0.6 * prog);
+                    for (let bx2 = -width; bx2 <= width; bx2 += 4 * f.scale) {
+                        const scallop = prog > 0.85 ? Math.sin(bx2 / width * Math.PI * 3) * 1.5 : 0;
+                        addGlyph(glyphs, bellX + bx2, y2 + scallop, nextChar(), lerpColor('#ffffff', '#d1d5db', prog), 6.5 * f.scale);
+                    }
+                }
+            }
+        }
+
+        function buildGlyphLayout() {
+            const W = window.innerWidth, H = window.innerHeight;
+            const glyphs = [];
+            _phraseCursor = 0;
+            for (const f of FLOWERS) {
+                const bx = f.baseX * W, by = f.baseY * H;
+                const tx = f.topX * W, ty = f.topY * H;
+                buildStemGlyphs(glyphs, bx, by, tx, ty, f);
+                if (f.type === 'lotv') {
+                    buildLOTV(glyphs, bx, by, tx, ty, f);
+                } else {
+                    buildLeafGlyphs(glyphs, bx, by, tx, ty, f);
+                    buildBudGlyphs(glyphs, tx, ty, f);
+                    if (f.type === 'rose') buildRosePetals(glyphs, tx, ty, f);
+                    else if (f.type === 'lily') buildLilyPetals(glyphs, tx, ty, f);
+                    else if (f.type === 'daisy') buildDaisyPetals(glyphs, tx, ty, f);
+                }
+            }
+            return glyphs;
+        }
 
         function resizeCanvas() {
             dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -612,240 +902,175 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        const FLOWERS = [
-            { type: 'rose',  baseX: 0.50, baseY: 0.94, topX: 0.50, topY: 0.28, scale: 1.00, startAt: 0.00 },
-            { type: 'lily',  baseX: 0.47, baseY: 0.94, topX: 0.30, topY: 0.32, scale: 0.85, startAt: 0.10 },
-            { type: 'lily',  baseX: 0.53, baseY: 0.94, topX: 0.70, topY: 0.30, scale: 0.85, startAt: 0.18 },
-            { type: 'daisy', baseX: 0.44, baseY: 0.94, topX: 0.28, topY: 0.54, scale: 0.65, startAt: 0.25 },
-            { type: 'daisy', baseX: 0.56, baseY: 0.94, topX: 0.72, topY: 0.55, scale: 0.65, startAt: 0.32 },
-            { type: 'daisy', baseX: 0.54, baseY: 0.94, topX: 0.82, topY: 0.68, scale: 0.55, startAt: 0.40 },
-            { type: 'lotv',  baseX: 0.46, baseY: 0.94, topX: 0.20, topY: 0.70, scale: 0.95, startAt: 0.20 },
-        ];
+        function initCache() {
+            const W = window.innerWidth, H = window.innerHeight;
+            cachedCanvas = document.createElement('canvas');
+            cachedCanvas.width = W * dpr;
+            cachedCanvas.height = H * dpr;
+            cachedCtx = cachedCanvas.getContext('2d');
+            cachedCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cachedCtx.textBaseline = 'top';
+        }
 
-        function fillWithPhrase(bounds, style, fontSize) {
-            ctx.font = fontSize + "px 'Caveat', cursive";
-            ctx.textBaseline = 'top';
-            ctx.fillStyle = style;
-            const lineH = fontSize * 1.2;
-            for (let row = bounds.y; row < bounds.y + bounds.h; row += lineH) {
-                ctx.fillText(PHRASE.repeat(8), bounds.x, row);
+        function drawGlyphTo(targetCtx, g) {
+            targetCtx.fillStyle = g.color;
+            targetCtx.font = getFont(g.fontSize);
+            if (g.rotation === 0) {
+                targetCtx.fillText(g.char, g.x, g.y);
+            } else {
+                targetCtx.save();
+                targetCtx.translate(g.x, g.y);
+                targetCtx.rotate(g.rotation);
+                targetCtx.fillText(g.char, 0, 0);
+                targetCtx.restore();
             }
         }
-        function drawTextStem(x1, y1, x2, y2, f) {
-            if (Math.hypot(x2 - x1, y2 - y1) < 2) return;
-            const w = 5 * f.scale;
-            const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy);
-            const nx = -dy / len * w / 2, ny = dx / len * w / 2;
-            const curve = 20 * f.scale * ((f.topX > 0.5) ? 1 : -1);
-            const mx = (x1 + x2) / 2 + curve, my = (y1 + y2) / 2;
-            ctx.save(); ctx.beginPath();
-            ctx.moveTo(x1 + nx, y1 + ny); ctx.quadraticCurveTo(mx + nx, my + ny, x2 + nx, y2 + ny);
-            ctx.lineTo(x2 - nx, y2 - ny); ctx.quadraticCurveTo(mx - nx, my - ny, x1 - nx, y1 - ny);
-            ctx.closePath(); ctx.clip();
-            const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-            grad.addColorStop(0, '#4a7030'); grad.addColorStop(1, '#2f5d3a');
-            fillWithPhrase({ x: Math.min(x1, x2) - w, y: Math.min(y1, y2), w: w * 4, h: len }, grad, Math.max(8, 10 * f.scale));
-            ctx.restore();
-        }
-        function drawTextLeaves(bx, by, tx, ty, f, t) {
-            const leaves = [{ at: 0.35, side: -1, size: 1.0 },{ at: 0.55, side: 1, size: 0.9 },{ at: 0.72, side: -1, size: 0.7 }];
-            for (const L of leaves) {
-                if (t < L.at) continue;
-                const lx = bx + (tx - bx) * L.at; const ly = by + (ty - by) * L.at;
-                const angle = L.side * 0.9; const lw = 32 * f.scale * L.size; const lh = 14 * f.scale * L.size;
-                const localT = Math.min(1, (t - L.at) / 0.3);
-                ctx.save(); ctx.translate(lx, ly); ctx.rotate(angle); ctx.scale(localT, localT);
-                ctx.beginPath(); ctx.ellipse(lw / 2, 0, lw / 2, lh / 2, 0, 0, Math.PI * 2); ctx.clip();
-                const grad = ctx.createLinearGradient(0, 0, lw, 0);
-                grad.addColorStop(0, '#5c8a3c'); grad.addColorStop(1, '#2f5d3a');
-                fillWithPhrase({ x: -10, y: -lh, w: lw + 20, h: lh * 2 }, grad, Math.max(7, 9 * f.scale));
+
+        function drawGlyphFading(g) {
+            ctx.globalAlpha = g.alpha;
+            ctx.fillStyle = g.color;
+            ctx.font = getFont(g.fontSize);
+            if (g.rotation === 0) {
+                ctx.fillText(g.char, g.x, g.y);
+            } else {
+                ctx.save();
+                ctx.translate(g.x, g.y);
+                ctx.rotate(g.rotation);
+                ctx.fillText(g.char, 0, 0);
                 ctx.restore();
             }
+            ctx.globalAlpha = 1;
         }
-        function drawTextBud(cx, cy, f, t) {
-            const r = 12 * f.scale * t;
-            ctx.save(); ctx.beginPath(); ctx.ellipse(cx, cy, r * 0.8, r * 1.2, 0, 0, Math.PI * 2); ctx.clip();
-            const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 1.2);
-            grad.addColorStop(0, '#fef3c7'); grad.addColorStop(1, '#d4a574');
-            fillWithPhrase({ x: cx - r * 2, y: cy - r * 2, w: r * 4, h: r * 4 }, grad, Math.max(7, 9 * f.scale));
-            ctx.restore();
-        }
-        function drawRose(cx, cy, scale, t) {
-            const baseR = 65 * scale;
-            const rings = [
-                { count: 5, radius: baseR * 0.85, pw: baseR * 0.85, ph: baseR * 1.00, rot: 0, colorA: '#e11d48', colorB: '#7f1d1d' },
-                { count: 4, radius: baseR * 0.55, pw: baseR * 0.65, ph: baseR * 0.80, rot: 0.6, colorA: '#be123c', colorB: '#881337' },
-                { count: 3, radius: baseR * 0.25, pw: baseR * 0.40, ph: baseR * 0.55, rot: 0.9, colorA: '#881337', colorB: '#4c0519' },
-            ];
-            for (const ring of rings) {
-                for (let i = 0; i < ring.count; i++) {
-                    const angle = (i / ring.count) * Math.PI * 2 + ring.rot;
-                    const px = cx + Math.cos(angle) * ring.radius * t;
-                    const py = cy + Math.sin(angle) * ring.radius * t;
-                    ctx.save(); ctx.translate(px, py); ctx.rotate(angle + Math.PI / 2); ctx.scale(t, t);
-                    ctx.beginPath(); ctx.ellipse(0, 0, ring.pw, ring.ph, 0, 0, Math.PI * 2); ctx.clip();
-                    const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, ring.ph);
-                    grad.addColorStop(0, ring.colorA); grad.addColorStop(1, ring.colorB);
-                    fillWithPhrase({ x: -ring.pw - 10, y: -ring.ph, w: ring.pw * 2 + 20, h: ring.ph * 2 }, grad, Math.max(8, 10 * scale));
-                    ctx.restore();
+
+        function drawAllFlowers(progress, isFinal) {
+            if (!cachedCtx) initCache();
+            const W = window.innerWidth, H = window.innerHeight;
+            const revealY = H * (1 - easeOutQuad(progress));
+
+            for (const g of allGlyphs) {
+                if (g.cached) continue;
+                const effY = g.y + g.randomOffset;
+                if (isFinal || (effY - revealY) > FADE_DISTANCE) {
+                    drawGlyphTo(cachedCtx, g);
+                    g.cached = true;
+                }
+            }
+
+            ctx.clearRect(0, 0, W, H);
+            ctx.drawImage(cachedCanvas, 0, 0, W, H);
+
+            for (const g of allGlyphs) {
+                if (g.cached) continue;
+                const effY = g.y + g.randomOffset;
+                if (isFinal) {
+                    g.alpha = 1;
+                    drawGlyphFading(g);
+                } else if (effY >= revealY) {
+                    g.alpha = Math.min(1, (effY - revealY) / FADE_DISTANCE);
+                    drawGlyphFading(g);
                 }
             }
         }
-        function drawLily(cx, cy, scale, t) {
-            const petalLen = 55 * scale, petalW = 15 * scale;
-            for (let i = 0; i < 6; i++) {
-                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-                ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle); ctx.scale(t, t);
-                ctx.beginPath(); ctx.ellipse(petalLen * 0.6, 0, petalLen * 0.6, petalW, 0, 0, Math.PI * 2); ctx.clip();
-                const grad = ctx.createRadialGradient(petalLen * 0.6, 0, 0, petalLen * 0.6, 0, petalLen);
-                grad.addColorStop(0, '#fff8e7'); grad.addColorStop(0.6, '#fef3c7'); grad.addColorStop(1, '#d4a574');
-                fillWithPhrase({ x: 0, y: -petalW * 1.5, w: petalLen * 1.5, h: petalW * 3 }, grad, Math.max(7, 9 * scale));
-                ctx.restore();
-            }
-            ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, 5 * scale * t, 0, Math.PI * 2); ctx.clip();
-            fillWithPhrase({ x: cx - 15, y: cy - 15, w: 30, h: 30 }, '#F2D46F', 8);
-            ctx.restore();
-        }
-        function drawDaisy(cx, cy, scale, t) {
-            const petalLen = 32 * scale, petalW = 9 * scale;
-            const petalCount = 8;
-            const colors = ['#F2D46F', '#fb7185', '#e5e7eb'];
-            const colorIdx = Math.floor((cx + cy) % 3);
-            const petalColor = colors[colorIdx] || '#F2D46F';
-            for (let i = 0; i < petalCount; i++) {
-                const angle = (i / petalCount) * Math.PI * 2;
-                ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle); ctx.scale(t, t);
-                ctx.beginPath(); ctx.ellipse(petalLen * 0.6, 0, petalLen * 0.6, petalW, 0, 0, Math.PI * 2); ctx.clip();
-                fillWithPhrase({ x: 0, y: -petalW * 1.5, w: petalLen * 1.5, h: petalW * 3 }, petalColor, Math.max(7, 8 * scale));
-                ctx.restore();
-            }
-            ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, 7 * scale * t, 0, Math.PI * 2); ctx.clip();
-            fillWithPhrase({ x: cx - 15, y: cy - 15, w: 30, h: 30 }, '#b45309', 8);
-            ctx.restore();
-        }
-        function drawLOTV(bx, by, tx, ty, scale, t) {
-            const bells = [{ at: 0.25, side: -1 }, { at: 0.40, side: 1 }, { at: 0.55, side: -1 }, { at: 0.70, side: 1 }, { at: 0.85, side: -1 }];
-            for (const bell of bells) {
-                if (t < bell.at) continue;
-                const localT = Math.min(1, (t - bell.at) / 0.3);
-                const x = bx + (tx - bx) * bell.at + bell.side * 10 * scale;
-                const y = by + (ty - by) * bell.at + 8 * scale;
-                const bw = 8 * scale * localT, bh = 12 * scale * localT;
-                ctx.save(); ctx.beginPath();
-                ctx.moveTo(x, y);
-                ctx.bezierCurveTo(x - bw, y + bh * 0.4, x - bw, y + bh, x, y + bh);
-                ctx.bezierCurveTo(x + bw, y + bh, x + bw, y + bh * 0.4, x, y);
-                ctx.closePath(); ctx.clip();
-                const grad = ctx.createLinearGradient(x, y, x, y + bh);
-                grad.addColorStop(0, '#ffffff'); grad.addColorStop(1, '#d1d5db');
-                fillWithPhrase({ x: x - bw * 2, y: y, w: bw * 4, h: bh }, grad, Math.max(6, 7 * scale));
-                ctx.restore();
-            }
-        }
-        function drawFlower(f, local) {
-            const W = canvas.width / dpr, H = canvas.height / dpr;
-            const bx = f.baseX * W, by = f.baseY * H;
-            const tx = f.topX * W, ty = f.topY * H;
-            const stemT = Math.min(1, local / 0.35);
-            const leafT = Math.max(0, (local - 0.30) / 0.25);
-            const budT = Math.max(0, (local - 0.55) / 0.20);
-            const petalT = Math.max(0, (local - 0.65) / 0.35);
-            const endX = bx + (tx - bx) * stemT;
-            const endY = by + (ty - by) * stemT;
-            drawTextStem(bx, by, endX, endY, f);
-            if (leafT > 0 && stemT > 0.9) drawTextLeaves(bx, by, tx, ty, f, leafT);
-            if (budT > 0) drawTextBud(tx, ty, f, budT);
-            if (f.type === 'rose' && petalT > 0) drawRose(tx, ty, f.scale * petalT, petalT);
-            if (f.type === 'lily' && petalT > 0) drawLily(tx, ty, f.scale * petalT, petalT);
-            if (f.type === 'daisy' && petalT > 0) drawDaisy(tx, ty, f.scale * petalT, petalT);
-            if (f.type === 'lotv' && petalT > 0) drawLOTV(bx, by, tx, ty, f.scale * petalT, petalT);
-        }
-        function drawAllFlowers(progress) {
-            const W = canvas.width / dpr, H = canvas.height / dpr;
-            ctx.clearRect(0, 0, W, H);
-            for (const f of FLOWERS) {
-                const local = Math.max(0, Math.min(1, (progress - f.startAt) / 0.6));
-                if (local <= 0) continue;
-                drawFlower(f, local);
-            }
-        }
-        let lastDraw = 0;
+
         function tick(now) {
             if (!heartSequenceRunning || !growthStartTime) return;
-            if (now - lastDraw > 33) {
-                lastDraw = now;
-                const progress = Math.min(1, (now - growthStartTime) / GROWTH_DURATION);
-                drawAllFlowers(progress);
-            }
-            if (performance.now() - growthStartTime < GROWTH_DURATION) {
+            const elapsed = now - growthStartTime;
+            const progress = Math.min(1, elapsed / GROWTH_DURATION);
+            drawAllFlowers(progress, progress >= 1);
+            if (progress < 1) {
                 canvasAnimRAF = requestAnimationFrame(tick);
             } else {
-                drawAllFlowers(1);
                 canvasAnimRAF = 0;
             }
         }
+
         async function startHeartSequence() {
             if (heartSequenceRunning) return;
             heartSequenceRunning = true;
             heartClickTarget.style.pointerEvents = 'none';
             heartClickTarget.style.cursor = 'default';
+
             if (document.fonts && document.fonts.ready) {
                 try { await document.fonts.ready; } catch (e) {}
             }
+
             beatingHeart.style.animationDuration = '0.5s';
             await sleep(2000);
+
             beatingHeart.style.setProperty('--heart-color', HEART_RED);
             await sleep(1000);
+
             beatingHeart.classList.add('slow-color');
             beatingHeart.style.setProperty('--heart-color', HEART_YELLOW);
             await sleep(2000);
+
             shockwaveEl.classList.add('burst');
             beatingHeart.style.opacity = '0';
             await sleep(1600);
+
             blackoutEl.style.transition = 'opacity 3s ease';
             blackoutEl.style.opacity = '1';
             await sleep(3000);
+
             resizeCanvas();
+            initCache();
+            allGlyphs = buildGlyphLayout();
             growthStartTime = performance.now();
-            lastDraw = 0;
-            tick(performance.now());
+            canvasAnimRAF = requestAnimationFrame(tick);
+
             await sleep(GROWTH_DURATION + 500);
             await sleep(3000);
+
             returnArrow.classList.add('visible', 'drawing');
             await sleep(1800);
             returnArrow.classList.add('ready');
             heartSequenceRunning = false;
         }
+
         heartClickTarget.addEventListener('click', startHeartSequence);
         heartClickTarget.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startHeartSequence(); }
         });
+
         function closeHeartScene() {
             if (heartSequenceRunning) return;
             heartScene.classList.remove('active');
+
             beatingHeart.style.animationDuration = '';
             beatingHeart.style.opacity = '';
             beatingHeart.style.removeProperty('--heart-color');
             beatingHeart.classList.remove('slow-color');
             heartClickTarget.style.pointerEvents = '';
             heartClickTarget.style.cursor = '';
+
             shockwaveEl.classList.remove('burst');
             blackoutEl.style.transition = '';
             blackoutEl.style.opacity = '0';
             returnArrow.classList.remove('visible', 'drawing', 'ready');
+
             if (canvasAnimRAF) { cancelAnimationFrame(canvasAnimRAF); canvasAnimRAF = 0; }
+            if (cachedCtx) cachedCtx.clearRect(0, 0, cachedCanvas.width / dpr, cachedCanvas.height / dpr);
             if (ctx) ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+            allGlyphs.forEach(g => g.cached = false);
+            allGlyphs = [];
             growthStartTime = 0;
+
             setTimeout(() => stage3.classList.add('show'), 300);
         }
+
         returnArrow.addEventListener('click', closeHeartScene);
         returnArrow.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeHeartScene(); }
         });
+
         window.addEventListener('resize', () => {
             if (!heartScene.classList.contains('active')) return;
             resizeCanvas();
-            if (growthStartTime) drawAllFlowers(1);
+            if (!growthStartTime) return;
+            if (canvasAnimRAF) { cancelAnimationFrame(canvasAnimRAF); canvasAnimRAF = 0; }
+            initCache();
+            allGlyphs = buildGlyphLayout();
+            drawAllFlowers(1, true);
         });
 
         // ================= ENVELOPE & LETTER =================
@@ -985,11 +1210,11 @@
                 if (!reduced()) { flashOverlay.animate([{ opacity: 0 }, { opacity: 0.55, offset: 0.18 }, { opacity: 0 }], { duration: 420, easing: 'ease-out' }); }
                 const width = videoElement.videoWidth, height = videoElement.videoHeight;
                 canvasElement.width = width; canvasElement.height = height;
-                const ctx = canvasElement.getContext('2d');
-                ctx.filter = currentFilter; ctx.drawImage(videoElement, 0, 0, width, height); ctx.filter = 'none';
-                const gradient = ctx.createRadialGradient(width / 2, height / 2, width / 4, width / 2, height / 2, width / 1.5);
+                const c2d = canvasElement.getContext('2d');
+                c2d.filter = currentFilter; c2d.drawImage(videoElement, 0, 0, width, height); c2d.filter = 'none';
+                const gradient = c2d.createRadialGradient(width / 2, height / 2, width / 4, width / 2, height / 2, width / 1.5);
                 gradient.addColorStop(0, 'rgba(0,0,0,0)'); gradient.addColorStop(1, 'rgba(0,0,0,0.45)');
-                ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
+                c2d.fillStyle = gradient; c2d.fillRect(0, 0, width, height);
                 capturedImage.src = canvasElement.toDataURL('image/jpeg', 0.92);
                 videoElement.style.display = 'none';
                 previewContainer.classList.add('active');
