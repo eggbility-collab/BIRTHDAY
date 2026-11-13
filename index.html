@@ -60,6 +60,10 @@
         @keyframes curtainSequence { 0% { transform: translateY(0); } 27.27% { transform: translateY(200vh); } 72.72% { transform: translateY(200vh); } 100% { transform: translateY(0); } }
         #final-scene { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 9998; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.1s ease, visibility 0s 0.1s; display: flex; flex-direction: column; align-items: center; padding: 20px 15px; overflow-y: auto; overflow-x: hidden; background-color: var(--kraft); background-image: radial-gradient(var(--kraft-dark) 1px, transparent 1px), radial-gradient(var(--kraft-dark) 1px, transparent 1px); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
         .show-final-scene #final-scene { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 0.1s ease; }
+        .back-to-hub-btn { position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: calc(20px + env(safe-area-inset-left, 0px)); min-height: 44px; background: var(--vintage-paper); color: var(--main-red); border: 2px solid var(--accent-gold); padding: 10px 20px; border-radius: 30px; font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; z-index: 2147483000; box-shadow: 0 4px 12px rgba(56, 20, 19, 0.45); display: none; align-items: center; gap: 8px; transition: transform 0.15s ease; }
+        body.came-from-hub .back-to-hub-btn { display: flex; }
+        .back-to-hub-btn:hover { background: #fff; transform: translateX(-2px); }
+        .back-to-hub-btn:active { transform: translateY(2px) scale(0.97); }
         .scrap-flower { position: absolute; pointer-events: none; z-index: 1; filter: drop-shadow(3px 5px 4px rgba(0,0,0,0.3)) sepia(0.4) contrast(1.1); opacity: 0.85; }
         .flower-1 { top: 5%; left: -20px; width: 150px; transform: rotate(-15deg); }
         .flower-2 { top: 25%; right: -30px; width: 120px; transform: rotate(25deg); }
@@ -171,6 +175,7 @@
         #camera-modal.active .camera-ui { transform: none; }
         .viewfinder { flex: 1; position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         #camera-video { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.3) contrast(1.1) brightness(1.05) saturate(0.8) hue-rotate(-5deg); transition: filter 0.3s ease; }
+        #camera-video.mirrored { transform: scaleX(-1); }
         .grain-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"); opacity: 0.4; z-index: 2; }
         .vignette-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.6) 100%); z-index: 3; }
         .camera-controls { height: 120px; background: var(--main-red); display: flex; flex-direction: column; align-items: center; justify-content: center; border-top: 2px solid var(--accent-gold); z-index: 4; padding: 0 10px; }
@@ -209,7 +214,10 @@
         .crumpled-paper-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #732624; background-image: radial-gradient(ellipse at 50% 38%, rgba(217, 180, 109, 0.10) 0%, transparent 62%), radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(56, 20, 19, 0.5) 100%); z-index: 1; opacity: 0; }
         #letter-scene.settled .crumpled-paper-bg { opacity: 1; }
         .letter-paper-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--letter-paper); z-index: 2; transform-origin: 0 0; opacity: 0; will-change: transform, clip-path, opacity; }
-        .letter-content-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; padding: calc(86px + env(safe-area-inset-top, 0px)) max(26px, calc((100% - 640px) / 2)) calc(56px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scrollbar-width: none; opacity: 0; visibility: hidden; text-shadow: 0 1px 2px rgba(56, 20, 19, 0.55); }
+        #envelope-flap { backface-visibility: hidden; will-change: transform; }
+        #envelope-paper { will-change: transform; }
+        #wax-seal { backface-visibility: hidden; }
+        .letter-content-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; padding: calc(86px + env(safe-area-inset-top, 0px)) max(26px, calc((100% - 640px) / 2)) calc(48px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: auto; touch-action: pan-y; scrollbar-width: none; opacity: 0; visibility: hidden; text-shadow: 0 1px 2px rgba(56, 20, 19, 0.55); }
         .letter-content-wrapper::-webkit-scrollbar { display: none; }
         #letter-scene.reading .letter-content-wrapper { opacity: 1; visibility: visible; }
         .back-to-collection-btn { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); min-height: 44px; background: var(--page-bg); color: var(--main-red); border: 2px solid var(--accent-gold); padding: 10px 20px; border-radius: 30px; font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; z-index: 100; box-shadow: 0 4px 12px rgba(56, 20, 19, 0.45); display: flex; align-items: center; gap: 8px; transition: transform 0.15s ease; }
@@ -290,6 +298,7 @@
     </div>
     <div id="transition-overlay"><div id="pixel-curtain"></div></div>
     <div id="final-scene">
+        <button class="back-to-hub-btn" id="memories-back-btn" type="button" aria-label="Back to collection">← Back</button>
         <svg class="scrap-flower flower-1" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
         <svg class="scrap-flower flower-2" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
         <svg class="scrap-flower flower-3" viewBox="0 0 100 100"><path d="M50 15 C60 15 65 25 50 40 C35 25 40 15 50 15 Z" fill="#F2D46F"/><path d="M85 50 C85 60 75 65 60 50 C75 35 85 40 85 50 Z" fill="#F2D46F"/><path d="M50 85 C40 85 35 75 50 60 C65 75 60 85 50 85 Z" fill="#F2D46F"/><path d="M15 50 C15 40 25 35 40 50 C25 65 15 60 15 50 Z" fill="#F2D46F"/><path d="M75 25 C80 30 75 45 55 50 C50 30 65 20 75 25 Z" fill="#E6C875"/><path d="M75 75 C70 80 55 75 50 55 C70 50 80 65 75 75 Z" fill="#E6C875"/><path d="M25 75 C20 70 25 55 45 50 C50 70 35 80 25 75 Z" fill="#E6C875"/><path d="M25 25 C30 20 45 25 50 45 C30 50 20 35 25 25 Z" fill="#E6C875"/><circle cx="50" cy="50" r="15" fill="#C19A6B"/><circle cx="50" cy="50" r="10" fill="#D2B48C"/></svg>
@@ -1268,7 +1277,7 @@
                 cameraError.style.display = 'block'; cameraControls.style.display = 'none';
                 const retry = $('camera-retry'); if (retry) retry.addEventListener('click', startCamera);
             }
-            function stopCamera() { startToken++; if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; } videoElement.srcObject = null; }
+            function stopCamera() { startToken++; if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; } videoElement.srcObject = null; videoElement.classList.remove('mirrored'); }
             async function startCamera() {
                 const token = ++startToken;
                 if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; }
@@ -1278,6 +1287,7 @@
                     const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: facingMode } }, audio: false });
                     if (token !== startToken || !cameraModal.classList.contains('active')) { s.getTracks().forEach((t) => t.stop()); return; }
                     stream = s; videoElement.srcObject = s; videoElement.style.filter = currentFilter;
+                    videoElement.classList.toggle('mirrored', facingMode === 'user');
                     cameraControls.style.display = 'flex';
                     try { await videoElement.play(); } catch (e) {}
                     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -1350,7 +1360,7 @@
                 const vw = window.innerWidth, vh = window.innerHeight;
                 shutter.classList.add('on'); await wait(80);
                 stage3.classList.remove('show');
-                document.body.classList.add('show-final-scene');
+                document.body.classList.add('show-final-scene', 'came-from-hub');
                 finalScene.style.zIndex = '9999999997';
                 polaroids.forEach((p) => p.classList.add('mem-hide'));
                 const dark = document.createElement('div');
@@ -1379,6 +1389,22 @@
                 window.__s3busy = false;
             }
             galleryBtn.addEventListener('click', openMemories);
+
+            const memoriesBackBtn = document.getElementById('memories-back-btn');
+            if (memoriesBackBtn) {
+                memoriesBackBtn.addEventListener('click', async () => {
+                    if (window.__s3busy) return;
+                    window.__s3busy = true;
+                    shutter.classList.add('on');
+                    await wait(100);
+                    document.body.classList.remove('show-final-scene', 'came-from-hub');
+                    finalScene.style.zIndex = '';
+                    stage3.classList.add('show');
+                    await wait(100);
+                    shutter.classList.remove('on');
+                    setTimeout(() => { window.__s3busy = false; }, 300);
+                });
+            }
         })();
 
         // ================= MOBILE SIMULATOR =================
