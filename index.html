@@ -457,7 +457,7 @@
         <div class="phone-frame"><button class="close-sim" id="closeSimBtn">Close X</button><iframe id="sim-iframe" title="Mobile Preview"></iframe></div>
     </div>
     <script>
-        // ================= HEART ANIMATION (unchanged) =================
+        // ================= HEART ANIMATION =================
         const container = document.getElementById('heart-container');
         const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
         const MAX_HEARTS = 5; let activeHearts = 0; let spawnInterval;
@@ -490,7 +490,7 @@
         document.addEventListener('visibilitychange', () => { if (document.hidden) stopSpawning(); else startSpawning(); });
         startSpawning();
 
-        // ================= TRANSITION & ROPE PHYSICS (unchanged) =================
+        // ================= TRANSITION & ROPE PHYSICS =================
         const startBtn = document.getElementById('startBtn');
         const redRopeContainer = document.getElementById('red-rope-container');
         const redCircle = document.getElementById('red-circle');
@@ -590,14 +590,14 @@
         });
         arrowTrigger.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); arrowTrigger.click(); } });
 
-        // ================= TEXT-FLOWER CANVAS GARDEN (TYPEWRITER) =================
+        // ================= TEXT-FLOWER CANVAS GARDEN =================
         const canvas = document.getElementById('flower-canvas');
         const ctx = canvas.getContext('2d');
         const PHRASE = 'i love you jessa ';
         let dpr = 1;
         let canvasAnimRAF = 0;
         let growthStartTime = 0;
-        const GROWTH_DURATION = 11000;
+        const GROWTH_DURATION = 10000;
         const FADE_DISTANCE = 40;
 
         let cachedCanvas = null;
@@ -623,47 +623,19 @@
                        + Math.round(b1+(b2-b1)*t).toString(16).padStart(2,'0');
         }
 
-        function pointInEllipse(px, py, cx, cy, rx, ry, angle) {
-            angle = angle || 0;
-            const cos = Math.cos(-angle), sin = Math.sin(-angle);
-            const dx = px - cx, dy = py - cy;
-            const lx = dx * cos - dy * sin;
-            const ly = dx * sin + dy * cos;
-            return (lx*lx)/(rx*rx) + (ly*ly)/(ry*ry) <= 1;
-        }
-
-        function normalizeRot(rot) {
-            while (rot > Math.PI / 2) rot -= Math.PI;
-            while (rot < -Math.PI / 2) rot += Math.PI;
-            return rot;
-        }
-
-        // 18 flowers — 3 roses, 2 peonies, 3 lilies, 3 tulips, 4 daisies, 3 lily-of-the-valleys
+        // 11 flowers: 1 rose, 2 lilies, 1 peony, 2 tulips, 2 daisies, 3 lily-of-the-valleys
         const FLOWERS = [
-            // ROSES (3)
-            { type: 'rose',  baseX: 0.50, baseY: 0.96, topX: 0.50, topY: 0.22, scale: 1.05 },
-            { type: 'rose',  baseX: 0.40, baseY: 0.96, topX: 0.30, topY: 0.34, scale: 0.72 },
-            { type: 'rose',  baseX: 0.60, baseY: 0.96, topX: 0.70, topY: 0.32, scale: 0.78 },
-            // PEONIES (2)
-            { type: 'peony', baseX: 0.44, baseY: 0.96, topX: 0.38, topY: 0.46, scale: 0.82 },
-            { type: 'peony', baseX: 0.56, baseY: 0.96, topX: 0.62, topY: 0.44, scale: 0.78 },
-            // LILIES (3)
-            { type: 'lily',  baseX: 0.46, baseY: 0.96, topX: 0.22, topY: 0.28, scale: 0.85 },
-            { type: 'lily',  baseX: 0.54, baseY: 0.96, topX: 0.78, topY: 0.28, scale: 0.85 },
-            { type: 'lily',  baseX: 0.52, baseY: 0.96, topX: 0.54, topY: 0.14, scale: 0.72 },
-            // TULIPS (3)
-            { type: 'tulip', baseX: 0.34, baseY: 0.96, topX: 0.18, topY: 0.52, scale: 0.72, variant: 'pink' },
-            { type: 'tulip', baseX: 0.66, baseY: 0.96, topX: 0.82, topY: 0.50, scale: 0.72, variant: 'peach' },
-            { type: 'tulip', baseX: 0.44, baseY: 0.96, topX: 0.32, topY: 0.60, scale: 0.65, variant: 'red' },
-            // DAISIES (4)
-            { type: 'daisy', baseX: 0.28, baseY: 0.96, topX: 0.14, topY: 0.68, scale: 0.58 },
-            { type: 'daisy', baseX: 0.72, baseY: 0.96, topX: 0.86, topY: 0.66, scale: 0.58 },
-            { type: 'daisy', baseX: 0.40, baseY: 0.96, topX: 0.28, topY: 0.76, scale: 0.52 },
-            { type: 'daisy', baseX: 0.60, baseY: 0.96, topX: 0.72, topY: 0.74, scale: 0.52 },
-            // LILY OF THE VALLEYS (3)
-            { type: 'lotv',  baseX: 0.24, baseY: 0.96, topX: 0.08, topY: 0.44, scale: 1.00 },
-            { type: 'lotv',  baseX: 0.76, baseY: 0.96, topX: 0.92, topY: 0.42, scale: 0.90 },
-            { type: 'lotv',  baseX: 0.50, baseY: 0.96, topX: 0.50, topY: 0.58, scale: 0.75 },
+            { type: 'rose',  baseX: 0.50, baseY: 0.96, topX: 0.50, topY: 0.24, scale: 1.15 },
+            { type: 'lily',  baseX: 0.40, baseY: 0.96, topX: 0.28, topY: 0.32, scale: 0.90 },
+            { type: 'lily',  baseX: 0.60, baseY: 0.96, topX: 0.72, topY: 0.32, scale: 0.90 },
+            { type: 'peony', baseX: 0.50, baseY: 0.96, topX: 0.55, topY: 0.44, scale: 0.95 },
+            { type: 'tulip', baseX: 0.36, baseY: 0.96, topX: 0.24, topY: 0.52, scale: 0.85, variant: 'pink' },
+            { type: 'tulip', baseX: 0.64, baseY: 0.96, topX: 0.76, topY: 0.52, scale: 0.85, variant: 'peach' },
+            { type: 'daisy', baseX: 0.30, baseY: 0.96, topX: 0.14, topY: 0.70, scale: 0.75 },
+            { type: 'daisy', baseX: 0.70, baseY: 0.96, topX: 0.86, topY: 0.70, scale: 0.75 },
+            { type: 'lotv',  baseX: 0.22, baseY: 0.96, topX: 0.08, topY: 0.44, scale: 1.00 },
+            { type: 'lotv',  baseX: 0.78, baseY: 0.96, topX: 0.92, topY: 0.44, scale: 1.00 },
+            { type: 'lotv',  baseX: 0.50, baseY: 0.96, topX: 0.50, topY: 0.62, scale: 0.85 },
         ];
 
         let _phraseCursor = 0;
@@ -684,171 +656,202 @@
             });
         }
 
+        // Stroke a bezier curve with text characters - creates OUTLINE effect
+        function strokeBezierWithText(glyphs, p0, p1, p2, p3, color, fontSize, charSpacing) {
+            charSpacing = charSpacing || fontSize * 1.5;
+            const approxLen = Math.hypot(p1.x-p0.x, p1.y-p0.y)
+                            + Math.hypot(p2.x-p1.x, p2.y-p1.y)
+                            + Math.hypot(p3.x-p2.x, p3.y-p2.y);
+            const steps = Math.max(4, Math.floor(approxLen / charSpacing));
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const mt = 1 - t;
+                const x = mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x;
+                const y = mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y;
+                addGlyph(glyphs, x, y, nextChar(), color, fontSize, 0);
+            }
+        }
+
+        // Draw a petal as an OUTLINE (two bezier edges meeting at a pointed tip)
+        function drawPetalOutline(glyphs, baseX, baseY, tipX, tipY, width, color1, color2, fontSize) {
+            const dx = tipX - baseX, dy = tipY - baseY;
+            const len = Math.hypot(dx, dy) || 1;
+            const px = -dy / len, py = dx / len;
+            const midX = baseX + dx * 0.5;
+            const midY = baseY + dy * 0.5;
+            strokeBezierWithText(glyphs,
+                { x: baseX, y: baseY },
+                { x: baseX + dx * 0.25 + px * width * 0.35, y: baseY + dy * 0.25 + py * width * 0.35 },
+                { x: midX + px * width * 0.95, y: midY + py * width * 0.95 },
+                { x: tipX, y: tipY },
+                color1, fontSize);
+            strokeBezierWithText(glyphs,
+                { x: baseX, y: baseY },
+                { x: baseX + dx * 0.25 - px * width * 0.35, y: baseY + dy * 0.25 - py * width * 0.35 },
+                { x: midX - px * width * 0.95, y: midY - py * width * 0.95 },
+                { x: tipX, y: tipY },
+                color2, fontSize);
+        }
+
         function buildStemGlyphs(glyphs, bx, by, tx, ty, f) {
-            const stemW = 2.8 * f.scale;
+            const stemW = 2.2 * f.scale;
             const curveDir = f.topX > 0.5 ? 1 : -1;
-            const curveAmt = 25 * f.scale * curveDir;
-            const rowStep = 8 * f.scale;
+            const curveAmt = 22 * f.scale * curveDir;
+            const rowStep = 12 * f.scale;
             for (let y = by; y >= ty; y -= rowStep) {
                 const t = (by - y) / Math.max(1, (by - ty));
                 const curveOff = Math.sin(t * Math.PI) * curveAmt;
                 const cx = bx + (tx - bx) * t + curveOff;
-                for (let x = cx - stemW; x <= cx + stemW; x += 4.5 * f.scale) {
-                    addGlyph(glyphs, x, y, nextChar(), lerpColor('#4a7030', '#2f5d3a', t), 9 * f.scale);
+                for (let x = cx - stemW; x <= cx + stemW; x += 7 * f.scale) {
+                    addGlyph(glyphs, x, y, nextChar(), lerpColor('#4a7030', '#2f5d3a', t), 9 * f.scale, 0);
                 }
             }
         }
 
         function buildLeafGlyphs(glyphs, bx, by, tx, ty, f) {
             const leaves = [
-                { at: 0.40, side: -1, size: 1.0 },
-                { at: 0.62, side: 1, size: 0.85 },
+                { at: 0.45, side: -1, size: 1.0 },
+                { at: 0.65, side: 1, size: 0.85 },
             ];
             for (const leaf of leaves) {
                 const t = leaf.at;
                 const curveDir = f.topX > 0.5 ? 1 : -1;
-                const curveOff = Math.sin(t * Math.PI) * 25 * f.scale * curveDir;
+                const curveOff = Math.sin(t * Math.PI) * 22 * f.scale * curveDir;
                 const lx = bx + (tx - bx) * t + curveOff;
                 const ly = by + (ty - by) * t;
-                const angle = leaf.side * 0.8;
-                const lw = 32 * f.scale * leaf.size;
-                const lh = 12 * f.scale * leaf.size;
-                const ecx = lx + Math.cos(angle) * lw / 2;
-                const ecy = ly + Math.sin(angle) * lw / 2;
-                const step = 4.5;
-                const rowStep = 9;
-                for (let y = ecy - lh; y <= ecy + lh; y += rowStep) {
-                    for (let x = ecx - lw; x <= ecx + lw; x += step) {
-                        if (pointInEllipse(x, y, ecx, ecy, lw/2, lh/2, angle)) {
-                            const dist = Math.hypot(x - ecx, y - ecy) / Math.max(lw, lh);
-                            addGlyph(glyphs, x, y, nextChar(), lerpColor('#5c8a3c', '#2f5d3a', dist), 8 * f.scale, angle);
-                        }
-                    }
-                }
+                const angle = leaf.side * 0.85;
+                const lw = 30 * f.scale * leaf.size;
+                const lh = 10 * f.scale * leaf.size;
+                const tipX = lx + Math.cos(angle) * lw;
+                const tipY = ly + Math.sin(angle) * lw;
+                const perpX = -Math.sin(angle) * lh;
+                const perpY = Math.cos(angle) * lh;
+                const midX = lx + (tipX - lx) * 0.5;
+                const midY = ly + (tipY - ly) * 0.5;
+                strokeBezierWithText(glyphs,
+                    { x: lx, y: ly },
+                    { x: lx + Math.cos(angle) * lw * 0.25 + perpX * 0.5, y: ly + Math.sin(angle) * lw * 0.25 + perpY * 0.5 },
+                    { x: midX + perpX, y: midY + perpY },
+                    { x: tipX, y: tipY },
+                    '#5c8a3c', 8 * f.scale, 10 * f.scale);
+                strokeBezierWithText(glyphs,
+                    { x: lx, y: ly },
+                    { x: lx + Math.cos(angle) * lw * 0.25 - perpX * 0.5, y: ly + Math.sin(angle) * lw * 0.25 - perpY * 0.5 },
+                    { x: midX - perpX, y: midY - perpY },
+                    { x: tipX, y: tipY },
+                    '#2f5d3a', 8 * f.scale, 10 * f.scale);
             }
         }
 
+        function buildBudGlyphs(glyphs, cx, cy, f) {
+            const r = 10 * f.scale;
+            for (let k = 0; k < 8; k++) {
+                const a = (k / 8) * Math.PI * 2;
+                addGlyph(glyphs, cx + Math.cos(a) * r, cy + Math.sin(a) * r, nextChar(), lerpColor('#fef3c7', '#d4a574', k / 8), 8 * f.scale, 0);
+            }
+        }
+
+        // ROSE - concentric arc layers at decreasing radii (spiral)
         function buildRosePetals(glyphs, cx, cy, f) {
-            const baseR = 65 * f.scale;
-            const rings = [
-                { count: 5, radius: baseR * 0.85, pw: baseR * 0.85, ph: baseR * 1.00, rot: 0, colorA: '#e11d48', colorB: '#7f1d1d' },
-                { count: 4, radius: baseR * 0.55, pw: baseR * 0.65, ph: baseR * 0.80, rot: 0.6, colorA: '#be123c', colorB: '#881337' },
-                { count: 3, radius: baseR * 0.25, pw: baseR * 0.40, ph: baseR * 0.55, rot: 0.9, colorA: '#881337', colorB: '#4c0519' },
+            const baseR = 62 * f.scale;
+            const fontSize = 9 * f.scale;
+            const layers = [
+                { r: baseR * 1.00, petals: 5, color: '#e11d48', offset: 0 },
+                { r: baseR * 0.75, petals: 4, color: '#be123c', offset: 0.35 },
+                { r: baseR * 0.52, petals: 3, color: '#881337', offset: 0.70 },
+                { r: baseR * 0.28, petals: 2, color: '#4c0519', offset: 1.05 },
             ];
-            for (const ring of rings) {
-                for (let i = 0; i < ring.count; i++) {
-                    const angle = (i / ring.count) * Math.PI * 2 + ring.rot;
-                    const px = cx + Math.cos(angle) * ring.radius;
-                    const py = cy + Math.sin(angle) * ring.radius;
-                    const petalRot = angle + Math.PI / 2;
-                    const textRot = normalizeRot(petalRot);
-                    const step = 4.5;
-                    const rowStep = 10;
-                    for (let ly = -ring.ph; ly <= ring.ph; ly += rowStep) {
-                        for (let lx = -ring.pw; lx <= ring.pw; lx += step) {
-                            const cos = Math.cos(petalRot), sin = Math.sin(petalRot);
-                            const wx = px + lx * cos - ly * sin;
-                            const wy = py + lx * sin + ly * cos;
-                            if (pointInEllipse(wx, wy, px, py, ring.pw, ring.ph, petalRot)) {
-                                const dist = Math.hypot(lx, ly) / ring.ph;
-                                addGlyph(glyphs, wx, wy, nextChar(), lerpColor(ring.colorA, ring.colorB, Math.min(1, dist)), 10 * f.scale, textRot);
-                            }
-                        }
+            for (const layer of layers) {
+                const petalSweep = (Math.PI * 2) / layer.petals;
+                const gap = petalSweep * 0.18;
+                for (let p = 0; p < layer.petals; p++) {
+                    const startA = layer.offset + p * petalSweep + gap / 2;
+                    const endA = layer.offset + (p + 1) * petalSweep - gap / 2;
+                    const arcLen = (endA - startA) * layer.r;
+                    const steps = Math.max(5, Math.floor(arcLen / (fontSize * 1.3)));
+                    for (let i = 0; i <= steps; i++) {
+                        const t = i / steps;
+                        const a = startA + (endA - startA) * t;
+                        const r = layer.r * (1 - t * 0.08);
+                        const x = cx + Math.cos(a) * r;
+                        const y = cy + Math.sin(a) * r;
+                        addGlyph(glyphs, x, y, nextChar(), layer.color, fontSize, 0);
                     }
                 }
             }
         }
 
+        // PEONY - 4 layers of arc petals, pink palette
         function buildPeonyPetals(glyphs, cx, cy, f) {
-            const baseR = 60 * f.scale;
-            const rings = [
-                { count: 7, radius: baseR * 0.80, pw: baseR * 0.70, ph: baseR * 0.85, rot: 0, colorA: '#fbcfe8', colorB: '#f9a8d4' },
-                { count: 6, radius: baseR * 0.55, pw: baseR * 0.55, ph: baseR * 0.65, rot: 0.5, colorA: '#f9a8d4', colorB: '#ec4899' },
-                { count: 5, radius: baseR * 0.30, pw: baseR * 0.35, ph: baseR * 0.45, rot: 0.9, colorA: '#ec4899', colorB: '#be185d' },
+            const baseR = 58 * f.scale;
+            const fontSize = 8.5 * f.scale;
+            const layers = [
+                { r: baseR * 1.00, petals: 7, color: '#fbcfe8', offset: 0 },
+                { r: baseR * 0.78, petals: 6, color: '#f9a8d4', offset: 0.25 },
+                { r: baseR * 0.55, petals: 5, color: '#ec4899', offset: 0.55 },
+                { r: baseR * 0.30, petals: 3, color: '#be185d', offset: 0.85 },
             ];
-            for (const ring of rings) {
-                for (let i = 0; i < ring.count; i++) {
-                    const angle = (i / ring.count) * Math.PI * 2 + ring.rot;
-                    const px = cx + Math.cos(angle) * ring.radius;
-                    const py = cy + Math.sin(angle) * ring.radius;
-                    const petalRot = angle + Math.PI / 2;
-                    const textRot = normalizeRot(petalRot);
-                    const step = 4.5;
-                    const rowStep = 9;
-                    for (let ly = -ring.ph; ly <= ring.ph; ly += rowStep) {
-                        for (let lx = -ring.pw; lx <= ring.pw; lx += step) {
-                            const cos = Math.cos(petalRot), sin = Math.sin(petalRot);
-                            const wx = px + lx * cos - ly * sin;
-                            const wy = py + lx * sin + ly * cos;
-                            if (pointInEllipse(wx, wy, px, py, ring.pw, ring.ph, petalRot)) {
-                                const dist = Math.hypot(lx, ly) / ring.ph;
-                                addGlyph(glyphs, wx, wy, nextChar(), lerpColor(ring.colorA, ring.colorB, Math.min(1, dist)), 8.5 * f.scale, textRot);
-                            }
-                        }
+            for (const layer of layers) {
+                const petalSweep = (Math.PI * 2) / layer.petals;
+                const gap = petalSweep * 0.16;
+                for (let p = 0; p < layer.petals; p++) {
+                    const startA = layer.offset + p * petalSweep + gap / 2;
+                    const endA = layer.offset + (p + 1) * petalSweep - gap / 2;
+                    const arcLen = (endA - startA) * layer.r;
+                    const steps = Math.max(5, Math.floor(arcLen / (fontSize * 1.3)));
+                    for (let i = 0; i <= steps; i++) {
+                        const t = i / steps;
+                        const a = startA + (endA - startA) * t;
+                        const r = layer.r * (1 - t * 0.06);
+                        const x = cx + Math.cos(a) * r;
+                        const y = cy + Math.sin(a) * r;
+                        addGlyph(glyphs, x, y, nextChar(), layer.color, fontSize, 0);
                     }
                 }
             }
         }
 
+        // LILY - 6 pointed petal outlines radiating out
         function buildLilyPetals(glyphs, cx, cy, f) {
-            const petalLen = 55 * f.scale, petalW = 15 * f.scale;
+            const petalLen = 55 * f.scale;
+            const petalW = 14 * f.scale;
+            const fontSize = 9 * f.scale;
             for (let i = 0; i < 6; i++) {
-                const petalRot = (i / 6) * Math.PI * 2 - Math.PI / 2;
-                const textRot = normalizeRot(petalRot);
-                const step = 4.5;
-                const rowStep = 10;
-                for (let ly = -petalW; ly <= petalW; ly += rowStep) {
-                    for (let lx = 0; lx <= petalLen; lx += step) {
-                        const cos = Math.cos(petalRot), sin = Math.sin(petalRot);
-                        const wx = cx + lx * cos - ly * sin;
-                        const wy = cy + lx * sin + ly * cos;
-                        const centeredX = lx - petalLen * 0.6;
-                        if ((centeredX*centeredX)/((petalLen*0.6)*(petalLen*0.6)) + (ly*ly)/(petalW*petalW) <= 1) {
-                            const t = lx / petalLen;
-                            addGlyph(glyphs, wx, wy, nextChar(), lerpColor('#fff8e7', '#d4a574', t), 9 * f.scale, textRot);
-                        }
-                    }
-                }
+                const angle = -Math.PI / 2 + (i / 6) * Math.PI * 2;
+                const tipX = cx + Math.cos(angle) * petalLen;
+                const tipY = cy + Math.sin(angle) * petalLen;
+                drawPetalOutline(glyphs, cx, cy, tipX, tipY, petalW, '#fff8e7', '#d4a574', fontSize);
             }
-            for (let y = cy - 5; y <= cy + 5; y += 5) {
-                for (let x = cx - 5; x <= cx + 5; x += 4) {
-                    if (pointInEllipse(x, y, cx, cy, 5 * f.scale, 5 * f.scale)) {
-                        addGlyph(glyphs, x, y, nextChar(), '#F2D46F', 8 * f.scale);
-                    }
-                }
+            for (let k = 0; k < 5; k++) {
+                const a = (k / 5) * Math.PI * 2;
+                addGlyph(glyphs, cx + Math.cos(a) * 4 * f.scale, cy + Math.sin(a) * 4 * f.scale, nextChar(), '#F2D46F', fontSize, 0);
             }
         }
 
+        // DAISY - 12 thin petal outlines + center cluster
         function buildDaisyPetals(glyphs, cx, cy, f) {
-            const petalLen = 32 * f.scale, petalW = 9 * f.scale;
+            const petalLen = 34 * f.scale;
+            const petalW = 5 * f.scale;
+            const fontSize = 8 * f.scale;
             const petalColors = ['#F2D46F', '#fb7185', '#e5e7eb'];
             const petalColor = petalColors[Math.floor((cx + cy) % 3)] || '#F2D46F';
-            for (let i = 0; i < 8; i++) {
-                const petalRot = (i / 8) * Math.PI * 2;
-                const textRot = normalizeRot(petalRot);
-                const step = 4;
-                const rowStep = 8;
-                for (let ly = -petalW; ly <= petalW; ly += rowStep) {
-                    for (let lx = 0; lx <= petalLen; lx += step) {
-                        const cos = Math.cos(petalRot), sin = Math.sin(petalRot);
-                        const wx = cx + lx * cos - ly * sin;
-                        const wy = cy + lx * sin + ly * cos;
-                        const centeredX = lx - petalLen * 0.6;
-                        if ((centeredX*centeredX)/((petalLen*0.6)*(petalLen*0.6)) + (ly*ly)/(petalW*petalW) <= 1) {
-                            addGlyph(glyphs, wx, wy, nextChar(), petalColor, 8 * f.scale, textRot);
-                        }
-                    }
-                }
+            for (let i = 0; i < 12; i++) {
+                const angle = (i / 12) * Math.PI * 2;
+                const tipX = cx + Math.cos(angle) * petalLen;
+                const tipY = cy + Math.sin(angle) * petalLen;
+                drawPetalOutline(glyphs, cx, cy, tipX, tipY, petalW, petalColor, petalColor, fontSize);
             }
-            for (let y = cy - 7; y <= cy + 7; y += 6) {
-                for (let x = cx - 7; x <= cx + 7; x += 4) {
-                    if (pointInEllipse(x, y, cx, cy, 7 * f.scale, 7 * f.scale)) {
-                        addGlyph(glyphs, x, y, nextChar(), '#b45309', 8 * f.scale);
-                    }
+            for (let r = 0; r < 3; r++) {
+                const radius = (2.5 + r * 2.5) * f.scale;
+                const count = 5 + r * 3;
+                for (let k = 0; k < count; k++) {
+                    const a = (k / count) * Math.PI * 2 + r * 0.5;
+                    addGlyph(glyphs, cx + Math.cos(a) * radius, cy + Math.sin(a) * radius, nextChar(), '#b45309', fontSize, 0);
                 }
             }
         }
 
+        // TULIP - cup silhouette with curved petals
         function buildTulipPetals(glyphs, cx, cy, f, variant) {
             const palettes = {
                 pink:  { light: '#fbcfe8', dark: '#db2777' },
@@ -856,61 +859,76 @@
                 red:   { light: '#fecaca', dark: '#dc2626' },
             };
             const pal = palettes[variant] || palettes.pink;
-            const pw = 14 * f.scale;
-            const ph = 45 * f.scale;
-            const petals = [
-                { px: cx - 10 * f.scale, py: cy + 6 * f.scale, rot: -0.32 },
-                { px: cx,                py: cy,               rot: 0     },
-                { px: cx + 10 * f.scale, py: cy + 6 * f.scale, rot: 0.32  },
-            ];
-            for (const p of petals) {
-                const textRot = normalizeRot(p.rot);
-                const step = 4.5;
-                const rowStep = 9;
-                for (let ly = -ph; ly <= ph; ly += rowStep) {
-                    for (let lx = -pw; lx <= pw; lx += step) {
-                        const cos = Math.cos(p.rot), sin = Math.sin(p.rot);
-                        const wx = p.px + lx * cos - ly * sin;
-                        const wy = p.py + lx * sin + ly * cos;
-                        if (pointInEllipse(wx, wy, p.px, p.py, pw, ph, p.rot)) {
-                            const t = (ly + ph) / (ph * 2);
-                            addGlyph(glyphs, wx, wy, nextChar(), lerpColor(pal.light, pal.dark, t), 8 * f.scale, textRot);
-                        }
-                    }
-                }
-            }
+            const fontSize = 9 * f.scale;
+            const cupH = 52 * f.scale;
+            const cupW = 20 * f.scale;
+            const baseY = cy + cupH * 0.35;
+            const topY = cy - cupH * 0.65;
+
+            // Left outer edge
+            strokeBezierWithText(glyphs,
+                { x: cx - cupW * 0.2, y: baseY },
+                { x: cx - cupW * 1.3, y: cy + cupH * 0.1 },
+                { x: cx - cupW * 1.2, y: cy - cupH * 0.4 },
+                { x: cx - cupW * 0.5, y: topY },
+                pal.dark, fontSize);
+            // Left inner fold
+            strokeBezierWithText(glyphs,
+                { x: cx - cupW * 0.2, y: baseY },
+                { x: cx - cupW * 0.5, y: cy },
+                { x: cx - cupW * 0.35, y: topY + cupH * 0.15 },
+                { x: cx - cupW * 0.05, y: topY + cupH * 0.08 },
+                pal.light, fontSize);
+
+            // Right outer edge
+            strokeBezierWithText(glyphs,
+                { x: cx + cupW * 0.2, y: baseY },
+                { x: cx + cupW * 1.3, y: cy + cupH * 0.1 },
+                { x: cx + cupW * 1.2, y: cy - cupH * 0.4 },
+                { x: cx + cupW * 0.5, y: topY },
+                pal.dark, fontSize);
+            // Right inner fold
+            strokeBezierWithText(glyphs,
+                { x: cx + cupW * 0.2, y: baseY },
+                { x: cx + cupW * 0.5, y: cy },
+                { x: cx + cupW * 0.35, y: topY + cupH * 0.15 },
+                { x: cx + cupW * 0.05, y: topY + cupH * 0.08 },
+                pal.light, fontSize);
+
+            // Center back petal - the tulip's classic top notch
+            strokeBezierWithText(glyphs,
+                { x: cx - cupW * 0.05, y: baseY },
+                { x: cx - cupW * 0.3, y: cy - cupH * 0.15 },
+                { x: cx - cupW * 0.15, y: topY + cupH * 0.12 },
+                { x: cx, y: topY - cupH * 0.05 },
+                pal.light, fontSize);
+            strokeBezierWithText(glyphs,
+                { x: cx + cupW * 0.05, y: baseY },
+                { x: cx + cupW * 0.3, y: cy - cupH * 0.15 },
+                { x: cx + cupW * 0.15, y: topY + cupH * 0.12 },
+                { x: cx, y: topY - cupH * 0.05 },
+                pal.light, fontSize);
         }
 
-        function buildBudGlyphs(glyphs, cx, cy, f) {
-            const r = 12 * f.scale;
-            for (let y = cy - r*1.2; y <= cy + r*1.2; y += 8) {
-                for (let x = cx - r*0.8; x <= cx + r*0.8; x += 4) {
-                    if (pointInEllipse(x, y, cx, cy, r*0.8, r*1.2)) {
-                        const t = (y - (cy - r*1.2)) / (r*2.4);
-                        addGlyph(glyphs, x, y, nextChar(), lerpColor('#fef3c7', '#d4a574', t), 8 * f.scale);
-                    }
-                }
-            }
-        }
-
+        // LOTV - arching stalk + hanging bell flowers
         function buildLOTV(glyphs, bx, by, tx, ty, f) {
             for (let li = 0; li < 2; li++) {
                 const side = li === 0 ? -1 : 1;
                 const leafAngle = side * 0.35;
-                const leafLen = 95 * f.scale;
-                const leafW = 22 * f.scale;
+                const leafLen = 90 * f.scale;
+                const leafW = 20 * f.scale;
                 const leafBaseX = bx + side * 8 * f.scale;
                 const leafBaseY = by - 5;
                 const leafTipX = leafBaseX + Math.sin(leafAngle) * leafLen;
                 const leafTipY = leafBaseY - Math.cos(leafAngle) * leafLen;
                 const perpX = Math.cos(leafAngle);
                 const perpY = Math.sin(leafAngle);
-                for (let t = 0; t <= 1; t += 0.025) {
+                for (let t = 0; t <= 1; t += 0.04) {
                     const px = leafBaseX + (leafTipX - leafBaseX) * t;
                     const py = leafBaseY + (leafTipY - leafBaseY) * t;
                     const width = leafW * Math.sin(t * Math.PI) * 0.5;
-                    for (let d = -width; d <= width; d += 4.5) {
-                        addGlyph(glyphs, px + perpX * d, py + perpY * d, nextChar(), lerpColor('#5c8a3c', '#2f5d3a', t), 8 * f.scale, leafAngle);
+                    for (let d = -width; d <= width; d += 6) {
+                        addGlyph(glyphs, px + perpX * d, py + perpY * d, nextChar(), lerpColor('#5c8a3c', '#2f5d3a', t), 8 * f.scale, 0);
                     }
                 }
             }
@@ -922,36 +940,34 @@
                 const y = (1-t)*(1-t)*by + 2*(1-t)*t*ctrlY + t*t*ty;
                 return { x, y };
             };
-            const stalkW = 2.4 * f.scale;
-            for (let t = 0; t <= 1; t += 0.012) {
+            const stalkW = 2.2 * f.scale;
+            for (let t = 0; t <= 1; t += 0.015) {
                 const pt = bezierPoint(t);
-                for (let d = -stalkW; d <= stalkW; d += 2.8 * f.scale) {
-                    addGlyph(glyphs, pt.x + d, pt.y, nextChar(), lerpColor('#4a7030', '#5c8a3c', t), 7 * f.scale);
+                for (let d = -stalkW; d <= stalkW; d += 3.5 * f.scale) {
+                    addGlyph(glyphs, pt.x + d, pt.y, nextChar(), lerpColor('#4a7030', '#5c8a3c', t), 7 * f.scale, 0);
                 }
             }
 
-            const bellCount = 7;
+            const bellCount = 6;
             for (let i = 0; i < bellCount; i++) {
                 const t = 0.55 + (i / (bellCount - 1)) * 0.42;
                 const pt = bezierPoint(t);
-                const sideOffset = (i % 2 === 0 ? -1 : 1) * 3 * f.scale;
+                const sideOffset = (i % 2 === 0 ? -1 : 1) * 4 * f.scale;
                 const bellX = pt.x + sideOffset;
-                const pedicelLen = 8 * f.scale;
+                const pedicelLen = 7 * f.scale;
                 const bellY = pt.y + pedicelLen;
-
-                for (let py = pt.y; py <= bellY; py += 4) {
-                    addGlyph(glyphs, pt.x, py, nextChar(), '#7FA070', 6 * f.scale);
+                for (let py = pt.y; py <= bellY; py += 5) {
+                    addGlyph(glyphs, pt.x, py, nextChar(), '#7FA070', 6 * f.scale, 0);
                 }
-
-                const bellH = 13 * f.scale;
-                const bellW = 6 * f.scale;
-                for (let bOffset = 0; bOffset <= bellH; bOffset += 6 * f.scale) {
+                const bellH = 12 * f.scale;
+                const bellW = 5 * f.scale;
+                for (let bOffset = 0; bOffset <= bellH; bOffset += 8 * f.scale) {
                     const y2 = bellY + bOffset;
                     const prog = bOffset / bellH;
                     const width = bellW * (0.4 + 0.6 * prog);
-                    for (let bx2 = -width; bx2 <= width; bx2 += 4 * f.scale) {
+                    for (let bx2 = -width; bx2 <= width; bx2 += 6 * f.scale) {
                         const scallop = prog > 0.85 ? Math.sin(bx2 / width * Math.PI * 3) * 1.5 : 0;
-                        addGlyph(glyphs, bellX + bx2, y2 + scallop, nextChar(), lerpColor('#ffffff', '#d1d5db', prog), 6.5 * f.scale);
+                        addGlyph(glyphs, bellX + bx2, y2 + scallop, nextChar(), lerpColor('#ffffff', '#d1d5db', prog), 6.5 * f.scale, 0);
                     }
                 }
             }
