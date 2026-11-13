@@ -656,7 +656,6 @@
             });
         }
 
-        // Stroke a bezier curve with text characters - creates OUTLINE effect
         function strokeBezierWithText(glyphs, p0, p1, p2, p3, color, fontSize, charSpacing) {
             charSpacing = charSpacing || fontSize * 1.5;
             const approxLen = Math.hypot(p1.x-p0.x, p1.y-p0.y)
@@ -672,7 +671,6 @@
             }
         }
 
-        // Draw a petal as an OUTLINE (two bezier edges meeting at a pointed tip)
         function drawPetalOutline(glyphs, baseX, baseY, tipX, tipY, width, color1, color2, fontSize) {
             const dx = tipX - baseX, dy = tipY - baseY;
             const len = Math.hypot(dx, dy) || 1;
@@ -751,7 +749,6 @@
             }
         }
 
-        // ROSE - concentric arc layers at decreasing radii (spiral)
         function buildRosePetals(glyphs, cx, cy, f) {
             const baseR = 62 * f.scale;
             const fontSize = 9 * f.scale;
@@ -781,7 +778,6 @@
             }
         }
 
-        // PEONY - 4 layers of arc petals, pink palette
         function buildPeonyPetals(glyphs, cx, cy, f) {
             const baseR = 58 * f.scale;
             const fontSize = 8.5 * f.scale;
@@ -811,7 +807,6 @@
             }
         }
 
-        // LILY - 6 pointed petal outlines radiating out
         function buildLilyPetals(glyphs, cx, cy, f) {
             const petalLen = 55 * f.scale;
             const petalW = 14 * f.scale;
@@ -828,7 +823,6 @@
             }
         }
 
-        // DAISY - 12 thin petal outlines + center cluster
         function buildDaisyPetals(glyphs, cx, cy, f) {
             const petalLen = 34 * f.scale;
             const petalW = 5 * f.scale;
@@ -851,7 +845,6 @@
             }
         }
 
-        // TULIP - cup silhouette with curved petals
         function buildTulipPetals(glyphs, cx, cy, f, variant) {
             const palettes = {
                 pink:  { light: '#fbcfe8', dark: '#db2777' },
@@ -865,14 +858,12 @@
             const baseY = cy + cupH * 0.35;
             const topY = cy - cupH * 0.65;
 
-            // Left outer edge
             strokeBezierWithText(glyphs,
                 { x: cx - cupW * 0.2, y: baseY },
                 { x: cx - cupW * 1.3, y: cy + cupH * 0.1 },
                 { x: cx - cupW * 1.2, y: cy - cupH * 0.4 },
                 { x: cx - cupW * 0.5, y: topY },
                 pal.dark, fontSize);
-            // Left inner fold
             strokeBezierWithText(glyphs,
                 { x: cx - cupW * 0.2, y: baseY },
                 { x: cx - cupW * 0.5, y: cy },
@@ -880,14 +871,12 @@
                 { x: cx - cupW * 0.05, y: topY + cupH * 0.08 },
                 pal.light, fontSize);
 
-            // Right outer edge
             strokeBezierWithText(glyphs,
                 { x: cx + cupW * 0.2, y: baseY },
                 { x: cx + cupW * 1.3, y: cy + cupH * 0.1 },
                 { x: cx + cupW * 1.2, y: cy - cupH * 0.4 },
                 { x: cx + cupW * 0.5, y: topY },
                 pal.dark, fontSize);
-            // Right inner fold
             strokeBezierWithText(glyphs,
                 { x: cx + cupW * 0.2, y: baseY },
                 { x: cx + cupW * 0.5, y: cy },
@@ -895,7 +884,6 @@
                 { x: cx + cupW * 0.05, y: topY + cupH * 0.08 },
                 pal.light, fontSize);
 
-            // Center back petal - the tulip's classic top notch
             strokeBezierWithText(glyphs,
                 { x: cx - cupW * 0.05, y: baseY },
                 { x: cx - cupW * 0.3, y: cy - cupH * 0.15 },
@@ -910,7 +898,6 @@
                 pal.light, fontSize);
         }
 
-        // LOTV - arching stalk + hanging bell flowers
         function buildLOTV(glyphs, bx, by, tx, ty, f) {
             for (let li = 0; li < 2; li++) {
                 const side = li === 0 ? -1 : 1;
@@ -1016,9 +1003,12 @@
             cachedCtx.textBaseline = 'top';
         }
 
+        // Each glyph gets a glow bloom in its own color — makes flower silhouettes visible
         function drawGlyphTo(targetCtx, g) {
             targetCtx.fillStyle = g.color;
             targetCtx.font = getFont(g.fontSize);
+            targetCtx.shadowColor = g.color;
+            targetCtx.shadowBlur = Math.max(4, g.fontSize * 0.7);
             if (g.rotation === 0) {
                 targetCtx.fillText(g.char, g.x, g.y);
             } else {
@@ -1028,12 +1018,16 @@
                 targetCtx.fillText(g.char, 0, 0);
                 targetCtx.restore();
             }
+            targetCtx.shadowBlur = 0;
+            targetCtx.shadowColor = 'transparent';
         }
 
         function drawGlyphFading(g) {
             ctx.globalAlpha = g.alpha;
             ctx.fillStyle = g.color;
             ctx.font = getFont(g.fontSize);
+            ctx.shadowColor = g.color;
+            ctx.shadowBlur = Math.max(4, g.fontSize * 0.7);
             if (g.rotation === 0) {
                 ctx.fillText(g.char, g.x, g.y);
             } else {
@@ -1043,6 +1037,8 @@
                 ctx.fillText(g.char, 0, 0);
                 ctx.restore();
             }
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
             ctx.globalAlpha = 1;
         }
 
