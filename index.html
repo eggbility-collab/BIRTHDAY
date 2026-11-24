@@ -384,9 +384,9 @@
     </style>
 </head>
 <body>
-    <!-- BACKGROUND MUSIC (Fallback) -->
+    <!-- BACKGROUND MUSIC (Fixed path to .mp3.mp3) -->
     <audio id="bgMusic" loop>
-        <source src="./assets/music.mp3" type="audio/mpeg">
+        <source src="./assets/music.mp3.mp3" type="audio/mpeg">
     </audio>
     <button id="musicToggle" class="music-btn" aria-label="Toggle background music" style="display: none;">🔇</button>
 
@@ -677,7 +677,7 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
     </div>
 
     <script>
-        // ================= BACKGROUND MUSIC (SMOOTH LOOP) =================
+        // ================= BACKGROUND MUSIC (SMOOTH LOOP with .mp3.mp3 fix) =================
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
         let musicSource = null;
@@ -697,8 +697,7 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
 
             if (!musicSource) {
                 try {
-                    // Fetch and decode for gapless looping
-                    const response = await fetch('./assets/music.mp3');
+                    const response = await fetch('./assets/music.mp3.mp3'); // FIXED PATH
                     if (!response.ok) throw new Error('File not found');
                     const arrayBuffer = await response.arrayBuffer();
                     const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
@@ -711,7 +710,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                     isMusicPlaying = true;
                 } catch (err) {
                     console.warn("Smooth loop failed (CORS/local file issue). Falling back to standard audio.", err);
-                    // Fallback to standard audio element
                     const fallbackAudio = document.getElementById('bgMusic');
                     if (fallbackAudio) {
                         fallbackAudio.volume = 0.4;
@@ -799,7 +797,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
         startBtn.addEventListener('click', () => {
             if (isTransitioning) return; isTransitioning = true; startBtn.disabled = true;
             
-            // Initialize Music on first click
             const musicBtn = document.getElementById('musicToggle');
             if (musicBtn.style.display === 'none') {
                 musicBtn.style.display = 'flex';
@@ -812,7 +809,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                 initMusic();
             }
 
-            // Gift logic
             document.querySelector('.bw-gift-1').style.display = 'none';
             
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -907,9 +903,7 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
 
         arrowTrigger.addEventListener('click', () => {
             if (heartBusy) return; heartBusy = true;
-            
             document.querySelector('.bw-gift-3').style.display = 'none';
-            
             stage3.classList.remove('show');
             heartScene.classList.add('active');
             document.querySelector('.bw-gift-4').style.display = 'flex';
