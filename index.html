@@ -274,6 +274,50 @@
             #return-arrow-svg.drawing #arrow-curve { animation: none; stroke-dashoffset: 0; }
             #return-arrow-svg.drawing #arrow-dot, #return-arrow-svg.drawing #arrow-head { animation: none; opacity: 1; }
         }
+        /* ===== BIRTHDAY ADDITIONS: wishes + gift boxes ===== */
+        #wishesBtn { position: fixed; right: calc(20px + env(safe-area-inset-right, 0px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 10000001; min-height: 44px; padding: 10px 22px; border-radius: 30px; border: 2px solid var(--accent-gold); background: var(--vintage-paper); color: var(--main-red); font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(56,20,19,0.45); opacity: 0; transform: translateY(14px) scale(0.95); pointer-events: none; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22,0.8,0.25,1); }
+        #wishesBtn.bw-visible { opacity: 1; transform: none; pointer-events: auto; }
+        #wishesBtn:hover { background: #fff; transform: translateY(-2px); }
+        #wishesBtn:active { transform: translateY(2px) scale(0.97); }
+        #wishesBtn:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 4px; }
+        #wishesJar { position: fixed; inset: 0; z-index: 2000000000; display: none; align-items: center; justify-content: center; background: rgba(24, 9, 9, 0.82); opacity: 0; transition: opacity 0.3s ease; padding: 20px; }
+        #wishesJar.bw-open { display: flex; }
+        #wishesJar.bw-visible { opacity: 1; }
+        .bw-jar-card { position: relative; width: 100%; max-width: 480px; max-height: 92vh; overflow-y: auto; background: var(--kraft); background-image: radial-gradient(var(--kraft-dark) 1px, transparent 1px), radial-gradient(var(--kraft-dark) 1px, transparent 1px); background-size: 20px 20px; background-position: 0 0, 10px 10px; border-radius: 16px; border: 2px solid var(--accent-gold); padding: 24px 20px 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.55); transform: translateY(12px) scale(0.97); transition: transform 0.4s cubic-bezier(0.22,0.8,0.25,1); }
+        #wishesJar.bw-visible .bw-jar-card { transform: none; }
+        .bw-jar-close { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--main-red); background: var(--surface); color: var(--main-red); font-size: 22px; font-weight: 700; line-height: 1; cursor: pointer; z-index: 10; }
+        .bw-jar-close:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 3px; }
+        .bw-jar-title { font-family: 'Caveat', cursive; font-size: 36px; color: var(--main-red); text-align: center; margin: 4px 0 6px; line-height: 1; }
+        .bw-jar-hint { font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--main-red); text-align: center; margin: 0 0 14px; opacity: 0.75; }
+        .bw-jar-wrap { position: relative; width: 100%; aspect-ratio: 1 / 1.05; max-height: 60vh; display: flex; align-items: flex-end; justify-content: center; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation; outline: none; }
+        .bw-jar-wrap:focus-visible { outline: 3px dashed var(--main-red); outline-offset: 6px; border-radius: 12px; }
+        .bw-jar-svg { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 78%; max-width: 320px; height: auto; filter: drop-shadow(0 10px 14px rgba(0,0,0,0.35)); pointer-events: none; }
+        .bw-roll { position: absolute; width: 34px; height: 16px; border-radius: 10px; background: linear-gradient(180deg, #f4e6c8 0%, #d8b98a 55%, #b08858 100%); box-shadow: inset -3px -2px 4px rgba(120,80,40,0.35), inset 2px 2px 3px rgba(255,240,210,0.65), 0 3px 5px rgba(0,0,0,0.3); border: 1px solid rgba(150,110,70,0.4); transform: rotate(var(--rot, 0deg)); transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22,0.8,0.25,1); z-index: 5; pointer-events: none; }
+        .bw-roll::before, .bw-roll::after { content: ''; position: absolute; top: 50%; width: 7px; height: 7px; background: radial-gradient(circle at 40% 40%, #ffefd0 0%, #c99a5f 70%, #8f6a3a 100%); border-radius: 50%; transform: translateY(-50%); }
+        .bw-roll::before { left: -3px; }
+        .bw-roll::after { right: -3px; }
+        .bw-roll.bw-used { opacity: 0; transform: rotate(var(--rot, 0deg)) scale(0.3); }
+        .bw-floating-paper { position: absolute; left: 50%; bottom: 26%; width: 78%; max-width: 320px; min-height: 32px; transform-origin: center center; background: var(--vintage-paper); background-image: repeating-linear-gradient(transparent 0px, transparent 27px, rgba(114,38,36,0.10) 28px); border: 1px solid #d9c69a; border-radius: 6px; box-shadow: 0 10px 22px rgba(0,0,0,0.4); padding: 18px 20px; font-family: 'Caveat', cursive; font-size: clamp(20px, 5vw, 26px); line-height: 1.45; color: var(--main-red); text-align: center; opacity: 0; pointer-events: none; z-index: 8; overflow-wrap: anywhere; }
+        .bw-floating-paper.bw-show { animation: bwPaperShow 0.7s cubic-bezier(0.22,0.8,0.25,1) forwards; }
+        .bw-floating-paper.bw-hide { animation: bwPaperHide 0.35s ease-in forwards; }
+        @keyframes bwPaperShow { 0% { opacity: 0; transform: translate(-50%, 45%) rotate(-4deg) scale(0.7, 0.15); } 30% { opacity: 1; transform: translate(-50%, -6%) rotate(-3deg) scale(1, 0.15); } 100% { opacity: 1; transform: translate(-50%, -22%) rotate(-2deg) scale(1, 1); } }
+        @keyframes bwPaperHide { 0% { opacity: 1; transform: translate(-50%, -22%) rotate(-2deg) scale(1, 1); } 100% { opacity: 0; transform: translate(-50%, -42%) rotate(-2deg) scale(0.85, 0.15); } }
+        .bw-gift { position: fixed; z-index: 10000001; width: 40px; height: 40px; border-radius: 50%; border: none; background: rgba(244, 235, 208, 0.22); font-size: 20px; line-height: 1; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; opacity: 0.45; transition: opacity 0.25s ease, transform 0.2s ease, background 0.2s ease; -webkit-tap-highlight-color: transparent; }
+        .bw-gift:hover, .bw-gift:focus-visible { opacity: 1; background: rgba(244, 235, 208, 0.7); transform: scale(1.1); outline: none; }
+        .bw-gift:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+        .bw-gift:active { transform: scale(0.94); }
+        .bw-gift-1 { left: 10px; top: 42%; }
+        .bw-gift-2 { right: 10px; top: 26%; }
+        .bw-gift-3 { left: 10px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
+        .bw-gift-4 { right: 10px; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+        .bw-gift-pop { position: fixed; z-index: 10000005; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.9); background: var(--vintage-paper); color: var(--main-red); font-family: 'Caveat', cursive; font-size: clamp(22px, 5vw, 28px); padding: 18px 24px; border-radius: 12px; border: 2px solid var(--accent-gold); box-shadow: 0 12px 30px rgba(0,0,0,0.5); max-width: min(420px, 84vw); text-align: center; line-height: 1.35; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22,0.8,0.25,1); }
+        .bw-gift-pop.bw-show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+        .bw-gift-pop-close { position: absolute; top: -10px; right: -10px; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--main-red); background: var(--surface); color: var(--main-red); font-size: 18px; font-weight: 700; line-height: 1; cursor: pointer; }
+        .bw-gift-pop-close:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) {
+            #wishesBtn, .bw-floating-paper, .bw-roll, .bw-gift-pop, .bw-jar-card { transition: none !important; animation: none !important; }
+            .bw-floating-paper.bw-show { opacity: 1; transform: translate(-50%, -22%) rotate(-2deg) scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -423,7 +467,20 @@
         <div class="letter-content-wrapper">
             <h1 class="letter-heading">To My Dearest Jessa,</h1>
             <div class="letter-date">October 2026</div>
-            <div class="letter-body">[WRITE MY PERSONAL LETTER HERE]</div>
+            <div class="letter-body">Happy birthday to my favorite person best wishes for my baby🎂🥳💛
+I honestly don't know where to start, as my first birthday letter essay, sooo bear with me if I end up being a little akward with my words, there's just alot I'd love to say and i want to make sure I don't leave out the things that matter.
+First, i want you to know that this day is special, know that you deserve to be celebrated. Not just today but everyday, you're your own person with their own personality, thougjts, interests, dreams, and little things which make you, you. Don't ever think that you have to be someone else just to be celebrated, I love you for being you, even in little things that you probably don't think about.
+I appreciate the little things about you. Whenever you just do your makeup, I just stare at times and find it so cute. Also whenever we spend time together too, your reactions, your random comments, OHHH and when your eating too you look so cute while eating🫠🫠
+There's more that I may haven't mentioned and these might've been or seem to be not that big of a deal but these are what makes spending time with you soo much more special.
+It's not all about just doing somethinng soo big and grand tjst makes it special, simply being around you is. And I thank you for that, you really are my special someone.
+And as I look back on our peak memories, Truly I am grateful to have met such a soul. From the ones we didn't expect, the funny ones, the quiet ones and the ones that did not go as planned. Lord I pray we make more memories with eachother, for we have so much to experience and so much to do together, and I'd love for us to have more opportunities to do so.
+There's also a lot about you that I admire. I admire the way you have your own thoughts and opinions, how you know what you like and don't like, and how you pursue the things that interest you. I admire your determination, the way you continue being yourself, oh and how you look so kyut achuchu bebeh. I hope you recognize those qualities in yourself to, because they're worth appreciating.
+I'm grateful for everything we've experience and the things I learned from knowing you.
+You gave me experiences and perspectiivs that I might've not have experienced if not for you. You made me realize things about myself, that there's more to life than just waking up eating and excessive screentime, also about how I communicate and understanding people. And I know there's alot for me to learn, however I'm still really grateful for you being a part of my journey.
+AANDD as you enter another year in your life this also brings another chapter for you. And I hope things become kinder to you. Opportunities to do what you love, experience what you want and have what you need. I hope you get to experience so much more memories that you'll look back and smile at, may this new chapter and all other chapters of your life be happy, and if there's times where it's not, just know I'd be there for you.
+I hope you'll never rush at life, stress about how you need things figured out too. Take your time will ya? Change your mind, make mistakes, explore, grow(at your own pace remember that). I hope you give yourself the same patience and understanding that you deserve from the people around you. And again, when life hits you hard, your harder. These difficult moments don't define the entire journey, it's temporary.
+For us, I hope we get to experience more things together. More random conversations, more fun t moments, more little(and big🏔️🏔️🏰) adventures, more normaldays that eventually become memories worth looking back on. I hope we continue learning about each other and finding new reasons to appreciate one another. There's still so much ahead of us, and I'm looking forward to the memories we have yet to make. And finally, I just want you to enjoy your day. Don't feel like you have to make it perfect, it doesn't have to be for it to be good. I hope you get to do the things you want, eat the things you enjoy, laugh as much as you can, and overall just have a good day bii. You deserve a birthday that feels special, and I hope this next chapter brings you more happiness, opportunities, and experiences than you could ever expect.
+Happy birthday again bii.Thank you for being you, for the memories we've made, and for all the little things that make you the person you are. I hope that when you look back on this year, you'll have so mch reasons to be proud of yourself and happy with how far you've reached, I'm proud of you for reaching far bi. I love you</div>
             <div class="letter-foot"><div class="letter-signature">With love,<br>Me</div></div>
         </div>
     </div>
@@ -632,7 +689,6 @@
                        + Math.round(b1+(b2-b1)*t).toString(16).padStart(2,'0');
         }
 
-        // 11 flowers: 1 rose, 2 lilies, 1 peony, 2 tulips, 2 daisies, 3 lily-of-the-valleys
         const FLOWERS = [
             { type: 'rose',  baseX: 0.50, baseY: 0.96, topX: 0.50, topY: 0.24, scale: 1.15 },
             { type: 'lily',  baseX: 0.40, baseY: 0.96, topX: 0.28, topY: 0.32, scale: 0.90 },
@@ -1012,7 +1068,6 @@
             cachedCtx.textBaseline = 'top';
         }
 
-        // Each glyph gets a glow bloom in its own color — makes flower silhouettes visible
         function drawGlyphTo(targetCtx, g) {
             targetCtx.fillStyle = g.color;
             targetCtx.font = getFont(g.fontSize);
@@ -1437,6 +1492,138 @@
             document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSim(); });
             window.addEventListener('resize', fit);
         })();
+    </script>
+    <!-- ===== BIRTHDAY ADDITIONS: wishes button, jar, gift boxes ===== -->
+    <button id="wishesBtn" type="button" aria-haspopup="dialog" aria-controls="wishesJar" aria-label="Open wishes jar">wishes</button>
+
+    <div id="wishesJar" role="dialog" aria-modal="true" aria-labelledby="wishesTitle" aria-hidden="true">
+        <div class="bw-jar-card">
+            <button class="bw-jar-close" id="wishesClose" type="button" aria-label="Close wishes jar">×</button>
+            <h2 class="bw-jar-title" id="wishesTitle">wishes for you</h2>
+            <p class="bw-jar-hint">tap the jar ✨</p>
+            <div class="bw-jar-wrap" id="wishesJarTap" role="button" tabindex="0" aria-label="Tap to draw a wish">
+                <svg class="bw-jar-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="58" y="4" width="84" height="10" rx="4" fill="#e0b878" stroke="#8f6a3a" stroke-width="2"/>
+                    <rect x="52" y="12" width="96" height="18" rx="6" fill="#c99a5f" stroke="#8f6a3a" stroke-width="2"/>
+                    <path d="M 48 30 Q 30 40 30 70 L 30 180 Q 30 210 60 210 L 140 210 Q 170 210 170 180 L 170 70 Q 170 40 152 30 Z" fill="rgba(180, 220, 235, 0.28)" stroke="rgba(140, 190, 210, 0.85)" stroke-width="2.5"/>
+                    <path d="M 46 42 Q 38 60 38 90 L 38 170" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="3" stroke-linecap="round"/>
+                    <ellipse cx="100" cy="200" rx="60" ry="6" fill="rgba(255,255,255,0.25)"/>
+                    <rect x="72" y="76" width="56" height="20" rx="3" fill="#f4ebd0" stroke="#8f6a3a" stroke-width="1.5"/>
+                    <text x="100" y="91" text-anchor="middle" font-family="Caveat, cursive" font-size="14" fill="#732624" font-weight="700">wishes</text>
+                </svg>
+                <div class="bw-floating-paper" id="wishesPaper" aria-live="polite"></div>
+                <div class="bw-roll" data-i="0" style="left: 28%; bottom: 18%; --rot: -3deg;"></div>
+                <div class="bw-roll" data-i="1" style="left: 44%; bottom: 13%; --rot: -12deg;"></div>
+                <div class="bw-roll" data-i="2" style="left: 58%; bottom: 17%; --rot: 8deg;"></div>
+                <div class="bw-roll" data-i="3" style="left: 36%; bottom: 26%; --rot: 14deg;"></div>
+                <div class="bw-roll" data-i="4" style="left: 54%; bottom: 27%; --rot: -6deg;"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="bw-gift bw-gift-1" type="button" data-msg="i miss you" aria-label="Open a secret note">🎁</button>
+    <button class="bw-gift bw-gift-2" type="button" data-msg="happy birthday baby" aria-label="Open a secret note">🎁</button>
+    <button class="bw-gift bw-gift-3" type="button" data-msg="love you 👀" aria-label="Open a secret note">🎁</button>
+    <button class="bw-gift bw-gift-4" type="button" data-msg="im genuinely sorry i got late, i had to repaste so much then sleep for a few mins" aria-label="Open a secret note">🎁</button>
+
+    <div class="bw-gift-pop" id="giftPop" role="status" aria-live="polite">
+        <button class="bw-gift-pop-close" id="giftPopClose" type="button" aria-label="Dismiss note">×</button>
+        <span id="giftPopText"></span>
+    </div>
+
+    <script>
+    /* ===== BIRTHDAY ADDITIONS: wishes button + jar + gift boxes ===== */
+    (function () {
+        'use strict';
+        const wishesBtn   = document.getElementById('wishesBtn');
+        const letterScene = document.getElementById('letter-scene');
+        const letterWrap  = letterScene ? letterScene.querySelector('.letter-content-wrapper') : null;
+        let letterRead = false;
+        function nearBottom(el, pad) { pad = (pad == null) ? 40 : pad; return el.scrollTop + el.clientHeight >= el.scrollHeight - pad; }
+        function tryMarkRead() {
+            if (letterRead || !letterWrap) return;
+            if (!letterScene.classList.contains('reading')) return;
+            const fits = letterWrap.scrollHeight <= letterWrap.clientHeight + 40;
+            if (fits || nearBottom(letterWrap, 40)) { letterRead = true; wishesBtn.classList.add('bw-visible'); }
+        }
+        if (letterWrap) letterWrap.addEventListener('scroll', tryMarkRead, { passive: true });
+        if (letterScene) new MutationObserver(function () {
+            if (letterScene.classList.contains('reading')) { setTimeout(tryMarkRead, 1200); setTimeout(tryMarkRead, 3500); }
+        }).observe(letterScene, { attributes: true, attributeFilter: ['class'] });
+        window.addEventListener('resize', function () { if (letterScene && letterScene.classList.contains('reading')) setTimeout(tryMarkRead, 300); });
+
+        const jarModal = document.getElementById('wishesJar');
+        const jarClose = document.getElementById('wishesClose');
+        const jarTap   = document.getElementById('wishesJarTap');
+        const paperEl  = document.getElementById('wishesPaper');
+        const rolls    = Array.from(jarModal.querySelectorAll('.bw-roll'));
+        const WISHES = [
+            "i wish for you to have a long good life, filled with love, peace, prosperity, and pure hapiness",
+            "i wish for you to keep going, no matter how hard life becomes. never give up okay?",
+            "i wish we would get married, to one day have our own house and children, making more beautiful memories and experiences we look back at and smile at in the future",
+            "I wish you to always see yourself through my eyes, so you will never doubt how deeply you are loved",
+            " I wish for you to never lose that spark that made me fall in love with you so much"
+        ];
+        let order = [], cursor = 0, revealLock = false;
+        function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+        function resetCycle() { order = shuffle([0,1,2,3,4]); cursor = 0; rolls.forEach(function (r) { r.classList.remove('bw-used'); }); }
+        function openJar() {
+            if (!order.length) resetCycle();
+            jarModal.classList.add('bw-open'); jarModal.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(function () { jarModal.classList.add('bw-visible'); });
+            if (jarClose) jarClose.focus({ preventScroll: true });
+            document.documentElement.style.overflow = 'hidden';
+        }
+        function closeJar() {
+            jarModal.classList.remove('bw-visible'); jarModal.setAttribute('aria-hidden', 'true');
+            setTimeout(function () { jarModal.classList.remove('bw-open'); }, 300);
+            if (paperEl) { paperEl.classList.remove('bw-show', 'bw-hide'); paperEl.textContent = ''; }
+            if (wishesBtn) wishesBtn.focus({ preventScroll: true });
+            document.documentElement.style.overflow = '';
+        }
+        function revealNext() {
+            if (revealLock || !paperEl) return; revealLock = true;
+            function doReveal() {
+                if (cursor >= order.length) resetCycle();
+                const idx = order[cursor++]; const roll = rolls[idx]; if (roll) roll.classList.add('bw-used');
+                paperEl.classList.remove('bw-hide'); paperEl.textContent = WISHES[idx]; void paperEl.offsetWidth; paperEl.classList.add('bw-show');
+                setTimeout(function () { revealLock = false; }, 450);
+            }
+            if (paperEl.classList.contains('bw-show')) { paperEl.classList.remove('bw-show'); paperEl.classList.add('bw-hide'); setTimeout(doReveal, 380); }
+            else doReveal();
+        }
+        wishesBtn.addEventListener('click', openJar);
+        jarClose.addEventListener('click', closeJar);
+        jarModal.addEventListener('click', function (e) { if (e.target === jarModal) closeJar(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && jarModal.classList.contains('bw-open')) closeJar(); });
+        jarTap.addEventListener('click', function (e) { e.stopPropagation(); revealNext(); });
+        jarTap.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); revealNext(); } });
+        jarModal.addEventListener('keydown', function (e) {
+            if (e.key !== 'Tab') return;
+            const f = jarModal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+            if (!f.length) return; const first = f[0], last = f[f.length - 1];
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        });
+
+        const giftPop      = document.getElementById('giftPop');
+        const giftPopText  = document.getElementById('giftPopText');
+        const giftPopClose = document.getElementById('giftPopClose');
+        let giftTimer = null;
+        function showGift(msg) { giftPopText.textContent = msg; giftPop.classList.add('bw-show'); clearTimeout(giftTimer); giftTimer = setTimeout(hideGift, 4500); }
+        function hideGift() { giftPop.classList.remove('bw-show'); clearTimeout(giftTimer); }
+        document.querySelectorAll('.bw-gift').forEach(function (btn) {
+            btn.addEventListener('click', function (e) { e.stopPropagation(); showGift(btn.getAttribute('data-msg') || ''); });
+        });
+        giftPopClose.addEventListener('click', hideGift);
+        document.addEventListener('click', function (e) {
+            if (!giftPop.classList.contains('bw-show')) return;
+            if (giftPop.contains(e.target)) return;
+            if (e.target.classList && e.target.classList.contains('bw-gift')) return;
+            hideGift();
+        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideGift(); });
+    })();
     </script>
 </body>
 </html>
