@@ -302,7 +302,7 @@
             #return-arrow-svg.drawing #arrow-dot, #return-arrow-svg.drawing #arrow-head { animation: none; opacity: 1; }
         }
 
-        /* ===== BIRTHDAY ADDITIONS: wishes, jar, gifts ===== */
+        /* ===== BIRTHDAY ADDITIONS: wishes, jar, gifts, music ===== */
         #wishesBtn { position: fixed; right: calc(20px + env(safe-area-inset-right, 0px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 10000001; min-height: 44px; padding: 10px 22px; border-radius: 30px; border: 2px solid var(--accent-gold); background: var(--vintage-paper); color: var(--main-red); font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(56,20,19,0.45); opacity: 0; transform: translateY(14px) scale(0.95); pointer-events: none; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22,0.8,0.25,1); }
         #wishesBtn.bw-visible { opacity: 1; transform: none; pointer-events: auto; }
         #wishesBtn:hover { background: #fff; transform: translateY(-2px); }
@@ -336,7 +336,6 @@
         .bw-gift:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
         .bw-gift:active { transform: scale(0.94); }
         
-        /* GIFT POSITIONS (Distinct slides) */
         .bw-gift-1 { left: 20px; bottom: 20px; } 
         .bw-gift-2 { right: 20px; bottom: 80px; } 
         .bw-gift-3 { left: 20px; top: 80px; } 
@@ -346,13 +345,51 @@
         .bw-gift-pop.bw-show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
         .bw-gift-pop-close { position: absolute; top: -10px; right: -10px; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--main-red); background: var(--surface); color: var(--main-red); font-size: 18px; font-weight: 700; line-height: 1; cursor: pointer; }
         .bw-gift-pop-close:focus-visible { outline: 3px solid var(--accent-gold); outline-offset: 2px; }
+
+        /* ===== BACKGROUND MUSIC ===== */
+        .music-btn {
+            position: fixed;
+            top: calc(20px + env(safe-area-inset-top, 0px));
+            right: calc(20px + env(safe-area-inset-right, 0px));
+            z-index: 2147483000;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--vintage-paper);
+            border: 2px solid var(--accent-gold);
+            color: var(--main-red);
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(56, 20, 19, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+        .music-btn:active { transform: scale(0.9); }
+        .music-btn.playing {
+            background: var(--accent-gold);
+            color: var(--surface);
+            animation: musicPulse 2s infinite;
+        }
+        @keyframes musicPulse {
+            0% { box-shadow: 0 0 0 0 rgba(217, 180, 109, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 180, 109, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 180, 109, 0); }
+        }
         @media (prefers-reduced-motion: reduce) {
-            #wishesBtn, .bw-floating-paper, .bw-roll, .bw-gift-pop, .bw-jar-card { transition: none !important; animation: none !important; }
+            #wishesBtn, .bw-floating-paper, .bw-roll, .bw-gift-pop, .bw-jar-card, .music-btn { transition: none !important; animation: none !important; }
             .bw-floating-paper.bw-show { opacity: 1; transform: translate(-50%, -22%) rotate(-2deg) scale(1); }
         }
     </style>
 </head>
 <body>
+    <!-- BACKGROUND MUSIC (Fallback) -->
+    <audio id="bgMusic" loop>
+        <source src="./assets/music.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicToggle" class="music-btn" aria-label="Toggle background music" style="display: none;">🔇</button>
+
     <div id="background-layer"><div class="stars"></div><div class="moon"></div><div class="sun"></div><div class="city-layer city-back"></div><div class="city-layer city-mid"></div><div class="city-layer city-front"></div></div>
     <div id="heart-container"></div>
     
@@ -640,6 +677,83 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
     </div>
 
     <script>
+        // ================= BACKGROUND MUSIC (SMOOTH LOOP) =================
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let musicSource = null;
+        let musicGain = null;
+        let isMusicPlaying = false;
+
+        async function initMusic() {
+            if (!AudioContextClass) return;
+            if (!audioCtx) {
+                audioCtx = new AudioContextClass();
+                musicGain = audioCtx.createGain();
+                musicGain.gain.value = 0.4; 
+                musicGain.connect(audioCtx.destination);
+            }
+            
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+            if (!musicSource) {
+                try {
+                    // Fetch and decode for gapless looping
+                    const response = await fetch('./assets/music.mp3');
+                    if (!response.ok) throw new Error('File not found');
+                    const arrayBuffer = await response.arrayBuffer();
+                    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                    
+                    musicSource = audioCtx.createBufferSource();
+                    musicSource.buffer = audioBuffer;
+                    musicSource.loop = true;
+                    musicSource.connect(musicGain);
+                    musicSource.start(0);
+                    isMusicPlaying = true;
+                } catch (err) {
+                    console.warn("Smooth loop failed (CORS/local file issue). Falling back to standard audio.", err);
+                    // Fallback to standard audio element
+                    const fallbackAudio = document.getElementById('bgMusic');
+                    if (fallbackAudio) {
+                        fallbackAudio.volume = 0.4;
+                        fallbackAudio.play().then(() => {
+                            isMusicPlaying = true;
+                        }).catch(e => console.log("Fallback failed:", e));
+                    }
+                }
+            }
+        }
+
+        function toggleMusic() {
+            const btn = document.getElementById('musicToggle');
+            if (!btn) return;
+            
+            if (audioCtx && musicGain) {
+                if (isMusicPlaying) {
+                    musicGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                    isMusicPlaying = false;
+                    btn.textContent = '🔇';
+                    btn.classList.remove('playing');
+                } else {
+                    musicGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                    isMusicPlaying = true;
+                    btn.textContent = '🎵';
+                    btn.classList.add('playing');
+                }
+            } else {
+                const fallbackAudio = document.getElementById('bgMusic');
+                if (!fallbackAudio) return;
+                if (fallbackAudio.paused) {
+                    fallbackAudio.play();
+                    btn.textContent = '🎵';
+                    btn.classList.add('playing');
+                } else {
+                    fallbackAudio.pause();
+                    btn.textContent = '🔇';
+                    btn.classList.remove('playing');
+                }
+            }
+        }
+
         // ================= HEART ANIMATION =================
         const container = document.getElementById('heart-container');
         const trailColors = ['#00FF66', '#00FFFF', '#0088FF', '#8A2BE2'];
@@ -685,6 +799,19 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
         startBtn.addEventListener('click', () => {
             if (isTransitioning) return; isTransitioning = true; startBtn.disabled = true;
             
+            // Initialize Music on first click
+            const musicBtn = document.getElementById('musicToggle');
+            if (musicBtn.style.display === 'none') {
+                musicBtn.style.display = 'flex';
+                musicBtn.classList.add('playing');
+                musicBtn.textContent = '🎵';
+                musicBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleMusic();
+                });
+                initMusic();
+            }
+
             // Gift logic
             document.querySelector('.bw-gift-1').style.display = 'none';
             
@@ -781,7 +908,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
         arrowTrigger.addEventListener('click', () => {
             if (heartBusy) return; heartBusy = true;
             
-            // Gift logic
             document.querySelector('.bw-gift-3').style.display = 'none';
             
             stage3.classList.remove('show');
@@ -1446,7 +1572,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
             if (typeof window.__s3busy === 'undefined') window.__s3busy = false;
             const vf = $('viewfinder');
             
-            // New UI Elements
             const timerBtn = $('timer-btn');
             const aspectSelect = $('aspect-select');
             const gridBtn = $('grid-btn');
@@ -1464,7 +1589,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
             let currentAspect = 'cover';
             let isGridOn = false;
             let capturedBlob = null;
-            let currentZoom = 1;
 
             function showBrackets(el) {
                 const r = el.getBoundingClientRect(), pad = 14;
@@ -1505,37 +1629,31 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                 });
             });
 
-            filterToggleBtn.addEventListener('click', () => {
-                filterDrawer.classList.toggle('active');
-            });
-
+            filterToggleBtn.addEventListener('click', () => { filterDrawer.classList.toggle('active'); });
             gridBtn.addEventListener('click', () => {
                 isGridOn = !isGridOn;
                 ruleGrid.classList.toggle('active', isGridOn);
                 gridBtn.style.color = isGridOn ? 'var(--main-red)' : 'var(--vintage-paper)';
                 gridBtn.style.background = isGridOn ? 'var(--accent-gold)' : 'transparent';
             });
-
             timerBtn.addEventListener('click', () => {
                 currentTimer = currentTimer === 0 ? 3 : (currentTimer === 3 ? 5 : (currentTimer === 5 ? 10 : 0));
                 timerBtn.textContent = currentTimer === 0 ? '⏱' : currentTimer + 's';
                 timerBtn.style.background = currentTimer === 0 ? 'var(--surface)' : 'var(--accent-gold)';
                 timerBtn.style.color = currentTimer === 0 ? 'var(--main-red)' : 'var(--surface)';
             });
-
             aspectSelect.addEventListener('change', (e) => {
                 currentAspect = e.target.value;
                 videoElement.style.objectFit = currentAspect;
             });
-
             zoomSlider.addEventListener('input', (e) => {
-                currentZoom = parseFloat(e.target.value);
+                const z = parseFloat(e.target.value);
                 if (stream) {
                     const track = stream.getVideoTracks()[0];
                     if (track && track.getCapabilities().zoom) {
-                        track.applyConstraints({ advanced: [{ zoom: currentZoom }] });
+                        track.applyConstraints({ advanced: [{ zoom: z }] });
                     } else {
-                        videoElement.style.transform = `scale(${currentZoom})`;
+                        videoElement.style.transform = `scale(${z})`;
                     }
                 }
             });
@@ -1561,14 +1679,12 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                     historyGrid.appendChild(div);
                 });
             }
-
             window.downloadHistory = function(dataUrl) {
                 const a = document.createElement('a');
                 a.href = dataUrl;
                 a.download = 'memory-' + Date.now() + '.jpg';
                 a.click();
             };
-
             window.deleteHistory = function(index) {
                 let history = JSON.parse(localStorage.getItem('bw_camera_history') || '[]');
                 history.splice(index, 1);
@@ -1576,14 +1692,8 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                 loadHistory();
             };
 
-            historyBtn.addEventListener('click', () => {
-                loadHistory();
-                historyModal.classList.add('active');
-            });
-
-            closeHistoryBtn.addEventListener('click', () => {
-                historyModal.classList.remove('active');
-            });
+            historyBtn.addEventListener('click', () => { loadHistory(); historyModal.classList.add('active'); });
+            closeHistoryBtn.addEventListener('click', () => { historyModal.classList.remove('active'); });
 
             function showCameraError(html) {
                 cameraError.innerHTML = html + '<br><button type="button" class="retry-btn" id="camera-retry" style="margin-top:14px;padding:9px 20px;border-radius:24px;background:var(--surface);color:var(--main-red);border:2px solid var(--accent-gold);font-family:Fredoka;font-weight:600;cursor:pointer;">Try again</button>';
@@ -1602,7 +1712,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                     stream = s; videoElement.srcObject = s; videoElement.style.filter = currentFilter; videoElement.style.objectFit = currentAspect;
                     videoElement.classList.toggle('mirrored', facingMode === 'user');
                     
-                    // Reset zoom UI if not supported
                     const track = s.getVideoTracks()[0];
                     if (!track || !track.getCapabilities().zoom) {
                         zoomSlider.style.display = 'none';
@@ -1673,7 +1782,6 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                 
                 c2d.filter = currentFilter; 
                 
-                // Mirror fix for front camera
                 if (facingMode === 'user') {
                     c2d.translate(width, 0);
                     c2d.scale(-1, 1);
@@ -1714,12 +1822,11 @@ Happy birthday again bii.Thank you for being you, for the memories we've made, a
                         setTimeout(() => URL.revokeObjectURL(url), 2000); 
                     }
                     
-                    // Save to history
                     const reader = new FileReader();
                     reader.onloadend = () => {
                         let history = JSON.parse(localStorage.getItem('bw_camera_history') || '[]');
                         history.unshift(reader.result);
-                        if (history.length > 20) history.pop(); // Max 20 photos
+                        if (history.length > 20) history.pop();
                         localStorage.setItem('bw_camera_history', JSON.stringify(history));
                     };
                     reader.readAsDataURL(capturedBlob);
